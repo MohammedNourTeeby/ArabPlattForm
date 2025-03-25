@@ -1,26 +1,62 @@
+'use client';
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Cairo } from "next/font/google";
-import { FiExternalLink, FiChevronRight } from "react-icons/fi";
-
-const cairo = Cairo({
-  subsets: ["arabic"],
-  weight: ["300", "400", "600", "700"],
-  display: 'swap',
-  variable: '--font-cairo',
-});
+import { FiExternalLink, FiChevronLeft } from "react-icons/fi";
 
 const Footer = () => {
+  // بيانات الشعارات
+  const logos = [
+    { 
+      name: "Nasdaq",
+      src: "https://upload.wikimedia.org/wikipedia/commons/8/88/Nasdaq_Logo.svg",
+      link: "https://www.nasdaq.com"
+    },
+    {
+      name: "NetApp",
+      src: "https://upload.wikimedia.org/wikipedia/commons/9/9d/NetApp_Logo.svg",
+      link: "https://www.netapp.com"
+    },
+    {
+      name: "Eventbrite",
+      src: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Eventbrite_Logo.svg",
+      link: "https://www.eventbrite.com"
+    }
+  ];
+
+  // بيانات القوائم
+  const sections = [
+    {
+      title: "الشهادات والاعتمادات",
+      items: ['AWS Certification', 'Cisco', 'Microsoft', 'Oracle', 'CompTIA'],
+      color: "purple-400"
+    },
+    {
+      title: "التطوير البرمجي",
+      items: ['JavaScript', 'Python', 'React', 'Node.js', 'Angular'],
+      color: "blue-400"
+    },
+    {
+      title: "التصميم والإعلام",
+      items: ['Photoshop', 'Illustrator', 'Premiere Pro', 'After Effects', 'UI/UX'],
+      color: "green-400"
+    },
+    {
+      title: "البيانات والتسويق",
+      items: ['Data Science', 'Big Data', 'SEO', 'Digital Marketing', 'Social Media'],
+      color: "yellow-400"
+    },
+    {
+      title: "مجالات أخرى",
+      items: ['إدارة المشاريع', 'ريادة الأعمال', 'اللغات والترجمة', 'الموارد البشرية', 'المزيد ...'],
+      color: "red-400"
+    }
+  ];
+
+  // إعدادات الحركة
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -34,10 +70,10 @@ const Footer = () => {
       whileInView="visible"
       viewport={{ once: true, margin: "0px 0px -100px 0px" }}
       variants={containerVariants}
-      className={`${cairo.variable} font-sans bg-gradient-to-b from-gray-900 to-[#1a1b1d] text-gray-300 pt-14 pb-8`}
+      className="bg-gradient-to-b from-gray-900 to-[#1a1b1d] text-gray-300 pt-14 pb-8"
       dir="rtl"
     >
-      {/* قسم الشعارات مع تحسينات الحركة */}
+      {/* قسم الشعارات */}
       <motion.div 
         variants={itemVariants}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
@@ -48,23 +84,7 @@ const Footer = () => {
           </h2>
           
           <div className="flex items-center gap-8 flex-wrap justify-center">
-            {[
-              { 
-                name: "Nasdaq",
-                src: "https://upload.wikimedia.org/wikipedia/commons/8/88/Nasdaq_Logo.svg",
-                link: "https://www.nasdaq.com"
-              },
-              {
-                name: "NetApp",
-                src: "https://upload.wikimedia.org/wikipedia/commons/9/9d/NetApp_Logo.svg",
-                link: "https://www.netapp.com"
-              },
-              {
-                name: "Eventbrite",
-                src: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Eventbrite_Logo.svg",
-                link: "https://www.eventbrite.com"
-              }
-            ].map((logo, index) => (
+            {logos.map((logo, index) => (
               <motion.a
                 key={index}
                 variants={itemVariants}
@@ -91,46 +111,20 @@ const Footer = () => {
         </div>
       </motion.div>
 
-      {/* القوائم الرئيسية مع تأثيرات الظهور */}
+      {/* القوائم الرئيسية */}
       <motion.div 
         variants={containerVariants}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
-          {[
-            {
-              title: "الشهادات والاعتمادات",
-              items: ['AWS Certification', 'Cisco', 'Microsoft', 'Oracle', 'CompTIA'],
-              icon: <FiChevronLeft className="text-purple-400 mr-2" />
-            },
-            {
-              title: "التطوير البرمجي",
-              items: ['JavaScript', 'Python', 'React', 'Node.js', 'Angular'],
-              icon: <FiChevronLeft className="text-blue-400 mr-2" />
-            },
-            {
-              title: "التصميم والإعلام",
-              items: ['Photoshop', 'Illustrator', 'Premiere Pro', 'After Effects', 'UI/UX'],
-              icon: <FiChevronLeft className="text-green-400 mr-2" />
-            },
-            {
-              title: "البيانات والتسويق",
-              items: ['Data Science', 'Big Data', 'SEO', 'Digital Marketing', 'Social Media'],
-              icon: <FiChevronLeft className="text-yellow-400 mr-2" />
-            },
-            {
-              title: "مجالات أخرى",
-              items: ['إدارة المشاريع', 'ريادة الأعمال', 'اللغات والترجمة', 'الموارد البشرية', 'المزيد ...'],
-              icon: <FiChevronLeft className="text-red-400 mr-2" />
-            }
-          ].map((section, index) => (
+          {sections.map((section, index) => (
             <motion.div 
               key={index}
               variants={itemVariants}
               className="space-y-5"
             >
-              <h3 className="text-white font-semibold text-lg flex items-center border-b border-gray-700 pb-3">
-                {section.icon}
+              <h3 className={`text-white font-semibold text-lg flex items-center border-b border-gray-700 pb-3`}>
+                <FiChevronLeft className={`text-${section.color} mr-2`} />
                 {section.title}
               </h3>
               <ul className="space-y-3.5">
@@ -151,7 +145,7 @@ const Footer = () => {
         </div>
       </motion.div>
 
-      {/* حقوق النشر مع تحسينات التصميم */}
+      {/* حقوق النشر */}
       <motion.div 
         variants={itemVariants}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14"
@@ -173,13 +167,16 @@ const Footer = () => {
           
           <div className="text-center md:text-right space-y-2">
             <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Udemy, Inc.
+              © {new Date().getFullYear()}  الإعتــمـاد العــربــي, Inc.
               <span className="block mt-1 text-xs font-light">الريادة في التعليم الرقمي العالمي</span>
             </p>
             <div className="flex gap-4 justify-center md:justify-end mt-2">
-              <span className="w-8 h-8 rounded-full bg-gray-700/50 hover:bg-gray-600 transition-colors cursor-pointer" />
-              <span className="w-8 h-8 rounded-full bg-gray-700/50 hover:bg-gray-600 transition-colors cursor-pointer" />
-              <span className="w-8 h-8 rounded-full bg-gray-700/50 hover:bg-gray-600 transition-colors cursor-pointer" />
+              {[1, 2, 3].map((_, idx) => (
+                <span 
+                  key={idx}
+                  className="w-8 h-8 rounded-full bg-gray-700/50 hover:bg-gray-600 transition-colors cursor-pointer"
+                />
+              ))}
             </div>
           </div>
         </div>
