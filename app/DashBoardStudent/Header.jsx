@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiChevronUp, FiBell, FiShoppingCart, FiSearch, FiUser } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiHeart , FiBell, FiShoppingCart, FiSearch, FiUser, FiMessageCircle } from 'react-icons/fi';
 import List from '../DashBoardStudent/list';
 import courseData from '../../data.json';
+import Link from 'next/link';
 
 const slideIn = {
   hidden: { x: '100%' },
@@ -26,7 +27,6 @@ const Header = () => {
   const exploreRef = useRef(null);
   const profileRef = useRef(null);
 
-  // تحويل البيانات مع memoization
   const { categories, exploreData } = useMemo(() => {
     const cats = courseData.categories.map(cat => ({
       title: cat.categoryName,
@@ -40,7 +40,7 @@ const Header = () => {
         title: "الدورات",
         items: cat.courses.map(course => ({
           name: course.name,
-          subItems: course.modules || [] // إضافة محتويات الدورة
+          subItems: course.modules || []
         }))
       }]
     }));
@@ -73,11 +73,9 @@ const Header = () => {
 
   return (
     <header className="w-full sticky top-0 z-50">
-      {/* تحسين التدرج اللوني */}
       <div className={`bg-gradient-to-r from-purple-800 to-blue-900 border-b border-purple-900 transition-all duration-300 ${isScrolled ? 'h-20 shadow-xl' : 'h-24'}`}>
         <div className="max-w-8xl mx-auto px-6 h-full flex items-center justify-between">
           
-          {/* الجزء الأيسر */}
           <div className="flex items-center gap-6 rtl:space-x-reverse">
             <motion.button 
               whileHover={{ scale: 1.05 }}
@@ -96,7 +94,6 @@ const Header = () => {
               الإعتــمـاد العــربــي
             </motion.a>
             
-            {/* زر الاستكشاف المطور */}
             <div className="hidden md:block relative">
               <motion.button 
                 className="flex items-center gap-2 text-white px-5 py-3 rounded-xl hover:bg-white/10 transition-colors"
@@ -132,7 +129,6 @@ const Header = () => {
                             <span className="font-semibold">{section.category}</span>
                           </div>
                           
-                          {/* القائمة المتداخلة */}
                           {activeCategory === index && (
                             <motion.div 
                               initial={{ opacity: 0 }}
@@ -155,7 +151,6 @@ const Header = () => {
                                           )}
                                         </a>
                                         
-                                        {/* المستوى الثالث */}
                                         {item.subItems.length > 0 && (
                                           <motion.div 
                                             initial={{ opacity: 0 }}
@@ -189,7 +184,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* بقية المكونات بدون تغيير */}
           <div className="hidden md:flex items-center flex-1 mx-10 max-w-4xl">
             <form className="relative w-full group">
               <input
@@ -228,7 +222,15 @@ const Header = () => {
                 </motion.div>
               )}
             </div>
-
+            <Link href="./FavoritesPage">
+            <motion.button 
+              className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FiHeart  size={26} />
+            </motion.button>
+            </Link>
             <motion.button 
               className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white"
               whileHover={{ scale: 1.05 }}
@@ -236,20 +238,32 @@ const Header = () => {
             >
               <FiShoppingCart size={26} />
             </motion.button>
-            
-            <motion.button 
-              className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FiBell size={26} />
-              <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full ring-2 ring-purple-900"></span>
-            </motion.button>
+
+            {/* زر الدعم الجديد */}
+            <Link href="/ChatAI">
+              <motion.button 
+                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FiMessageCircle size={26} />
+              </motion.button>
+            </Link>
+
+            <Link href="/Navigation">
+              <motion.button 
+                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FiBell size={26} />
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full ring-2 ring-purple-900"></span>
+              </motion.button>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* شريط التصنيفات */}
       <nav className={`bg-purple-900/95 backdrop-blur-sm hidden md:block ${isScrolled ? 'py-3' : 'py-4'}`}>
         <div className="max-w-8xl mx-auto px-6">
           <div className="flex justify-center gap-10 rtl:space-x-reverse">
@@ -297,7 +311,6 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* القائمة الجانبية */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>

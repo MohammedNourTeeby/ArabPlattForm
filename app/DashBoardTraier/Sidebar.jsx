@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   const menuItems = [
     { name: "الدورات", icon: <FiVideo size={24} />, link: "/courses" },
-    { name: "تواصل", icon: <FiMessageSquare size={24} />, link: "/contact" },
+    { name: "تواصل", icon: <FiMessageSquare size={24} />, link: "./Massage" },
     { name: "أداة", icon: <FiTool size={24} />, link: "/tool" },
     { name: "أدوات", icon: <FiLayers size={24} />, link: "/tools" },
     { name: "موارد", icon: <FiArchive size={24} />, link: "/resources" },

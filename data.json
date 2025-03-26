@@ -20,6 +20,8 @@
           "lessons": 156,
           "projects": 12,
           "certificate": true,
+          "isFavorite": false,
+
           "prerequisites": ["JavaScript", "React الأساسيات"]
         },
         {
@@ -36,6 +38,8 @@
           "studentsEnrolled": 3275,
           "language": "الإنجليزية",
           "lessons": 92,
+          "isFavorite": false,
+
           "projects": 8,
           "certificate": true
         },
@@ -54,6 +58,8 @@
           "language": "العربية",
           "lessons": 210,
           "projects": 15,
+          "isFavorite": false,
+
           "certificate": true
         },
         {
@@ -68,6 +74,8 @@
           "level": "مبتدئ",
           "studentsEnrolled": 8743,
           "language": "العربية",
+          "isFavorite": false,
+
           "lessons": 64,
           "certificate": true
         },
@@ -84,6 +92,8 @@
           "studentsEnrolled": 5321,
           "language": "العربية",
           "lessons": 120,
+          "isFavorite": false,
+
           "projects": 7,
           "certificate": true
         }
@@ -107,7 +117,10 @@
           "studentsEnrolled": 2876,
           "language": "العربية",
           "lessons": 85,
+          "isFavorite": false,
+
           "projects": 10
+          
         },
         {
           "id": 7,
@@ -120,6 +133,8 @@
           "duration": "15 ساعة",
           "level": "مبتدئ",
           "studentsEnrolled": 4123,
+          "isFavorite": false,
+
           "language": "العربية",
           "certificate": true
         },
@@ -135,6 +150,8 @@
           "level": "متوسط",
           "studentsEnrolled": 6543,
           "language": "الإنجليزية",
+          "isFavorite": false,
+
           "projects": 6
         }
       ]
@@ -151,6 +168,8 @@
           "description": "تصدر نتائج البحث مع أدوات SEMrush و Ahrefs العملية",
           "instructor": "فهد الجاسم",
           "rating": 4.83,
+          "isFavorite": false,
+
           "duration": "30 ساعة",
           "level": "متقدم",
           "studentsEnrolled": 1987,
@@ -168,6 +187,8 @@
           "rating": 4.79,
           "duration": "18 ساعة",
           "level": "متوسط",
+          "isFavorite": false,
+
           "studentsEnrolled": 3456,
           "language": "العربية"
         }
@@ -187,6 +208,8 @@
           "rating": 4.85,
           "duration": "8 ساعات",
           "level": "مبتدئ",
+          "isFavorite": false,
+
           "studentsEnrolled": 4321,
           "language": "العربية",
           "videoExamples": 15
@@ -200,6 +223,8 @@
           "instructor": "خالد الحميدي",
           "rating": 4.78,
           "duration": "6 ساعات",
+          "isFavorite": false,
+
           "level": "مبتدئ",
           "studentsEnrolled": 5678
         }
@@ -217,6 +242,8 @@
           "description": "بناء نماذج تنبؤية باستخدام Python و Scikit-learn",
           "instructor": "د. عمر الفاروق",
           "rating": 4.93,
+          "isFavorite": false,
+
           "duration": "40 ساعة",
           "level": "متقدم",
           "prerequisites": ["Python", "الإحصاء الأساسي"]
@@ -229,6 +256,8 @@
           "description": "تقنيات تحليل النصوص مع TensorFlow و PyTorch",
           "instructor": "أسماء الخليفي",
           "rating": 4.88,
+          "isFavorite": false,
+
           "duration": "35 ساعة"
         }
       ]

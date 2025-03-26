@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiBell, FiUser } from 'react-icons/fi';
 import List from './list';
+import Link from 'next/link';
+import { FiMessageCircle } from 'react-icons/fi'; // Feather Icons
+import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline'; // Heroicons v2
 
 export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -33,7 +36,9 @@ export default function Header() {
 
   return (
     <div className="flex mr-7 justify-end gap-5 rtl:space-x-reverse">
+      
       {/* زر الإشعارات المطور */}
+                  <Link href="/Navigation">
       <motion.button 
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -45,6 +50,8 @@ export default function Header() {
           <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full ring-2 ring-white" />
         )}
       </motion.button>
+</Link>
+
 
       {/* قسم الملف الشخصي المطور */}
       <div 
@@ -63,6 +70,7 @@ export default function Header() {
           <FiUser size={26} className="text-purple-600" />
         </motion.button>
         
+        
         {/* القائمة المنسدلة مع التحسينات */}
         <AnimatePresence>
           {isProfileOpen && (
@@ -79,7 +87,19 @@ export default function Header() {
             </motion.div>
           )}
         </AnimatePresence>
+        
       </div>
+       {/* زر الدعم الجديد */}
+       <Link href="/ChatAI">
+              <motion.button 
+                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-purple-600"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FiMessageCircle size={26} />
+              </motion.button>
+            </Link>
+      
     </div>
   );
 }

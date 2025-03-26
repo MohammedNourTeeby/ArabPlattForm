@@ -82,7 +82,7 @@ const HomePage = () => {
                 className="flex flex-wrap gap-4"
               >
                 <Link
-                  href="/courses/new"
+                  href="./AddCourse"
                   className="bg-white text-purple-600 px-8 py-4 rounded-xl font-semibold
                            flex items-center gap-3 hover:bg-opacity-90 transition-all
                            shadow-lg hover:shadow-xl active:scale-95"

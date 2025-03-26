@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import coursesData from '../../data.json';
 
-const Courses = () => {
+const page = () => {
   const [favorites, setFavorites] = useState([]);
 
   // Load favorites from localStorage on component mount
@@ -290,4 +290,4 @@ const CheckCircleIcon = ({ className }) => (
   </svg>
 );
 
-export default Courses;
+export default page;

@@ -32,7 +32,7 @@ const List = () => {
         className="space-y-4 text-right"
       >
         {/* القسم التعليمي */}
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Courses" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>تعليمي</span>
           <FiShoppingCart className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
@@ -42,12 +42,12 @@ const List = () => {
           <FiShoppingCart className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./FavoritesPage" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>قائمة الرغبات</span>
           <FiHeart className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./DashBoardTraier" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>لوحة معلومات المدرب</span>
           <FiBriefcase className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
@@ -56,12 +56,12 @@ const List = () => {
         <div className="border-t border-purple-100 my-5"></div>
 
         {/* الإشعارات والرسائل */}
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Navigation" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>إشعارات</span>
           <FiBell className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Massage" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>رسائل</span>
           <FiMessageSquare className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
@@ -70,12 +70,12 @@ const List = () => {
         <div className="border-t border-purple-100 my-5"></div>
 
         {/* إعدادات الحساب */}
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./AccountSettings" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>إعدادات الحساب</span>
           <FiSettings className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Payment" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>طرق الدفع</span>
           <FiCreditCard className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
@@ -86,7 +86,7 @@ const List = () => {
         </Link>
 
         <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>رصيد بوديمي</span>
+          <span>رصيد </span>
           <FiDollarSign className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
@@ -108,12 +108,12 @@ const List = () => {
         </div>
 
         {/* الملف الشخصي */}
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./ProfileSettings " className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>الملف الشخصي العام</span>
           <FiUser className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./ProfileSettings " className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>تعديل الملف الشخصي</span>
           <FiEdit className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
@@ -122,7 +122,7 @@ const List = () => {
         <div className="border-t border-purple-100 my-5"></div>
 
         {/* المساعدة وتسجيل الخروج */}
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Help" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>المساعدة والدعم</span>
           <FiHelpCircle className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
