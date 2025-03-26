@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-const AddCourse = ({ tracks: initialTracks = [] }) => {
-  // البيانات الافتراضية
+const AddCourseComponent = ({ tracks = [] }) => {
+  // بيانات افتراضية للمسارات والدورات
   const DEFAULT_TRACKS = [
     { id: 1, trackName: 'تطوير الويب' },
     { id: 2, trackName: 'علوم البيانات' },
@@ -25,9 +25,9 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
     }
   ];
 
-  // States
+  // تعريف الحالات (state)
   const [courses, setCourses] = useState(DEFAULT_COURSES);
-  const [tracks] = useState(initialTracks.length > 0 ? initialTracks : DEFAULT_TRACKS);
+  const [tracksState] = useState(tracks.length > 0 ? tracks : DEFAULT_TRACKS);
   const [formData, setFormData] = useState({
     courseName: '',
     track: '',
@@ -66,7 +66,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
     };
 
     if (editId) {
-      setCourses(courses.map(c => c.id === editId ? newCourse : c));
+      setCourses(courses.map(c => (c.id === editId ? newCourse : c)));
     } else {
       setCourses([...courses, newCourse]);
     }
@@ -95,7 +95,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
     }
   };
 
-  // تحرير دورة
+  // تعديل دورة
   const handleEdit = (course) => {
     setFormData({
       courseName: course.courseName,
@@ -108,7 +108,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
     setEditId(course.id);
   };
 
-  // تحريك الجدول
+  // متغيرات التحريك باستخدام framer-motion
   const tableVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -163,7 +163,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
                 required
               >
                 <option value="">اختر المسار</option>
-                {tracks.map(track => (
+                {tracksState.map(track => (
                   <option key={track.id} value={track.trackName}>
                     {track.trackName}
                   </option>
@@ -272,7 +272,6 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
             >
               إعادة تعيين
             </motion.button>
-
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -319,7 +318,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {courses.length > 0 ? (
-                courses.map((course) => (
+                courses.map(course => (
                   <motion.tr
                     key={course.id}
                     variants={rowVariants}
@@ -363,7 +362,6 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         </motion.button>
-
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -375,12 +373,7 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </motion.button>
-
-                        <Link 
-                          href={"./AddTest"}
-                          passHref
-                          legacyBehavior
-                        >
+                        <Link href="./AddTest" passHref legacyBehavior>
                           <motion.div
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -411,4 +404,4 @@ const AddCourse = ({ tracks: initialTracks = [] }) => {
   );
 };
 
-export default AddCourse;
+export default AddCourseComponent;
