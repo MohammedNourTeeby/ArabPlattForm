@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-const AddCourseComponent = ({ tracks = [] }) => {
+const AddCourseComponent = () => {
   // بيانات افتراضية للمسارات والدورات
   const DEFAULT_TRACKS = [
     { id: 1, trackName: 'تطوير الويب' },
@@ -27,7 +27,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
 
   // تعريف الحالات (state)
   const [courses, setCourses] = useState(DEFAULT_COURSES);
-  const [tracksState] = useState(tracks.length > 0 ? tracks : DEFAULT_TRACKS);
+  const [tracksState] = useState(DEFAULT_TRACKS);
   const [formData, setFormData] = useState({
     courseName: '',
     track: '',
@@ -42,7 +42,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
   // معالجة تغيير الحقول
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
@@ -66,7 +66,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
     };
 
     if (editId) {
-      setCourses(courses.map(c => (c.id === editId ? newCourse : c)));
+      setCourses(courses.map((c) => (c.id === editId ? newCourse : c)));
     } else {
       setCourses([...courses, newCourse]);
     }
@@ -91,7 +91,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
   // حذف دورة
   const handleDelete = (id) => {
     if (confirm('هل أنت متأكد من حذف هذه الدورة؟')) {
-      setCourses(courses.filter(course => course.id !== id));
+      setCourses(courses.filter((course) => course.id !== id));
     }
   };
 
@@ -122,7 +122,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
       {/* نموذج الإضافة/التعديل */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8 border border-gray-100"
@@ -163,14 +163,14 @@ const AddCourseComponent = ({ tracks = [] }) => {
                 required
               >
                 <option value="">اختر المسار</option>
-                {tracksState.map(track => (
+                {tracksState.map((track) => (
                   <option key={track.id} value={track.trackName}>
                     {track.trackName}
                   </option>
                 ))}
               </select>
             </div>
-            
+
             <Link href="./AddEduGat" passHref legacyBehavior>
               <motion.button
                 type="button"
@@ -180,7 +180,11 @@ const AddCourseComponent = ({ tracks = [] }) => {
                 title="إضافة مسار جديد"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="hidden sm:inline">مسار جديد</span>
               </motion.button>
@@ -196,7 +200,9 @@ const AddCourseComponent = ({ tracks = [] }) => {
                   type="radio"
                   name="isFree"
                   checked={formData.isFree}
-                  onChange={() => setFormData(prev => ({ ...prev, isFree: true, price: '' }))}
+                  onChange={() =>
+                    setFormData((prev) => ({ ...prev, isFree: true, price: '' }))
+                  }
                   className="text-emerald-500 focus:ring-emerald-500"
                 />
                 <span>مجانية</span>
@@ -206,7 +212,9 @@ const AddCourseComponent = ({ tracks = [] }) => {
                   type="radio"
                   name="isFree"
                   checked={!formData.isFree}
-                  onChange={() => setFormData(prev => ({ ...prev, isFree: false }))}
+                  onChange={() =>
+                    setFormData((prev) => ({ ...prev, isFree: false }))
+                  }
                   className="text-emerald-500 focus:ring-emerald-500"
                 />
                 <span>مدفوعة</span>
@@ -281,14 +289,24 @@ const AddCourseComponent = ({ tracks = [] }) => {
               {editId ? (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                   تحديث الدورة
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
                   </svg>
                   إضافة الدورة
                 </>
@@ -318,7 +336,7 @@ const AddCourseComponent = ({ tracks = [] }) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {courses.length > 0 ? (
-                courses.map(course => (
+                courses.map((course) => (
                   <motion.tr
                     key={course.id}
                     variants={rowVariants}
@@ -359,7 +377,12 @@ const AddCourseComponent = ({ tracks = [] }) => {
                           title="تعديل"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
                           </svg>
                         </motion.button>
                         <motion.button
@@ -370,7 +393,12 @@ const AddCourseComponent = ({ tracks = [] }) => {
                           title="حذف"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </motion.button>
                         <Link href="./AddTest" passHref legacyBehavior>
@@ -381,7 +409,12 @@ const AddCourseComponent = ({ tracks = [] }) => {
                             title="إضافة اختبار"
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                              />
                             </svg>
                           </motion.div>
                         </Link>
