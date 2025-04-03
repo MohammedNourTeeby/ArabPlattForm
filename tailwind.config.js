@@ -1,6 +1,9 @@
 module.exports = {
   theme: {
     extend: {
+      screens: {
+        md: "768px",
+      },
       fontFamily: {
         sans: ["var(--font-cairo)"],
       },

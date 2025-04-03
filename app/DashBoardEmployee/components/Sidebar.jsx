@@ -3,10 +3,10 @@ import React from 'react';
 
 const sectionLabels = {
   dashboard: 'لوحة التحكم',
-  users: 'إدارة المستخدمين',
-  content: 'المحتوى والدورات',
-  support: 'الدعم والتذاكر',
-  finance: 'العمليات المالية',
+  finance: ' الدعم الفني',
+  content: ' العمليات المالية',
+  support: 'المهام التشغيلية',
+  user: ' نظام التواصل الداخلي',
 
 };
 
