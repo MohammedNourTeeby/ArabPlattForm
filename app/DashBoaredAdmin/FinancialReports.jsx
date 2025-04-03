@@ -1,13 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
 import { utils, writeFile } from "xlsx";
 import {
   FiFilter,
@@ -54,69 +46,6 @@ const INITIAL_DATA = [
   },
 ];
 
-// مكون PDF Document
-const PdfDocument = ({ data }) => {
-  // التحقق من صحة البيانات
-  if (!data || data.length === 0) {
-    return (
-      <Document>
-        <Page style={styles.page}>
-          <Text style={styles.header}>لا توجد بيانات متاحة</Text>
-        </Page>
-      </Document>
-    );
-  }
-
-  return (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.header}>التقرير المالي</Text>
-          <View style={styles.tableHeader}>
-            <Text style={styles.headerCell}>التاريخ</Text>
-            <Text style={styles.headerCell}>النوع</Text>
-            <Text style={styles.headerCell}>المبلغ</Text>
-            <Text style={styles.headerCell}>الفئة</Text>
-            <Text style={styles.headerCell}>الحالة</Text>
-          </View>
-          {data.map((item, index) => (
-            <View key={index} style={styles.row}>
-              <Text style={styles.cell}>{item.date || "غير محدد"}</Text>
-              <Text style={styles.cell}>{item.type || "غير محدد"}</Text>
-              <Text style={styles.cell}>
-                {(item.amount || 0).toLocaleString()} {item.currency || "ر.س"}
-              </Text>
-              <Text style={styles.cell}>{item.category || "غير محدد"}</Text>
-              <Text style={styles.cell}>{item.status || "غير محدد"}</Text>
-            </View>
-          ))}
-        </View>
-      </Page>
-    </Document>
-  );
-};
-
-const styles = StyleSheet.create({
-  page: { padding: 30, fontFamily: "Helvetica" },
-  section: { margin: 10 },
-  header: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: "center",
-    fontFamily: "Helvetica-Bold",
-  },
-  tableHeader: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    paddingBottom: 5,
-    marginBottom: 5,
-  },
-  headerCell: { width: "20%", fontSize: 12, fontWeight: "bold" },
-  row: { flexDirection: "row", marginBottom: 5 },
-  cell: { width: "20%", fontSize: 10 },
-});
-
 // مكون مودال مخصص
 const CustomModal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -151,7 +80,6 @@ const FinancialReports = () => {
     startDate: "",
     endDate: "",
   });
-  const [isExportOpen, setIsExportOpen] = useState(false);
 
   // الحقول المتاحة
   const categories = [...new Set(INITIAL_DATA.map((t) => t.category))];
@@ -187,7 +115,6 @@ const FinancialReports = () => {
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, "العمليات المالية");
     writeFile(wb, "العمليات_المالية.xlsx");
-    setIsExportOpen(false);
     toast.success("تم التصدير إلى Excel بنجاح");
   };
 
@@ -257,37 +184,12 @@ const FinancialReports = () => {
             <FiPlus /> إضافة عملية
           </button>
 
-          <div className="relative flex-1 md:flex-none">
-            <button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 w-full justify-center"
-            >
-              <FiDownload /> تصدير
-            </button>
-
-            {isExportOpen && (
-              <div className="absolute mt-2 w-full bg-white shadow-lg rounded-lg p-2 z-10 border border-gray-200">
-                <PDFDownloadLink
-                  document={<PdfDocument data={filteredData} />}
-                  fileName="العمليات_المالية.pdf"
-                >
-                  {({ loading }) => (
-                    <button
-                      className="w-full text-right px-4 py-2 hover:bg-gray-100 rounded"
-                      disabled={loading}
-                    >
-                      {loading ? "جاري التحميل..." : "تصدير PDF"}
-                    </button>
-                  )}
-                </PDFDownloadLink>
-                <button
-                  onClick={handleExportExcel}
-                  className="w-full text-right px-4 py-2 hover:bg-gray-100 rounded"
-                >
-                  تصدير Excel
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={handleExportExcel}
+            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 w-full md:w-auto justify-center"
+          >
+            <FiDownload /> تصدير Excel
+          </button>
         </div>
       </div>
 
