@@ -19,6 +19,8 @@ const DASHBOARDS = [
   { id: "admin", label: "لوحة الإدارة", url: "/DashBoaredAdmin" },
   { id: "student", label: "لوحة الطالب", url: "/DashBoardStudent" },
   { id: "employee", label: "لوحة الموظف", url: "/DashBoardEmployee" },
+  { id: "wakiil", label: "لوحة الوكيل", url: "/DashBoardWakil" },
+  { id: "assist", label: "لوحة المساعد", url: "/DashBoardAssist" },
 ];
 
 // تعريف القوائم الفرعية
