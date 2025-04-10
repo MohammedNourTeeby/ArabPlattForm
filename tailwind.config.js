@@ -9,7 +9,10 @@ module.exports = {
   theme: {
     extend: {
       screens: { md: "768px" },
-      fontFamily: { sans: ["var(--font-cairo)"] },
+      fontFamily: {
+        sans: ["var(--font-cairo)", "Arial", "sans-serif"],
+        cairo: ["var(--font-cairo)", "Arial", "sans-serif"],
+      },
       colors: {
         "wave-primary": "#3B82F6",
         "wave-progress": "#2563EB",

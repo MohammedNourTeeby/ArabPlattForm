@@ -1,70 +1,90 @@
 'use client';
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 import PaymentStatusBadge from './PaymentStatusBadge';
 
-// بيانات وهمية للتعاملات (تظهر في سجل الدفع)
 const dummyTransactions = [
   { id: 1, amount: 100, method: 'بطاقة ائتمان', status: 'completed', date: '2023-04-10' },
   { id: 2, amount: 50, method: 'Apple Pay', status: 'pending', date: '2023-04-11' },
 ];
 
 const PaymentHistoryTable = () => {
-  // استخدام بيانات وهمية بدلاً من قراءة من الذاكرة الخارجية
   const data = useMemo(() => dummyTransactions, []);
+  
+  const columnHelper = createColumnHelper();
 
   const columns = useMemo(
     () => [
-      { Header: 'المبلغ', accessor: 'amount' },
-      { Header: 'الطريقة', accessor: 'method' },
-      {
-        Header: 'الحالة',
-        accessor: 'status',
-        Cell: ({ value }) => <PaymentStatusBadge status={value} />,
-      },
-      { Header: 'التاريخ', accessor: 'date' },
+      columnHelper.accessor('amount', {
+        header: 'المبلغ',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('method', {
+        header: 'الطريقة',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.display({
+        id: 'status',
+        header: 'الحالة',
+        cell: ({ row }) => (
+          <PaymentStatusBadge status={row.original.status} />
+        ),
+      }),
+      columnHelper.accessor('date', {
+        header: 'التاريخ',
+        cell: info => info.getValue(),
+      }),
     ],
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data });
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table {...getTableProps()} className="w-full">
+      <table className="w-full">
         <thead className="bg-gray-50">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
                 <th
-                  {...column.getHeaderProps()}
+                  key={header.id}
                   className="px-6 py-3 text-right font-medium text-gray-500"
                 >
-                  {column.render('Header')}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} className="px-6 py-4 text-gray-700">
-                    {cell.render('Cell')}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
+        <tbody className="divide-y divide-gray-200">
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td
+                  key={cell.id}
+                  className="px-6 py-4 text-gray-700"
+                >
+                  {flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

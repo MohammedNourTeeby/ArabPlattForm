@@ -233,7 +233,6 @@ const AdminDashboard = () => {
                 {activeSection === 'addgroup' && <TeamManagementPanel />}
                 {activeSection === 'tracker' && <CourseManagementy  />}
                 {activeSection === 'tracker' && <ReviewStats  />}
-                {activeSection === 'tracker' && <EngagementStats   />}
                 {activeSection === 'payouts' && <PayoutsPage   />}
                 {activeSection === 'ads' && <AdminAdsPage   />}
                 {activeSection === 'offers' && <OffersPage   />}

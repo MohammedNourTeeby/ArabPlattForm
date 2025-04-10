@@ -1,72 +1,106 @@
 'use client';
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import OfferBadge from '../Offers/OfferBadge';
 
-const CouponUsageReport = ({ coupons }) => {
-  // تجهيز البيانات مع حقول وهمية مثل عدد الاستخدامات والمتبقي
-  const data = useMemo(() => {
-    return coupons.map(c => ({
-      ...c,
-      uses: c.uses || 0, // قيمة افتراضية لعدد الاستخدامات
-      remaining: c.maxUses - (c.uses || 0),
-      validUntil: new Date(c.validUntil).toLocaleString()
-    }));
-  }, [coupons]);
-
-  const columns = useMemo(() => [
-    { Header: 'الكود', accessor: 'code' },
-    { Header: 'الخصم', accessor: 'discount' },
-    { Header: 'المستخدم', accessor: 'uses' },
-    { Header: 'المتبقي', accessor: 'remaining' },
-    { Header: 'الصلاحية', accessor: 'validUntil' }
+const ActiveOffersList = () => {
+  // بيانات وهمية ثابتة
+  const data = useMemo(() => [
+    {
+      code: 'OFFER123',
+      value: '20%',
+      startDate: '2025-04-01',
+      endDate: '2025-04-15',
+    },
+    {
+      code: 'SPRING50',
+      value: '50%',
+      startDate: '2025-04-05',
+      endDate: '2025-04-20',
+    },
   ], []);
 
-  const tableInstance = useTable({ columns, data });
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+  const columnHelper = createColumnHelper();
+
+  // تعريف الأعمدة
+  const columns = useMemo(() => [
+    columnHelper.accessor('code', {
+      header: 'الكود',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('value', {
+      header: 'القيمة',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.display({
+      id: 'status',
+      header: 'الحالة',
+      cell: ({ row }) => (
+        <OfferBadge 
+          start={row.original.startDate} 
+          end={row.original.endDate} 
+        />
+      )
+    }),
+    columnHelper.display({
+      id: 'period',
+      header: 'الفترة',
+      cell: ({ row }) => {
+        const start = new Date(row.original.startDate).toLocaleDateString();
+        const end = new Date(row.original.endDate).toLocaleDateString();
+        return `${start} - ${end}`;
+      }
+    })
+  ], []);
+
+  // إنشاء الجدول
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg overflow-x-auto mt-6">
-      <h2 className="text-xl font-bold mb-4">تقرير استخدام القسائم</h2>
+    <div className="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+      <h2 className="text-xl font-bold mb-4">العروض النشطة</h2>
       
-      <table {...getTableProps()} className="w-full">
-        <thead>
-          {headerGroups.map(headerGroup => {
-            const { key, ...rest } = headerGroup.getHeaderGroupProps();
-            return (
-              <tr key={key} {...rest}>
-                {headerGroup.headers.map(column => {
-                  const { key: colKey, ...restColProps } = column.getHeaderProps();
-                  return (
-                    <th key={colKey} {...restColProps} className="p-3 bg-gray-50 text-right">
-                      {column.render('Header')}
-                    </th>
-                  );
-                })}
-              </tr>
-            );
-          })}
+      <table className="w-full">
+        <thead className="bg-gray-50">
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id} className="p-3 text-right">
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            const { key: rowKey, ...restRowProps } = row.getRowProps();
-            return (
-              <tr key={rowKey} {...restRowProps} className="hover:bg-gray-50">
-                {row.cells.map(cell => {
-                  const { key: cellKey, ...restCellProps } = cell.getCellProps();
-                  return (
-                    <td key={cellKey} {...restCellProps} className="p-3 border-t">
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id} className="hover:bg-gray-50">
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className="p-3 border-t">
+                  {flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
 };
 
-export default CouponUsageReport;
+export default ActiveOffersList;
