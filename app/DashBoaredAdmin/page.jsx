@@ -18,7 +18,16 @@ import coursesData from '../../data/coursesData.json';
 import supportData from '../../data/supportTickets.json';
 import SupportTickets from './SupportTickets';
 import FinancialReports from './FinancialReports';
-
+import InviteLinkGenerator from './InviteLinkGenerator';
+import TeamManagementPanel from './TeamManagementPanel';
+import CourseManagementy from './components/CourseManagementy';
+import ReviewStats from './components/ReviewStats';
+import AdminAdsPage from './components/ads/page';
+import OffersPage from './components/Offers/page';
+import CouponDashboard from './components/coupons/page';
+import RefundsPage from './components/Refunds/page';
+import RefundDashboard from './components/promotion/page';
+import PayoutsPage from './components/Payouts/page';
 
 
 const AdminDashboard = () => {
@@ -109,6 +118,17 @@ const AdminDashboard = () => {
             content: 'المحتوى',
             support: 'الدعم',
             finance: 'المالية',
+            addstudent: 'إضافة متدرب جديد ',
+            addgroup: 'إضافة فريق إداري  ',
+            tracker: '   تفاعل المستخدمين ',
+            payouts: 'تسوية العمولات الآلية',
+            ads: 'إدارة الاعلانات',
+            offers: ' إدارة العروض و الخصومات',
+            copon: 'إدارة الخصومات ',
+            refunds: 'إدارة الرسوم المالية ',
+            promotion: 'ظهور المدرب في الصفحة الأولى ',
+
+
           }}
         />
 
@@ -209,6 +229,18 @@ const AdminDashboard = () => {
               </div>
             </div>
           )}
+                {activeSection === 'addstudent' && <InviteLinkGenerator />}
+                {activeSection === 'addgroup' && <TeamManagementPanel />}
+                {activeSection === 'tracker' && <CourseManagementy  />}
+                {activeSection === 'tracker' && <ReviewStats  />}
+                {activeSection === 'tracker' && <EngagementStats   />}
+                {activeSection === 'payouts' && <PayoutsPage   />}
+                {activeSection === 'ads' && <AdminAdsPage   />}
+                {activeSection === 'offers' && <OffersPage   />}
+                {activeSection === 'copon' && <CouponDashboard   />}
+                {activeSection === 'refunds' && <RefundsPage   />}
+                {activeSection === 'promotion' && <RefundDashboard   />}
+
         </main>
       </div>
     </div>

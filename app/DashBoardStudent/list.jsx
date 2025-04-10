@@ -80,7 +80,7 @@ const List = () => {
           <FiCreditCard className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>
 
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
+        <Link href="./Subscription" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
           <span>الاشتراكات</span>
           <FiClock className="text-purple-600 group-hover:scale-110 transition-transform" />
         </Link>

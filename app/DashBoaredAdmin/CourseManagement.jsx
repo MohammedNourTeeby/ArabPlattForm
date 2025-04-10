@@ -1,25 +1,27 @@
-"use client "
-import React, { useState } from 'react';
-import CourseFormModal from './CourseFormModal';
+"use client ";
+import React, { useState } from "react";
+import CourseFormModal from "./CourseFormModal";
+import { useRouter } from "next/navigation";
 
 const courseStatuses = [
-  { value: 'all', label: 'جميع الحالات' },
-  { value: 'منشور', label: 'منشور' },
-  { value: 'معلق', label: 'معلق' },
-  { value: 'مسودة', label: 'مسودة' }
+  { value: "all", label: "جميع الحالات" },
+  { value: "منشور", label: "منشور" },
+  { value: "معلق", label: "معلق" },
+  { value: "مسودة", label: "مسودة" },
 ];
 
 const CourseManagement = ({ courses, onUpdate, onDelete }) => {
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const router = useRouter();
 
-  const filteredCourses = courses.filter(course => 
-    selectedStatus === 'all' ? true : course.status === selectedStatus
+  const filteredCourses = courses.filter((course) =>
+    selectedStatus === "all" ? true : course.status === selectedStatus
   );
 
   const handleStatusChange = (courseId, newStatus) => {
-    const updated = courses.map(course => 
+    const updated = courses.map((course) =>
       course.id === courseId ? { ...course, status: newStatus } : course
     );
     onUpdate(updated);
@@ -35,7 +37,7 @@ const CourseManagement = ({ courses, onUpdate, onDelete }) => {
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
           >
-            {courseStatuses.map(status => (
+            {courseStatuses.map((status) => (
               <option key={status.value} value={status.value}>
                 {status.label}
               </option>
@@ -65,7 +67,7 @@ const CourseManagement = ({ courses, onUpdate, onDelete }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredCourses.map(course => (
+            {filteredCourses.map((course) => (
               <tr key={course.id}>
                 <td className="px-6 py-4">{course.title}</td>
                 <td className="px-6 py-4">
@@ -74,11 +76,15 @@ const CourseManagement = ({ courses, onUpdate, onDelete }) => {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-sm ${
-                    course.status === 'منشور' ? 'bg-green-100 text-green-800' :
-                    course.status === 'معلق' ? 'bg-red-100 text-red-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-sm ${
+                      course.status === "منشور"
+                        ? "bg-green-100 text-green-800"
+                        : course.status === "معلق"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
                     {course.status}
                   </span>
                 </td>
@@ -95,21 +101,28 @@ const CourseManagement = ({ courses, onUpdate, onDelete }) => {
                   </button>
                   <button
                     className="text-yellow-600 hover:text-yellow-800"
-                    onClick={() => handleStatusChange(course.id, 'معلق')}
+                    onClick={() => handleStatusChange(course.id, "معلق")}
                   >
                     تعليق
                   </button>
                   <button
                     className="text-red-600 hover:text-red-800"
                     onClick={() => {
-                      if(window.confirm('هل أنت متأكد من حذف هذه الدورة؟')) {
+                      if (window.confirm("هل أنت متأكد من حذف هذه الدورة؟")) {
                         onDelete(course.id);
                       }
                     }}
                   >
                     حذف
                   </button>
+                  <button
+                  className="text-purple-600 hover:text-purple-800"
+                  onClick={() => router.push(`./DashBoaredAdmin/licenses/${course.id}`)}
+                >
+                  التراخيص
+                </button>
                 </td>
+                
               </tr>
             ))}
           </tbody>
@@ -125,7 +138,9 @@ const CourseManagement = ({ courses, onUpdate, onDelete }) => {
         course={selectedCourse}
         onSubmit={(courseData) => {
           if (courseData.id) {
-            const updated = courses.map(c => c.id === courseData.id ? courseData : c);
+            const updated = courses.map((c) =>
+              c.id === courseData.id ? courseData : c
+            );
             onUpdate(updated);
           } else {
             onUpdate([...courses, { ...courseData, id: Date.now() }]);

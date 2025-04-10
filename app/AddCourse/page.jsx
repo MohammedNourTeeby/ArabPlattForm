@@ -1,60 +1,160 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { FiUserPlus, FiPaperclip, FiX } from "react-icons/fi";
 
 const AddCourseComponent = () => {
   // بيانات افتراضية للمسارات والدورات
   const DEFAULT_TRACKS = [
-    { id: 1, trackName: 'تطوير الويب' },
-    { id: 2, trackName: 'علوم البيانات' },
-    { id: 3, trackName: 'التسويق الرقمي' }
+    { id: 1, trackName: "تطوير الويب" },
+    { id: 2, trackName: "علوم البيانات" },
+    { id: 3, trackName: "التسويق الرقمي" },
   ];
 
   const DEFAULT_COURSES = [
     {
       id: 1,
-      courseName: 'أساسيات البرمجة',
-      track: 'تطوير الويب',
+      courseName: "أساسيات البرمجة",
+      track: "تطوير الويب",
       price: 0,
-      description: 'مدخل إلى عالم البرمجة للمبتدئين',
-      accessInstructions: 'لا يوجد متطلبات مسبقة',
+      description: "مدخل إلى عالم البرمجة للمبتدئين",
+      accessInstructions: "لا يوجد متطلبات مسبقة",
       isFree: true,
-      createdAt: new Date().toLocaleDateString('ar-EG')
-    }
+      createdAt: new Date().toLocaleDateString("ar-EG"),
+      attachments: [],
+    },
   ];
 
   // تعريف الحالات (state)
   const [courses, setCourses] = useState(DEFAULT_COURSES);
   const [tracksState] = useState(DEFAULT_TRACKS);
   const [formData, setFormData] = useState({
-    courseName: '',
-    track: '',
-    price: '',
-    description: '',
-    accessInstructions: '',
-    isFree: true
+    courseName: "",
+    track: "",
+    price: "",
+    description: "",
+    accessInstructions: "",
+    isFree: true,
+    attachments: [],
   });
   const [editId, setEditId] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // معالجة تغيير الحقول
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
+
+  // معالجة رفع الملفات
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    const newAttachments = await Promise.all(
+      files.map(async (file) => {
+        const base64 = await convertToBase64(file);
+        return {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: base64,
+        };
+      })
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      attachments: [...prev.attachments, ...newAttachments],
+    }));
+  };
+
+  // تحويل الملف إلى base64
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // حذف مرفق
+  const removeAttachment = (index) => {
+    const updatedAttachments = formData.attachments.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, attachments: updatedAttachments }));
+  };
+
+  // عرض قسم المرفقات في النموذج
+  const renderAttachmentsSection = () => (
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        الملفات المرفقة{" "}
+        <span className="text-xs text-gray-500 ml-2">
+          (الحد الأقصى 5 ملفات، حجم الملف لا يتجاوز 5MB)
+        </span>
+      </label>
+      
+      <div className="flex items-center gap-4">
+        <label className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors">
+          <FiPaperclip className="text-gray-500" />
+          <span className="text-sm">اختر ملفات</span>
+          <input
+            type="file"
+            multiple
+            onChange={handleFileUpload}
+            className="hidden"
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.png"
+            disabled={formData.attachments.length >= 5}
+          />
+        </label>
+        
+        <div className="flex flex-wrap gap-2">
+          {formData.attachments.map((file, index) => (
+            <div key={index} className="flex items-center bg-gray-50 rounded-lg px-3 py-2">
+              <span className="text-sm mr-2">{file.name}</span>
+              <button
+                type="button"
+                onClick={() => removeAttachment(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <FiX className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // عرض المرفقات في صف الدورة بالجدول
+  const renderAttachmentsInTable = (attachments) => (
+    <div className="flex flex-wrap gap-2 mt-2">
+      {attachments.map((file, index) => (
+        <a
+          key={index}
+          href={file.data}
+          download={file.name}
+          className="flex items-center text-sm text-blue-600 hover:text-blue-800"
+          title="تنزيل الملف"
+        >
+          <FiPaperclip className="mr-1" />
+          {file.name}
+        </a>
+      ))}
+    </div>
+  );
 
   // إرسال النموذج
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.courseName || !formData.track || !formData.description) {
-      setError('الرجاء ملء جميع الحقول المطلوبة');
+      setError("الرجاء ملء جميع الحقول المطلوبة");
       return;
     }
 
@@ -62,7 +162,7 @@ const AddCourseComponent = () => {
       id: editId || Date.now(),
       ...formData,
       price: formData.isFree ? 0 : Number(formData.price),
-      createdAt: new Date().toLocaleDateString('ar-EG')
+      createdAt: new Date().toLocaleDateString("ar-EG"),
     };
 
     if (editId) {
@@ -77,20 +177,21 @@ const AddCourseComponent = () => {
   // إعادة تعيين النموذج
   const resetForm = () => {
     setFormData({
-      courseName: '',
-      track: '',
-      price: '',
-      description: '',
-      accessInstructions: '',
-      isFree: true
+      courseName: "",
+      track: "",
+      price: "",
+      description: "",
+      accessInstructions: "",
+      isFree: true,
+      attachments: [],
     });
     setEditId(null);
-    setError('');
+    setError("");
   };
 
   // حذف دورة
   const handleDelete = (id) => {
-    if (confirm('هل أنت متأكد من حذف هذه الدورة؟')) {
+    if (confirm("هل أنت متأكد من حذف هذه الدورة؟")) {
       setCourses(courses.filter((course) => course.id !== id));
     }
   };
@@ -103,7 +204,8 @@ const AddCourseComponent = () => {
       price: course.price,
       description: course.description,
       accessInstructions: course.accessInstructions,
-      isFree: course.isFree
+      isFree: course.isFree,
+      attachments: course.attachments || [],
     });
     setEditId(course.id);
   };
@@ -111,12 +213,12 @@ const AddCourseComponent = () => {
   // متغيرات التحريك باستخدام framer-motion
   const tableVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const rowVariants = {
     hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -128,7 +230,7 @@ const AddCourseComponent = () => {
         className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8 border border-gray-100"
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          {editId ? 'تعديل الدورة' : 'إضافة دورة جديدة'}
+          {editId ? "تعديل الدورة" : "إضافة دورة جديدة"}
         </h2>
 
         {error && (
@@ -137,10 +239,15 @@ const AddCourseComponent = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
+        >
           {/* حقل اسم الدورة */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">اسم الدورة *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              اسم الدورة *
+            </label>
             <input
               type="text"
               name="courseName"
@@ -154,7 +261,9 @@ const AddCourseComponent = () => {
           {/* حقل المسار */}
           <div className="flex items-end gap-2">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">المسار التعليمي *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                المسار التعليمي *
+              </label>
               <select
                 name="track"
                 value={formData.track}
@@ -179,7 +288,12 @@ const AddCourseComponent = () => {
                 className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1"
                 title="إضافة مسار جديد"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
                   <path
                     fillRule="evenodd"
                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -193,7 +307,9 @@ const AddCourseComponent = () => {
 
           {/* حقل نوع الدورة والسعر */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">نوع الدورة *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              نوع الدورة *
+            </label>
             <div className="flex items-center gap-4 mt-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -201,7 +317,11 @@ const AddCourseComponent = () => {
                   name="isFree"
                   checked={formData.isFree}
                   onChange={() =>
-                    setFormData((prev) => ({ ...prev, isFree: true, price: '' }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      isFree: true,
+                      price: "",
+                    }))
                   }
                   className="text-emerald-500 focus:ring-emerald-500"
                 />
@@ -225,7 +345,9 @@ const AddCourseComponent = () => {
               <div className="mt-3 relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   السعر ($) *
-                  <span className="text-xs text-gray-500 ml-2">(المبلغ بالدولار الأمريكي)</span>
+                  <span className="text-xs text-gray-500 ml-2">
+                    (المبلغ بالدولار الأمريكي)
+                  </span>
                 </label>
                 <div className="relative">
                   <input
@@ -238,7 +360,9 @@ const AddCourseComponent = () => {
                     required={!formData.isFree}
                     step="0.01"
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    $
+                  </span>
                 </div>
               </div>
             )}
@@ -246,7 +370,9 @@ const AddCourseComponent = () => {
 
           {/* حقل الوصف */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">الوصف *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              الوصف *
+            </label>
             <textarea
               name="description"
               value={formData.description}
@@ -259,7 +385,9 @@ const AddCourseComponent = () => {
 
           {/* حقل متطلبات الدخول */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">متطلبات الدخول</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              متطلبات الدخول
+            </label>
             <textarea
               name="accessInstructions"
               value={formData.accessInstructions}
@@ -268,6 +396,9 @@ const AddCourseComponent = () => {
               rows="3"
             />
           </div>
+
+          {/* قسم المرفقات */}
+          {renderAttachmentsSection()}
 
           {/* أزرار التحكم */}
           <div className="md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-6">
@@ -288,7 +419,12 @@ const AddCourseComponent = () => {
             >
               {editId ? (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -300,7 +436,12 @@ const AddCourseComponent = () => {
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -327,11 +468,21 @@ const AddCourseComponent = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الدورة</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المسار</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">السعر</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ الإضافة</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  اسم الدورة
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  المسار
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  السعر
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  تاريخ الإضافة
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الإجراءات
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -345,13 +496,25 @@ const AddCourseComponent = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{course.courseName}</div>
-                          <div className="text-sm text-gray-500 line-clamp-2">{course.description}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {course.courseName}
+                          </div>
+                          <div className="text-sm text-gray-500 line-clamp-2">
+                            {course.description}
+                          </div>
+                          {course.attachments &&
+                            course.attachments.length > 0 && (
+                              <div>
+                                {renderAttachmentsInTable(course.attachments)}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{course.track}</div>
+                      <div className="text-sm text-gray-900">
+                        {course.track}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {course.isFree ? (
@@ -360,7 +523,7 @@ const AddCourseComponent = () => {
                         </span>
                       ) : (
                         <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                          ${course.price.toFixed(2)}
+                          ${Number(course.price).toFixed(2)}
                         </span>
                       )}
                     </td>
@@ -376,7 +539,12 @@ const AddCourseComponent = () => {
                           className="text-emerald-600 hover:text-emerald-800 p-2 rounded-lg bg-emerald-50 hover:bg-emerald-100"
                           title="تعديل"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -392,7 +560,12 @@ const AddCourseComponent = () => {
                           className="text-red-600 hover:text-red-800 p-2 rounded-lg bg-red-50 hover:bg-red-100"
                           title="حذف"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -408,7 +581,12 @@ const AddCourseComponent = () => {
                             className="text-blue-600 hover:text-blue-800 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer"
                             title="إضافة اختبار"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -416,6 +594,20 @@ const AddCourseComponent = () => {
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
                               />
                             </svg>
+                          </motion.div>
+                        </Link>
+                        <Link
+                          href={`/DashBoardTraier/my-courses/${course.id}/addAssist`}
+                          passHref
+                          legacyBehavior
+                        >
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="text-indigo-600 hover:text-indigo-800 p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer"
+                            title="إضافة مساعد"
+                          >
+                            <FiUserPlus className="w-5 h-5" />
                           </motion.div>
                         </Link>
                       </div>

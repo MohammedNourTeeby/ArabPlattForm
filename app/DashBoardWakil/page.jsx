@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'; // <-- تصحيح اسم المكو�
 import CampaignList from './components/CampaignList';
 import SalesReports from './components/SalesReports';
 import LeadsManager from './components/LeadsManager';
+import AffiliateDashboard from './components/Affiliate/AffiliateDashboard';
 
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -19,7 +20,8 @@ function Page() {
           dashboard: 'إحصاءات سريعة',
           campaigns: 'الحملات التسويقية',
           reports: 'التقارير المالية',
-          leads: 'إدارة العملاء',
+
+          affiliate: '    التسويق بالعمولة ',
         }}
       />
       <main className="flex-1 mr-64 p-8"> {/* تصحيح الهوامش */}
@@ -28,6 +30,8 @@ function Page() {
       {activeSection === 'campaigns' && <CampaignList />}
       {activeSection === 'reports' && <SalesReports />}
       {activeSection === 'leads' && <LeadsManager />}
+      {activeSection === 'affiliate' && <AffiliateDashboard   />}
+
 
         </div>
       </main>

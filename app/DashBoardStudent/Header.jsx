@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiHeart , FiBell, FiShoppingCart, FiSearch, FiUser, FiMessageCircle } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiHeart ,FiMic,FiVideo, FiBell, FiShoppingCart, FiSearch, FiUser, FiMessageCircle } from 'react-icons/fi';
 import List from '../DashBoardStudent/list';
 import courseData from '../../data.json';
 import Link from 'next/link';
@@ -258,6 +258,16 @@ const Header = () => {
               >
                 <FiBell size={26} />
                 <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full ring-2 ring-purple-900"></span>
+              </motion.button>
+            </Link>
+            <Link href="/AddCommints">
+              <motion.button 
+                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+<FiMic size={26} />
+<FiVideo size={26} />                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full ring-2 ring-purple-900"></span>
               </motion.button>
             </Link>
           </div>

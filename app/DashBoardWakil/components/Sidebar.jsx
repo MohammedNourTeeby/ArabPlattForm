@@ -6,6 +6,8 @@ const sectionLabels = {
   campaigns: 'الحملات التسويقية',
   reports: 'التقارير المالية',
   leads: 'إدارة العملاء',
+  affiliate: '    التسويق بالعمولة ',
+
 };
 
 const Sidebar = ({ activeSection, setActiveSection }) => ( // <-- تصحيح اسم المكون

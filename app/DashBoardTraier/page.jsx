@@ -7,7 +7,7 @@ function page() {
   return (
     <div   className="flex"> <Sidebar /> <div className="flex-1">  <Header/> 
     <HomePage/>
-      DSHTrainer</div>
+     </div>
    
     </div>
   )

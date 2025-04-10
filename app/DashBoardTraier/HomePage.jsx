@@ -116,12 +116,13 @@ const HomePage = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {[
+              
               { 
                 icon: <FiVideo />,
                 color: 'purple',
                 title: 'إتقان صناعة الفيديو',
                 content: 'أدلة متقدمة في إنتاج المحتوى المرئي، تقنيات إضاءة متطورة، وأسرار تحرير فيديو احترافي.',
-                link: '/resources/creation'
+                link: '/VideoCourse'
               },
               {
                 icon: <FiPlayCircle />,

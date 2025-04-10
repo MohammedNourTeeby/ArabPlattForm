@@ -1,33 +1,32 @@
-"use client";
+'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import coursesData from '../../data.json';
 
-const Courses = () => {
+const Page = () => {
   const [favorites, setFavorites] = useState([]);
 
-  // Load favorites from localStorage on component mount
   useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem('courseFavorites')) || [];
-    setFavorites(savedFavorites);
+    const saved = JSON.parse(localStorage.getItem('courseFavorites')) || [];
+    setFavorites(saved);
   }, []);
 
   const toggleFavorite = (courseId) => {
     setFavorites(prev => {
-      const newFavorites = prev.includes(courseId)
+      const next = prev.includes(courseId)
         ? prev.filter(id => id !== courseId)
         : [...prev, courseId];
-      
-      localStorage.setItem('courseFavorites', JSON.stringify(newFavorites));
-      return newFavorites;
+      localStorage.setItem('courseFavorites', JSON.stringify(next));
+      return next;
     });
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {coursesData.categories.map((category, idx) => (
-        <motion.section 
+        <motion.section
           key={category.categoryName}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,12 +41,12 @@ const Courses = () => {
               {category.categoryName}
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {category.courses.map((course) => (
-              <CourseCard 
-                key={course.id} 
-                course={course} 
+            {category.courses.map(course => (
+              <CourseCard
+                key={course.id}
+                course={course}
                 isFavorite={favorites.includes(course.id)}
                 onToggleFavorite={toggleFavorite}
               />
@@ -61,41 +60,41 @@ const Courses = () => {
 
 const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const discountedPrice = course.discount 
-    ? course.price - (course.price * course.discount / 100)
+  const discounted = course.discount
+    ? course.price * (1 - course.discount / 100)
     : null;
 
-  const handleFavoriteClick = (e) => {
+  const handleFav = (e) => {
     e.stopPropagation();
     onToggleFavorite(course.id);
   };
 
   return (
-    <motion.div 
-      className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full"
+    <motion.div
+      className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       layout
     >
-      {/* Badges Container */}
+      {/* Badges */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {course.discount && (
-          <div className="px-3 py-1 bg-red-500 text-white rounded-full text-sm font-medium">
+          <span className="px-3 py-1 bg-red-500 text-white rounded-full text-sm font-medium">
             {course.discount}% خصم
-          </div>
+          </span>
         )}
         {course.certificate && (
-          <div className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
+          <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
             شهادة
-          </div>
+          </span>
         )}
       </div>
 
-      {/* Favorite Button */}
+      {/* Favorite */}
       <button
-        onClick={handleFavoriteClick}
+        onClick={handleFav}
         className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors duration-200"
-        aria-label={isFavorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+        aria-label={isFavorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -108,12 +107,15 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
           <path
             stroke="currentColor"
             strokeWidth="1.5"
-            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+               2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+               C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 
+               22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
           />
         </motion.svg>
       </button>
 
-      {/* Image Section */}
+      {/* Image */}
       <div className="relative h-56 w-full overflow-hidden rounded-t-2xl">
         <Image
           src={course.image}
@@ -125,32 +127,30 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30" />
       </div>
 
-      {/* Main Content */}
-      <div className="p-5">
-        <h3 className="font-bold text-xl text-gray-900 mb-3">
-          {course.name}
-        </h3>
-        
-        {/* Price Section */}
-        <div className="flex items-center gap-3 mb-4">
-          {discountedPrice ? (
+      {/* Content */}
+      <div className="p-5 flex flex-col flex-grow">
+        <h3 className="font-bold text-xl text-gray-900 mb-2">{course.name}</h3>
+
+        {/* Price */}
+        <div className="flex items-center gap-3 mb-3">
+          {discounted ? (
             <>
               <span className="text-2xl font-bold text-red-600">
-                ${discountedPrice.toFixed(2)}
+                ${discounted.toFixed(2)}
               </span>
               <span className="line-through text-gray-400">
-                ${course.price}
+                ${course.price.toFixed(2)}
               </span>
             </>
           ) : (
             <span className="text-2xl font-bold text-gray-900">
-              ${course.price}
+              ${course.price.toFixed(2)}
             </span>
           )}
         </div>
 
-        {/* Course Meta */}
-        <div className="flex flex-wrap items-center gap-4 text-gray-600">
+        {/* Meta */}
+        <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-4">
           <div className="flex items-center gap-1">
             <StarRating rating={course.rating} />
             <span className="font-medium">{course.rating}</span>
@@ -165,12 +165,22 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
             {course.level}
           </span>
         </div>
+
+        {/* View Reviews */}
+        <div className="mt-auto">
+          <Link
+            href={`/DashBoardStudent/courses/${course.id}/`}
+            className="w-full block text-center py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-medium transition-colors"
+          >
+            عرض جميع التقييمات
+          </Link>
+        </div>
       </div>
 
       {/* Hover Overlay */}
       <AnimatePresence>
         {isHovered && (
-          <motion.div 
+          <motion.div
             className="absolute inset-0 bg-white rounded-2xl shadow-2xl p-6 overflow-y-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -180,32 +190,24 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
             <div className="flex justify-between items-start mb-4">
               <h4 className="font-bold text-xl text-gray-900">تفاصيل الدورة</h4>
               <button
-                onClick={handleFavoriteClick}
+                onClick={handleFav}
                 className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-                aria-label={isFavorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+                aria-label={isFavorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`w-6 h-6 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  />
-                </svg>
+                <CheckCircleIcon className={`w-6 h-6 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}`} />
               </button>
             </div>
-            
-            <p className="text-gray-600 leading-relaxed mb-6">{course.description}</p>
-            
+
+            <p className="text-gray-600 leading-relaxed mb-6">
+              {course.description}
+            </p>
+
             <div className="grid grid-cols-2 gap-4 text-sm mb-6">
               <DetailItem label="المدرب" value={course.instructor} />
               {course.studentsEnrolled && (
-                <DetailItem 
-                  label="الطلاب" 
-                  value={course.studentsEnrolled.toLocaleString()} 
+                <DetailItem
+                  label="الطلاب"
+                  value={course.studentsEnrolled.toLocaleString()}
                 />
               )}
               {course.language && (
@@ -218,7 +220,9 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
 
             {course.prerequisites && (
               <div className="mb-6">
-                <h5 className="text-gray-500 font-medium mb-3">المتطلبات المسبقة:</h5>
+                <h5 className="text-gray-500 font-medium mb-3">
+                  المتطلبات المسبقة:
+                </h5>
                 <ul className="space-y-2">
                   {course.prerequisites.map((req, i) => (
                     <li key={i} className="flex items-center gap-2 text-gray-600">
@@ -232,13 +236,20 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
 
             <motion.button
               whileHover={{ scale: 1.05 }}
-              className={`w-full py-3 rounded-xl font-semibold transition-all
-                ${course.certificate 
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' 
+              className={`w-full py-3 rounded-xl font-semibold transition-all mb-4
+                ${course.certificate
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-900'}`}
             >
               {course.certificate ? 'سجل واحصل على الشهادة' : 'سجل الآن'}
             </motion.button>
+
+            <Link
+              href={`/DashBoardStudent/courses/${course.id}/`}
+              className="w-full block text-center py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-medium transition-colors"
+            >
+              عرض جميع التقييمات
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -246,25 +257,26 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
   );
 };
 
-// Helper Components (remain the same as before)
 const StarRating = ({ rating }) => {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
-
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
   return (
     <div className="flex items-center gap-1">
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}
-          className={`w-5 h-5 ${i < fullStars ? 'text-yellow-400' : 'text-gray-300'}`}
+          className={`w-5 h-5 ${i < full || (i === full && half) ? 'text-yellow-400' : 'text-gray-300'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
-          {i < fullStars || (i === fullStars && hasHalfStar) ? (
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          ) : (
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          )}
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 
+            3.292a1 1 0 00.95.69h3.462c.969 0 1.371 
+            1.24.588 1.81l-2.8 2.034a1 1 0 
+            00-.364 1.118l1.07 3.292c.3.921-.755 
+            1.688-1.54 1.118l-2.8-2.034a1 1 0 
+            00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 
+            1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 
+            1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
     </div>
@@ -280,14 +292,21 @@ const DetailItem = ({ label, value }) => (
 
 const ClockIcon = () => (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+      d="M12 8v4l3 3m6-3a9 9 0 
+      11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
 const CheckCircleIcon = ({ className }) => (
-  <svg className={`w-4 h-4 ${className}`} fill="currentColor" viewBox="0 0 20 20">
-    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd"
+      d="M10 18a8 8 0 100-16 8 8 0 000 
+      16zm3.707-9.293a1 1 0 00-1.414-1.414L9 
+      10.586 7.707 9.293a1 1 0 00-1.414 
+      1.414l2 2a1 1 0 001.414 0l4-4z"
+      clipRule="evenodd" />
   </svg>
 );
 
-export default Courses;
+export default Page;

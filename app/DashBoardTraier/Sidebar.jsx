@@ -8,6 +8,7 @@ import {
   FiLayers,
   FiArchive,
   FiChevronRight,
+  FiMapPin,
 } from "react-icons/fi";
 
 export default function Sidebar() {
@@ -15,12 +16,16 @@ export default function Sidebar() {
   const [activeItem, setActiveItem] = useState(0);
 
   const menuItems = [
-    { name: "الدورات", icon: <FiVideo size={24} />, link: "/courses" },
+    { name: "الدورات", icon: <FiVideo size={24} />, link: "/DashBoardTraier/Courses" },
     { name: "تواصل", icon: <FiMessageSquare size={24} />, link: "./Massage" },
     { name: "أداة", icon: <FiTool size={24} />, link: "/tool" },
     { name: "أدوات", icon: <FiLayers size={24} />, link: "/tools" },
-    { name: "موارد", icon: <FiArchive size={24} />, link: "/resources" },
-  ];
+    { name: "موارد علمية", icon: <FiArchive size={24} />, link: "./Materials" },
+    { 
+      name: "إدارة المراكز التدريبية", 
+      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
+      link: "/DashBoardTraier/centers" // مسار مطلق
+    },  ];
 
   const sidebarVariants = {
     collapsed: { width: 64 },
