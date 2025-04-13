@@ -21,11 +21,26 @@ export default function Sidebar() {
     { name: "أداة", icon: <FiTool size={24} />, link: "/tool" },
     { name: "أدوات", icon: <FiLayers size={24} />, link: "/tools" },
     { name: "موارد علمية", icon: <FiArchive size={24} />, link: "./Materials" },
+    { name: " المجموعات التعليمية", icon: <FiArchive size={24} />, link: "/DashBoardTraier/components/groups" },
     { 
       name: "إدارة المراكز التدريبية", 
       icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
       link: "/DashBoardTraier/centers" // مسار مطلق
-    },  ];
+    }, 
+    { 
+      name: "إدارة الدومين و الصفحات التسويقية ", 
+      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
+      link: "/DashBoardTraier/components/domin" // مسار مطلق
+    }, 
+    { 
+      name: "الهوية البصرية  ", 
+      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
+      link: "/DashBoardTraier/components/WhiteLabel" // مسار مطلق
+    }, 
+  
+  
+  
+  ];
 
   const sidebarVariants = {
     collapsed: { width: 64 },

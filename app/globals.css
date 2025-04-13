@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
  :root {
 
   /* نقل المتغيرات الخاصة بالثيم هنا */
@@ -193,4 +192,21 @@ input:checked + .slider:before {
   body {
     @apply bg-background text-foreground;
   }
+}
+.ql-toolbar.ql-snow {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0 0 0.5rem 0.5rem;
+  height: 384px;
+}
+
+.ql-editor {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: right;
 }

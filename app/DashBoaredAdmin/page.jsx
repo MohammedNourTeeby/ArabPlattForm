@@ -28,6 +28,15 @@ import CouponDashboard from './components/coupons/page';
 import RefundsPage from './components/Refunds/page';
 import RefundDashboard from './components/promotion/page';
 import PayoutsPage from './components/Payouts/page';
+import PrivacyPage from './components/legal/page';
+import CertificatesPage from './components/Certificates/page';
+import AcademicDashboard from './components/Academic/page';
+import FinancialDashboard from './components/financial/page';
+import NotificationsDashboard from './components/SMS/page';
+import EmailTemplatesPage from './Email/page';
+import AnalyticsDashboard from './components/CRM/page';
+import LicenseDashboard from './components/Saas/page';
+
 
 
 const AdminDashboard = () => {
@@ -113,20 +122,26 @@ const AdminDashboard = () => {
           activeSection={activeSection}
           setActiveSection={setActiveSection}
           sections={{
-            dashboard: 'الاحصائيات',
-            users: 'المستخدمين',
-            content: 'المحتوى',
-            support: 'الدعم',
-            finance: 'المالية',
-            addstudent: 'إضافة متدرب جديد ',
-            addgroup: 'إضافة فريق إداري  ',
-            tracker: '   تفاعل المستخدمين ',
-            payouts: 'تسوية العمولات الآلية',
-            ads: 'إدارة الاعلانات',
-            offers: ' إدارة العروض و الخصومات',
-            copon: 'إدارة الخصومات ',
-            refunds: 'إدارة الرسوم المالية ',
-            promotion: 'ظهور المدرب في الصفحة الأولى ',
+            dashboard: 'لوحة التحكم',
+  users: 'إدارة المستخدمين',
+  content: 'المحتوى والدورات',
+  support: 'الدعم والتذاكر',
+  finance: 'العمليات المالية',
+  addstudent: 'إضافة متدرب جديد',
+  addgroup: 'إضافة فريق إداري',
+  tracker: 'تفاعل المستخدمين',
+  payouts: 'تسوية العمولات الآلية',
+  ads: 'إدارة الاعلانات',
+  offers: 'إدارة العروض',
+  copon: 'إدارة الخصومات',
+  refunds: 'إدارة الرسوم المالية',
+  promotion: 'ظهور المدرب في الصفحة الأولى',
+  legal: 'سياسة و شروط المنصة',
+  certif: 'إدارة الشهادات',
+  email: ' إدارة النظام البريدي',
+  crm: ' CRM  ',
+  saas: ' ادارة التراخيص  SaaS  ',
+
 
 
           }}
@@ -210,6 +225,7 @@ const AdminDashboard = () => {
           {activeSection === 'finance' && (
             <div className="bg-white p-6 rounded-lg shadow-sm">
           {activeSection === 'finance' && <FinancialReports />}
+          {activeSection === 'finance' && <FinancialDashboard />}
           </div>
           )}
 
@@ -239,6 +255,13 @@ const AdminDashboard = () => {
                 {activeSection === 'copon' && <CouponDashboard   />}
                 {activeSection === 'refunds' && <RefundsPage   />}
                 {activeSection === 'promotion' && <RefundDashboard   />}
+                {activeSection === 'legal' && <PrivacyPage   />}
+                {activeSection === 'certif' && <CertificatesPage   />}
+                {activeSection === 'certif' && <AcademicDashboard   />}
+                {activeSection === 'email' && <NotificationsDashboard   />}
+                {activeSection === 'email' && <EmailTemplatesPage   />}
+                {activeSection === 'crm' && <AnalyticsDashboard   />}
+                {activeSection === 'saas' && <LicenseDashboard   />}
 
         </main>
       </div>

@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const withTM = require("next-transpile-modules")(["@ffmpeg/ffmpeg"]);
 
+const nextConfig = {
+  transpilePackages: ["react-quill", "quill"],
+  experimental: {
+    esmExternals: "loose",
+  },
+};
+
+module.exports = nextConfig;
+
 module.exports = withTM({
   reactStrictMode: true,
   experimental: {},
@@ -15,6 +24,9 @@ module.exports = withTM({
         pathname: "/**",
       },
     ],
+  },
+  experimental: {
+    turboMode: false,
   },
   webpack: (config, { isServer }) => {
     // إضافة تحميل ملفات CSS
