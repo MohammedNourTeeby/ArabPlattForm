@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useRef, useEffect } from 'react';
 import 'react-quill-new/dist/quill.snow.css';
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+const ReactQuill = dynamic(() => import('@techenary/react-quill'), { ssr: false });
 
 export default function TranscriptEditor({ template = 'default', content, onChange }) {
   const quillRef = useRef(null);

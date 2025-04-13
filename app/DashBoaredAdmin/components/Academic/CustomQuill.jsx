@@ -2,7 +2,7 @@
 import dynamic from 'next/dynamic';
 import { forwardRef, useRef, useImperativeHandle } from 'react';
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+const ReactQuill = dynamic(() => import('@techenary/react-quill'), { ssr: false });
 
 const CustomQuill = forwardRef((props, ref) => {
   const quillRef = useRef(null);

@@ -11,7 +11,7 @@ if (typeof ReactDOM.findDOMNode !== 'function') {
 }
 
 const ReactQuill = dynamic(() =>
-  import('react-quill').then((mod) => {
+  import('@techenary/react-quill').then((mod) => {
     const Component = mod.default;
     const ForwardRefQuill = React.forwardRef((props, ref) => <Component {...props} ref={ref} />);
     return ForwardRefQuill;
