@@ -1,18 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const withTM = require("next-transpile-modules")(["@ffmpeg/ffmpeg"]);
 
-const nextConfig = {
-  transpilePackages: ["react-quill", "quill"],
-  experimental: {
-    esmExternals: "loose",
-  },
-};
-
-module.exports = nextConfig;
-
 module.exports = withTM({
   reactStrictMode: true,
-  experimental: {},
   env: {
     FFMPEG_CORE_PATH: "/ffmpeg.js",
   },
@@ -25,9 +15,8 @@ module.exports = withTM({
       },
     ],
   },
-  experimental: {
-    turboMode: false,
-  },
+  // تمت إزالة التكرار في experimental وإزالة turboMode لأنه غير معتمد
+  experimental: {},
   webpack: (config, { isServer }) => {
     // إضافة تحميل ملفات CSS
     config.module.rules.push({
