@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import { QrScanner } from 'react-qr-scanner';
 import { useRouter } from 'next/router';
 
 export default function QRCodeScanner() {
@@ -17,7 +17,7 @@ export default function QRCodeScanner() {
   return (
     <div className="max-w-md mx-auto p-6">
       <div className="bg-black rounded-xl overflow-hidden">
-        <QrReader
+        <QrScanner
           onResult={(result, error) => {
             if (result) handleScan(result);
             if (error) setError('تعذر قراءة QR Code');
