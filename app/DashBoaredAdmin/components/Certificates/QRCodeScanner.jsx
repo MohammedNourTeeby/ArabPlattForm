@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { QrScanner } from 'react-qr-scanner';
+import { QrScanner } from '@yudiel/react-qr-scanner';
 import { useRouter } from 'next/router';
 
 export default function QRCodeScanner() {
