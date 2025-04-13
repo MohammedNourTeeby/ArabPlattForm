@@ -1,12 +1,13 @@
 // app/layout.tsx
+import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
 import type { Metadata } from "next";
 import { Cairo } from 'next/font/google';
 import Footer from "../components/Footer";
 import AppSidebar from "@/components/app-sidebar";
 import "./globals.css";
 import { MediaRecorderProvider } from '@/contexts/MediaRecorderContext';
-import "react-datepicker/dist/react-datepicker.css";
-import "react-toastify/dist/ReactToastify.css";
+
 
 // إعداد الخط مع التحقق من توفر الخصائص
 const cairo = Cairo({

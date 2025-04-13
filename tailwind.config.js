@@ -2,9 +2,9 @@
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/react-datepicker/**/*.js",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/react-toastify/**/*.js",
-    "./app/globals.css",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
