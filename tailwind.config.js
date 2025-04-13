@@ -1,9 +1,7 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/react-toastify/**/*.js",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {

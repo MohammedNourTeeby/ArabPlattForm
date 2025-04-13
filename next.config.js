@@ -15,24 +15,27 @@ module.exports = withTM({
       },
     ],
   },
-  // تمت إزالة التكرار في experimental وإزالة turboMode لأنه غير معتمد
   experimental: {},
   webpack: (config, { isServer }) => {
-    // إضافة تحميل ملفات CSS
+    // إضافة تحميل ملفات CSS باستخدام require.resolve
     config.module.rules.push({
       test: /\.css$/i,
       use: !isServer
-        ? ["style-loader", "css-loader", "postcss-loader"]
+        ? [
+            require.resolve("style-loader"),
+            require.resolve("css-loader"),
+            require.resolve("postcss-loader"),
+          ]
         : [
             {
-              loader: "css-loader",
+              loader: require.resolve("css-loader"),
               options: {
                 url: false,
                 importLoaders: 1,
                 modules: false,
               },
             },
-            "postcss-loader",
+            require.resolve("postcss-loader"),
           ],
     });
 
