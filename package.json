@@ -92,7 +92,10 @@
     "wavesurfer.js": "^7.9.4",
     "xlsx": "^0.18.5",
     "yup": "^1.6.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "css-loader": "^7.1.2",
+    "postcss-loader": "^8.1.1"
+
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -101,11 +104,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
-    "css-loader": "^7.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "postcss": "^8.5.3",
-    "postcss-loader": "^8.1.1",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
     "tailwindcss": "^4.1.3",
