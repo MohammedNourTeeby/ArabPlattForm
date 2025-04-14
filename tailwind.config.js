@@ -6,12 +6,25 @@ module.exports = {
   ],
   theme: {
     extend: {
+      outlineColor: ({ theme }) => ({
+        ring: theme("colors.ring") + "50", // أضف الشفافية 50 هنا
+      }),
+      borderColor: ({ theme }) => ({
+        // أضف هذا القسم
+        border: theme("colors.border"),
+      }),
       screens: { md: "768px" },
       fontFamily: {
         sans: ["var(--font-cairo)", "Arial", "sans-serif"],
         cairo: ["var(--font-cairo)", "Arial", "sans-serif"],
       },
       colors: {
+        ring: "var(--ring)", // تأكد من وجود هذا التعريف
+
+        border: "var(--border)",
+        ring: "var(--ring)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         "wave-primary": "#3B82F6",
         "wave-progress": "#2563EB",
         "media-control": "rgba(0, 0, 0, 0.7)",

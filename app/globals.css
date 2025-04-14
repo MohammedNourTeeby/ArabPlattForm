@@ -1,6 +1,12 @@
-@import "tailwindcss";
- :root {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+:root {
+  --border: oklch(0.922 0 0); /* قيمتك الأصلية هنا */
+  --ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
   /* نقل المتغيرات الخاصة بالثيم هنا */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -27,9 +33,9 @@
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-3: oklch(0.398 0 227.392);
+  --chart-4: oklch(0.828 0 0);
+  --chart-5: oklch(0.769 0 0);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -41,7 +47,7 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif,'Inter','Cairo';
+  font-family: Arial, Helvetica, sans-serif, 'Inter', 'Cairo';
 }
 
 @layer base {
@@ -66,51 +72,52 @@ body {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-  /* أضف هذا في ملف CSS */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 28px;
-}
 
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+  /* تنسيق المفتاح للتحويل */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+  }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
-}
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
 
-input:checked + .slider {
-  background-color: #3b82f6;
-}
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
 
-input:checked + .slider:before {
-  transform: translateX(20px);
-}
+  input:checked + .slider {
+    background-color: #3b82f6;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
 }
 
 @theme inline {
@@ -170,14 +177,14 @@ input:checked + .slider:before {
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --chart-1: oklch(0.488 0 264.376);
+  --chart-2: oklch(0.696 0 162.48);
+  --chart-3: oklch(0.769 0 70.08);
+  --chart-4: oklch(0.627 0 303.9);
+  --chart-5: oklch(0.645 0 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.488 0 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -185,14 +192,17 @@ input:checked + .slider:before {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* تطبيق الخصائص المخصصة على جميع العناصر */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring outline-opacity-50;
   }
   body {
     @apply bg-background text-foreground;
   }
 }
+
+/* التنسيقات الخاصة بمحرر النصوص */
 .ql-toolbar.ql-snow {
   border: 1px solid #e5e7eb !important;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -209,4 +219,17 @@ input:checked + .slider:before {
   font-size: 16px;
   line-height: 1.6;
   text-align: right;
+}
+
+/* تأكد من عدم تكرار تطبيق الخصائص مرتين */
+/* يمكنك حذف النسخة الزائدة إذا رغبت */
+
+/* تعريف الكلاسات المخصصة داخل @layer utilities */
+@layer utilities {
+  .outline-ring {
+    outline-color: var(--ring);
+  }
+  .outline-opacity-50 {
+    outline-opacity: 0.5;
+  }
 }
