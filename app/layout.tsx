@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import AppSidebar from "@/components/app-sidebar";
 import "./globals.css";
 import { MediaRecorderProvider } from '@/contexts/MediaRecorderContext';
+import { MantineProvider } from "@mantine/core";
 
 
 // إعداد الخط مع التحقق من توفر الخصائص
@@ -36,10 +37,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex-1">
           <div className="hidden lg:block">
             <AppSidebar variant="header" />
-            <main className="pt-16 pl-64"> {/* إضافة padding-left للتوافق مع الشريط الجانبي */}
+            <main className="pt-16 pl-64"> 
+            <MantineProvider>
               <MediaRecorderProvider>
                 {children}
               </MediaRecorderProvider>
+              </MantineProvider>
             </main>
           </div>
           

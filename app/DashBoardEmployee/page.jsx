@@ -9,6 +9,7 @@ import TicketsManager from './components/TicketsManager';
 import FinancialManager from './components/FinancialManager';
 import TasksManager from './components/TasksManager';
 import InternalCommunication from './components/InternalCommunication';
+import VoipDashboard from './components/voip/page';
 
 const page = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -55,7 +56,9 @@ const page = () => {
           setActiveSection={setActiveSection}
           sections={{
             dashboard: 'الاحصائيات',
-            finance: 'المالية'
+            finance: 'المالية',
+            voip: '   إدارة المكالمات  VOIP',
+
           }}
         />
 
@@ -147,6 +150,10 @@ const page = () => {
                     {activeSection === 'user' && (
                       <div className="bg-white p-6 rounded-lg shadow-sm">
                     {activeSection === 'user' && <InternalCommunication />}
+                    </div>
+                    )}{activeSection === 'voip' && (
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                    {activeSection === 'voip' && <VoipDashboard />}
                     </div>
                     )}
         </main>

@@ -7,6 +7,10 @@ const sectionLabels = {
   reports: 'التقارير المالية',
   leads: 'إدارة العملاء',
   affiliate: '    التسويق بالعمولة ',
+  automation: ' إدارة حملات التسويق ',
+  funnel: 'إدارة المبيعات  ',
+  conniction: 'إدارة التواصل مع العملاء  ',
+  maitychannel: ' ادارة التواصل الموحد  ',
 
 };
 

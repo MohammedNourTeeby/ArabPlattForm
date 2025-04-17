@@ -37,6 +37,15 @@ export default function Sidebar() {
       icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
       link: "/DashBoardTraier/components/WhiteLabel" // مسار مطلق
     }, 
+    { 
+      name: "  إدارة التقييم الذاتي ", 
+      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
+      link: "/DashBoardTraier/components/Self-Assessment" // مسار مطلق
+    }, { 
+      name: "  كوبونات دعوة للدورات   ", 
+      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
+      link: "/DashBoardTraier/components/copon" // مسار مطلق
+    }, 
   
   
   

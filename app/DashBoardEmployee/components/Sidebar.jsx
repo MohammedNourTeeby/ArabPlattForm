@@ -7,6 +7,7 @@ const sectionLabels = {
   content: ' العمليات المالية',
   support: 'المهام التشغيلية',
   user: ' نظام التواصل الداخلي',
+  voip: '   إدارة المكالمات  VOIP',
 
 };
 

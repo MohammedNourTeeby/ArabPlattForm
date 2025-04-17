@@ -36,7 +36,8 @@ import NotificationsDashboard from './components/SMS/page';
 import EmailTemplatesPage from './Email/page';
 import AnalyticsDashboard from './components/CRM/page';
 import LicenseDashboard from './components/Saas/page';
-
+import SosialDashboard from './components/Social/page';
+import CommunityCoursePage from './components/communitycourse/page';
 
 
 const AdminDashboard = () => {
@@ -141,6 +142,7 @@ const AdminDashboard = () => {
   email: ' إدارة النظام البريدي',
   crm: ' CRM  ',
   saas: ' ادارة التراخيص  SaaS  ',
+  social: ' إدارة التواصل الاجتماعي',
 
 
 
@@ -206,8 +208,10 @@ const AdminDashboard = () => {
                 onSubmit={handleCourseSubmit}
                 onDelete={(courseId) => setCourses(courses.filter(c => c.id !== courseId))}
               />
+             <CommunityCoursePage />
             </div>
-          )}
+            
+          ) }
 
           {/* Support Section */}
           {activeSection === 'support' && (
@@ -262,6 +266,7 @@ const AdminDashboard = () => {
                 {activeSection === 'email' && <EmailTemplatesPage   />}
                 {activeSection === 'crm' && <AnalyticsDashboard   />}
                 {activeSection === 'saas' && <LicenseDashboard   />}
+                {activeSection === 'social' && <SosialDashboard   />}
 
         </main>
       </div>

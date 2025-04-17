@@ -7,12 +7,15 @@ import CampaignList from './components/CampaignList';
 import SalesReports from './components/SalesReports';
 import LeadsManager from './components/LeadsManager';
 import AffiliateDashboard from './components/Affiliate/AffiliateDashboard';
+import AutomationDashboard from './components/AutomationBuilder/page';
+import AutumationyyyDashboard from './components/automation/page';
+import DashboardPage from './components/MultiChannelCenter/page';
 
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
@@ -22,6 +25,12 @@ function Page() {
           reports: 'التقارير المالية',
 
           affiliate: '    التسويق بالعمولة ',
+            automation: ' إدارة حملات التسويق ',
+            funnel: 'إدارة المبيعات  ',
+            conniction: 'إدارة التواصل مع العملاء  ',
+            maitychannel: ' ادارة التواصل الموحد  ',
+
+          
         }}
       />
       <main className="flex-1 mr-64 p-8"> {/* تصحيح الهوامش */}
@@ -31,7 +40,14 @@ function Page() {
       {activeSection === 'reports' && <SalesReports />}
       {activeSection === 'leads' && <LeadsManager />}
       {activeSection === 'affiliate' && <AffiliateDashboard   />}
-
+ {/* content Section */}
+                    {activeSection === 'automation' && (
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                    {activeSection === 'automation' && <AutomationDashboard />}
+                    </div>
+                    )}
+      {activeSection === 'conniction' && <AutumationyyyDashboard   />}
+      {activeSection === 'maitychannel' && <DashboardPage   />}
 
         </div>
       </main>
