@@ -1,6 +1,6 @@
 // app/components/CustomerFunnelView.jsx
 "use client";
-import ReactFlow, { Controls } from "react-flow-renderer";
+import ReactFlow, { Controls } from "reactflow";
 import { funnelNodes, funnelEdges } from "./funnel-data";
 
 const CustomerFunnelView = () => {

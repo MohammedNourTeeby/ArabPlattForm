@@ -1,6 +1,6 @@
 // app/components/CustomerFunnel.jsx
 "use client";
-import ReactFlow, { useNodesState, useEdgesState } from "react-flow-renderer";
+import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
 import {funnelData} from "./funnel-data";
 import { useMemo } from "react";
 

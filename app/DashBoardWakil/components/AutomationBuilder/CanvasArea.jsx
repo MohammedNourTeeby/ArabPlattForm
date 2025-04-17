@@ -1,6 +1,6 @@
 "use client";
 import { DndContext, useDraggable } from "@dnd-kit/core";
-import ReactFlow from "react-flow-renderer"; // تأكد من تثبيت واستيراد react-flow-renderer أو المكتبة التي تستخدمها
+import ReactFlow from "reactflow"; 
 import useAutomationStore from "./AutomationContext";
 
 // دالة بسيطة لمعالجة انتهاء السحب (يمكنك تعديلها بناءً على منطق التطبيق)
