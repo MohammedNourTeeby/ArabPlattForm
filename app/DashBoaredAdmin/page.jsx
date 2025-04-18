@@ -38,6 +38,7 @@ import AnalyticsDashboard from './components/CRM/page';
 import LicenseDashboard from './components/Saas/page';
 import SosialDashboard from './components/Social/page';
 import CommunityCoursePage from './components/communitycourse/page';
+import ReportsDashboard from './components/Reports/page';
 
 
 const AdminDashboard = () => {
@@ -267,6 +268,7 @@ const AdminDashboard = () => {
                 {activeSection === 'crm' && <AnalyticsDashboard   />}
                 {activeSection === 'saas' && <LicenseDashboard   />}
                 {activeSection === 'social' && <SosialDashboard   />}
+                {activeSection === 'report' && <ReportsDashboard />}
 
         </main>
       </div>

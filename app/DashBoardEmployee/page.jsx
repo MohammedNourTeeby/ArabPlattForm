@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import SummaryCard from './components/SummaryCard';
 import TicketsManager from './components/TicketsManager';
@@ -48,7 +47,7 @@ const page = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+     
       
       <div className="flex pt-16">
         <Sidebar
