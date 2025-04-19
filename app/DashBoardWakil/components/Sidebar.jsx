@@ -13,7 +13,8 @@ const categories = [
       { key: 'campaigns', label: 'الحملات التسويقية' },
       { key: 'automation', label: 'إدارة حملات التسويق' },
       { key: 'affiliate', label: 'التسويق بالعمولة' },
-      { key: 'funnel', label: 'إدارة المبيعات' }
+      { key: 'social', label: 'التسويق المؤتمت' },
+
     ]
   },
   {
@@ -27,7 +28,8 @@ const categories = [
   {
     title: 'التقارير',
     items: [
-      { key: 'reports', label: 'التقارير المالية' }
+      { key: 'reports', label: 'التقارير المالية' },
+
     ]
   }
 ];

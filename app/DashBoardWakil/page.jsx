@@ -10,6 +10,7 @@ import AffiliateDashboard from './components/Affiliate/AffiliateDashboard';
 import AutomationDashboard from './components/AutomationBuilder/page';
 import AutumationyyyDashboard from './components/automation/page';
 import DashboardPage from './components/MultiChannelCenter/page';
+import SocialDashboard from './components/SocialMidia/page';
 
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -48,6 +49,7 @@ function Page() {
                     )}
       {activeSection === 'conniction' && <AutumationyyyDashboard   />}
       {activeSection === 'maitychannel' && <DashboardPage   />}
+      {activeSection === 'social' && < SocialDashboard/>}
 
         </div>
       </main>
