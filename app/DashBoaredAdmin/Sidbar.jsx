@@ -30,7 +30,9 @@ const categories = [
       { key: 'content', label: 'المحتوى والدورات' },
       { key: 'certif', label: 'إدارة الشهادات' },
       { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
-      { key: 'ads', label: 'إدارة الاعلانات' }
+      { key: 'ads', label: 'إدارة الاعلانات' },
+      { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
+      { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
     ]
   },
   {
@@ -40,8 +42,8 @@ const categories = [
       { key: 'email', label: 'إدارة النظام البريدي' },
       { key: 'crm', label: 'CRM' },
       { key: 'saas', label: 'ادارة التراخيص SaaS' },
-      { key: 'social', label: 'إدارة التواصل الاجتماعي' },
-      { key: 'legal', label: 'سياسة و شروط المنصة' }
+      { key: 'legal', label: 'سياسة و شروط المنصة' },
+    
     ]
   },
    {
@@ -52,11 +54,12 @@ const categories = [
     }
 ];
 
+
 const Sidebar = ({ activeSection, setActiveSection }) => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [hoveredItem, setHoveredItem] = useState(null);
   
-  const primaryColor = '#2563EB'; // لون أساسي من Tailwind [[10]]
+  const primaryColor = '#2563EB';
   const secondaryColor = '#BFDBFE';
   const bgColor = '#F8FAFC';
   const textColor = '#1E293B';
@@ -72,7 +75,6 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
         <ul className="flex flex-col space-y-4 px-4 pt-6">
           {categories.map(category => (
             <li key={category.title} className="group">
-              {/* Header مع تأثيرات حركية */}
               <button
                 onClick={() => setExpandedCategories(prev => 
                   prev.includes(category.title) 
@@ -93,7 +95,14 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
                     : 'none'
                 }}
               >
-                <span className="font-semibold text-sm lg:text-base">{category.title}</span>
+                <span className="font-semibold text-sm lg:text-base flex items-center gap-2">
+                  {category.title}
+                  {category.items.length > 4 && (
+                    <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                      {category.items.length}
+                    </span>
+                  )}
+                </span>
                 <svg
                   className={`w-5 h-5 transition-transform duration-300 
                     ${expandedCategories.includes(category.title) ? 'rotate-180' : ''}`}
@@ -104,10 +113,19 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
                 </svg>
               </button>
 
-              {/* قائمة منسدلة مع تحسينات تفاعلية */}
-              <ul className={`mt-2 space-y-2 overflow-hidden transition-all duration-500
-                ${expandedCategories.includes(category.title) ? 'max-h-60' : 'max-h-0'}
-              `}>
+              <ul 
+                className={`mt-2 space-y-2 overflow-hidden transition-all duration-500
+                  ${expandedCategories.includes(category.title) 
+                    ? 'max-h-[500px] overflow-y-auto' 
+                    : 'max-h-0'
+                  }`}
+                style={{
+                  maxHeight: expandedCategories.includes(category.title) 
+                    ? `${category.items.length * 56}px` 
+                    : '0px',
+                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+              >
                 {category.items.map(item => (
                   <li key={item.key} 
                     onMouseEnter={() => setHoveredItem(item.key)}

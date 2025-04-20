@@ -27,16 +27,7 @@ export default function Sidebar() {
       icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
       link: "/DashBoardTraier/centers" // مسار مطلق
     }, 
-    { 
-      name: "إدارة الدومين و الصفحات التسويقية ", 
-      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
-      link: "/DashBoardTraier/components/domin" // مسار مطلق
-    }, 
-    { 
-      name: "الهوية البصرية  ", 
-      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
-      link: "/DashBoardTraier/components/WhiteLabel" // مسار مطلق
-    }, 
+    
     { 
       name: "  إدارة التقييم الذاتي ", 
       icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة

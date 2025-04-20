@@ -39,6 +39,8 @@ import LicenseDashboard from './components/Saas/page';
 import SosialDashboard from './components/Social/page';
 import CommunityCoursePage from './components/communitycourse/page';
 import ReportsDashboard from './components/Reports/page';
+import BrandingPage from './components/WhiteLabel/page';
+import DomainPageBuilder from './components/domin/page';
 
 
 const AdminDashboard = () => {
@@ -269,6 +271,8 @@ const AdminDashboard = () => {
                 {activeSection === 'saas' && <LicenseDashboard   />}
                 {activeSection === 'social' && <SosialDashboard   />}
                 {activeSection === 'report' && <ReportsDashboard />}
+                {activeSection === 'WhiteLabel' && <BrandingPage />}
+                {activeSection === 'domin' && <DomainPageBuilder />}
 
         </main>
       </div>
