@@ -19,7 +19,7 @@ import supportData from '../../data/supportTickets.json';
 import SupportTickets from './SupportTickets';
 import FinancialReports from './FinancialReports';
 import InviteLinkGenerator from './InviteLinkGenerator';
-import TeamManagementPanel from './TeamManagementPanel';
+import TeamManagementPanel from './components/managmentTeam/TeamManagementPanel';
 import CourseManagementy from './components/CourseManagementy';
 import ReviewStats from './components/ReviewStats';
 import AdminAdsPage from './components/ads/page';
