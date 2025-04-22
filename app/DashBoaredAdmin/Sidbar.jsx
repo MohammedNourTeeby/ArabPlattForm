@@ -32,6 +32,7 @@ const categories = [
       { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
       { key: 'ads', label: 'إدارة الاعلانات' },
       { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
+      { key: 'social', label: ' التواصل الاجتماعي   ' },
       { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
     ]
   },
