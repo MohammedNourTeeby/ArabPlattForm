@@ -9,7 +9,7 @@ function page() {
       <Header/>
       <WelcomMassage/>
       <Courses/>
-      DSH Students 
+    
     </div>
   )
 }

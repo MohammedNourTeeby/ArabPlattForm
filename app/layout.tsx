@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: 'منصة الإعتماد العرب
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={cairo.variable}>
+    <html  className={cairo.variable}>
       <body className="flex flex-col min-h-screen bg-gray-50">
         {/* 1. مزوّد React Query */}
         
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex-1">
               <div className="hidden lg:block">
                 <AppSidebar variant="header" />
-                <main className="pt-16 pl-64">{children}</main>
+                <main className="pt-16 pl-0">{children}</main>
               </div>
               <div className="block lg:hidden">
                 <main className="flex-1 p-4">{children}</main>

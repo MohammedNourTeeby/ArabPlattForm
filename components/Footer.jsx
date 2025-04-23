@@ -2,10 +2,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { FiExternalLink, FiChevronLeft } from "react-icons/fi";
+import { 
+  FiExternalLink, FiChevronLeft, FiAward, FiCode, FiPenTool, 
+  FiDatabase, FiBarChart2, FiFacebook, FiTwitter, FiLinkedin, FiInstagram 
+} from "react-icons/fi";
 
 const Footer = () => {
-  // بيانات الشعارات
   const logos = [
     { 
       name: "Nasdaq",
@@ -24,75 +26,77 @@ const Footer = () => {
     }
   ];
 
-  // بيانات القوائم
   const sections = [
     {
       title: "الشهادات والاعتمادات",
       items: ['AWS Certification', 'Cisco', 'Microsoft', 'Oracle', 'CompTIA'],
-      color: "purple-400"
+      color: "purple-400",
+      icon: <FiAward className="text-purple-400" />
     },
     {
       title: "التطوير البرمجي",
       items: ['JavaScript', 'Python', 'React', 'Node.js', 'Angular'],
-      color: "blue-400"
+      color: "blue-400",
+      icon: <FiCode className="text-blue-400" />
     },
     {
       title: "التصميم والإعلام",
       items: ['Photoshop', 'Illustrator', 'Premiere Pro', 'After Effects', 'UI/UX'],
-      color: "green-400"
+      color: "green-400",
+      icon: <FiPenTool className="text-green-400" />
     },
     {
       title: "البيانات والتسويق",
       items: ['Data Science', 'Big Data', 'SEO', 'Digital Marketing', 'Social Media'],
-      color: "yellow-400"
+      color: "yellow-400",
+      icon: <FiDatabase className="text-yellow-400" />
     },
     {
       title: "مجالات أخرى",
       items: ['إدارة المشاريع', 'ريادة الأعمال', 'اللغات والترجمة', 'الموارد البشرية', 'المزيد ...'],
-      color: "red-400"
+      color: "red-400",
+      icon: <FiBarChart2 className="text-red-400" />
     }
   ];
 
-  // إعدادات الحركة
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
-  };
+  const socialMedia = [
+    { icon: <FiFacebook className="text-[#1877F2]"/>, link: "#" },
+    { icon: <FiTwitter className="text-[#1DA1F2]"/>, link: "#" },
+    { icon: <FiLinkedin className="text-[#0A66C2]"/>, link: "#" },
+    { icon: <FiInstagram className="text-[#E1306C]"/>, link: "#" }
+  ];
 
   return (
     <motion.footer 
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "0px 0px -100px 0px" }}
-      variants={containerVariants}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+      }}
       className="bg-gradient-to-b from-gray-900 to-[#1a1b1d] text-gray-300 pt-14 pb-8"
       dir="rtl"
     >
       {/* قسم الشعارات */}
       <motion.div 
-        variants={itemVariants}
+        variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0">
-          <h2 className="text-sm text-purple-400 font-semibold tracking-wide border-b border-purple-400/30 pb-1">
-            شركاء النجاح العالميين
+          <h2 className="text-sm text-purple-400 font-semibold tracking-wide border-b border-purple-400/30 pb-1 flex items-center">
+            <FiAward className="mr-2" /> شركاء النجاح العالميين
           </h2>
           
           <div className="flex items-center gap-8 flex-wrap justify-center">
             {logos.map((logo, index) => (
               <motion.a
                 key={index}
-                variants={itemVariants}
                 href={logo.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative opacity-90 hover:opacity-100 transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(255,255,255,0.1)" }}
               >
                 <Image
                   src={logo.src}
@@ -102,7 +106,7 @@ const Footer = () => {
                   className="object-contain h-8 contrast-75 hover:contrast-100 transition-all"
                   loading="lazy"
                 />
-                <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 px-2 py-1 rounded-md mt-2">
                   {logo.name}
                 </span>
               </motion.a>
@@ -113,29 +117,32 @@ const Footer = () => {
 
       {/* القوائم الرئيسية */}
       <motion.div 
-        variants={containerVariants}
+        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {sections.map((section, index) => (
             <motion.div 
               key={index}
-              variants={itemVariants}
+              variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
               className="space-y-5"
             >
               <h3 className={`text-white font-semibold text-lg flex items-center border-b border-gray-700 pb-3`}>
-                <FiChevronLeft className={`text-${section.color} mr-2`} />
-                {section.title}
+                {section.icon}
+                <span className={`ml-3 bg-gradient-to-r from-${section.color} to-${section.color}/70 bg-clip-text text-transparent`}>
+                  {section.title}
+                </span>
               </h3>
               <ul className="space-y-3.5">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
                     <a 
                       href="#"
-                      className="flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200 py-1.5"
+                      className="flex items-center justify-between group text-gray-400 hover:text-white transition-colors duration-200 py-1.5 relative pl-8"
                     >
-                      <span>{item}</span>
-                      <FiExternalLink className="opacity-0 group-hover:opacity-100 ml-2 transition-opacity text-sm" />
+                      <FiExternalLink className="absolute left-0 text-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {item}
+                      <FiChevronLeft className="text-gray-500 group-hover:text-white transition-colors" />
                     </a>
                   </li>
                 ))}
@@ -147,7 +154,7 @@ const Footer = () => {
 
       {/* حقوق النشر */}
       <motion.div 
-        variants={itemVariants}
+        variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14"
       >
         <div className="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -165,17 +172,23 @@ const Footer = () => {
             ))}
           </div>
           
-          <div className="text-center md:text-right space-y-2">
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()}  الإعتــمـاد العــربــي, Inc.
+          <div className="flex flex-col items-center md:items-end space-y-4 mt-4 md:mt-0">
+            <div className="text-sm text-gray-500 text-center md:text-right">
+              © {new Date().getFullYear()} الإعتــمـاد العــربــي, Inc.
               <span className="block mt-1 text-xs font-light">الريادة في التعليم الرقمي العالمي</span>
-            </p>
-            <div className="flex gap-4 justify-center md:justify-end mt-2">
-              {[1, 2, 3].map((_, idx) => (
-                <span 
-                  key={idx}
-                  className="w-8 h-8 rounded-full bg-gray-700/50 hover:bg-gray-600 transition-colors cursor-pointer"
-                />
+            </div>
+            
+            <div className="flex gap-6">
+              {socialMedia.map((media, index) => (
+                <motion.a
+                  key={index}
+                  href={media.link}
+                  target="_blank"
+                  className="text-xl p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                >
+                  {media.icon}
+                </motion.a>
               ))}
             </div>
           </div>
