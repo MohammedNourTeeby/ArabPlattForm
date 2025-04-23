@@ -52,7 +52,7 @@ const HomePage = () => {
           className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-2xl overflow-hidden relative"
         >
           <div className="p-10 text-white relative z-10">
-            <div className="absolute inset-0 bg-noise opacity-10" />
+            <div className="absolute inset-0 bg-gray-400 opacity-10" />
             <div className="relative z-20 max-w-2xl">
               <motion.h2 
                 initial={{ opacity: 0 }}

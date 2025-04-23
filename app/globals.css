@@ -8,7 +8,7 @@
   --dark: #1E293B; /* رمادي داكن */
   --light: #F8FAFC; /* أبيض نقي */
   --gradient: linear-gradient(135deg, #2563EB, #10B981);
-  --border: oklch(0.922 0 0); /* قيمتك الأصلية هنا */
+  --border: #e5e7eb; /* قيمتك الأصلية هنا */
   --ring: oklch(0.708 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

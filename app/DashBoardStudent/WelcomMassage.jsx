@@ -70,7 +70,7 @@ const WelcomeMessage = () => {
       {/* خلفية ديناميكية مع تأثيرات متقدمة */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 to-blue-100/80 backdrop-blur-xl"></div>
-        <div className="absolute inset-0 opacity-10 bg-[url('/assets/noise.png')] mix-blend-overlay"></div>
+        <div className="absolute inset-0 opacity-10 bg-slate-500 mix-blend-overlay"></div>
       </div>
 
       {/* رأس الصفحة مع تحسينات التصميم */}
