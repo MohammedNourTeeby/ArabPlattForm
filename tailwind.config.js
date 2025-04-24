@@ -17,6 +17,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-cairo)", "Arial", "sans-serif"],
         cairo: ["var(--font-cairo)", "Arial", "sans-serif"],
+        "din-next": ["DIN Next Arabic", "sans-serif"],
       },
       colors: {
         ring: "var(--ring)", // تأكد من وجود هذا التعريف

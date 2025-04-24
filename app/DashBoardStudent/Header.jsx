@@ -7,6 +7,15 @@ import courseData from '../../data.json';
 import Link from 'next/link';
 import Image from 'next/image';
 
+const COLORS = {
+  primary: '#008DCB',
+  secondary: '#0D1012',
+  gray: '#999999',
+  accent: '#E2101E',
+  white: '#FFFFFF',
+  highlight: '#F9D011'
+};
+
 const slideIn = {
   hidden: { x: '100%' },
   visible: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
@@ -15,7 +24,12 @@ const slideIn = {
 
 const fadeIn = {
   hidden: { opacity: 0, y: -10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
+};
+
+const scaleUp = {
+  hidden: { scale: 0.95, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.2 } }
 };
 
 const Header = () => {
@@ -107,38 +121,51 @@ const Header = () => {
   ];
 
   return (
-    <header className="w-full sticky top-0 z-50">
-      <div className={`bg-gradient-to-r from-purple-800 to-blue-900 border-b border-purple-900 transition-all duration-300 ${isScrolled ? 'h-20 shadow-xl' : 'h-24'}`}>
+    <header className="w-full sticky top-0 z-50 font-din-next">
+      <div 
+        className={`relative bg-gradient-to-b from-[${COLORS.primary}] to-[${COLORS.primary}EE] border-b transition-all duration-300 ${
+          isScrolled ? 'h-20 shadow-header' : 'h-24'
+        }`}
+        style={{ borderColor: `${COLORS.white}15` }}
+      >
         <div className="max-w-8xl mx-auto px-6 h-full flex items-center justify-between">
           
-          {/* الجانب الأيسر */}
           <div className="flex items-center gap-6 rtl:space-x-reverse">
             <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2 rounded-full text-white hover:bg-white/10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="md:hidden p-2 rounded-xl hover:bg-white/10"
+              style={{ color: COLORS.white }}
               onClick={() => setIsSidebarOpen(true)}
             >
               <FiMenu size={28} />
             </motion.button>
 
-            <motion.a 
-              href="/" 
-              className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300"
-              whileHover={{ scale: 1.02 }}
-            >
-              الإعتــمـاد العــربــي
-            </motion.a>
+            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+              <Image
+                src="/الاعتماد العربي.png"
+                alt="Logo"
+                width={isScrolled ? 120 : 150}
+                height={isScrolled ? 40 : 50}
+                className="transition-all duration-300 drop-shadow-logo"
+              />
+            </Link>
             
-            {/* زر الاستكشاف المعدل */}
             <div className="hidden md:block relative">
               <motion.button 
-                className="flex items-center gap-2 text-white px-5 py-3 rounded-xl hover:bg-white/10 transition-colors"
+                className="flex items-center gap-2 px-5 py-3 rounded-xl group"
+                style={{ 
+                  background: `linear-gradient(145deg, ${COLORS.primary} 30%, ${COLORS.highlight}AA 100%)`,
+                  boxShadow: '0 4px 20px rgba(0, 141, 203, 0.2)'
+                }}
                 onClick={() => setExploreOpen(!exploreOpen)}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, boxShadow: '0 6px 24px rgba(0, 141, 203, 0.3)' }}
               >
-                <span>استكشاف الدورات</span>
-                <motion.span animate={{ rotate: exploreOpen ? 180 : 0 }}>
+                <span className="text-white font-medium tracking-wide">استكشاف الدورات</span>
+                <motion.span 
+                  animate={{ rotate: exploreOpen ? 180 : 0 }}
+                  className="text-white/80 group-hover:text-white"
+                >
                   <FiChevronDown size={20} />
                 </motion.span>
               </motion.button>
@@ -151,9 +178,13 @@ const Header = () => {
                     exit="hidden"
                     variants={fadeIn}
                     ref={exploreRef}
-                    className="absolute top-full left-0 mt-3 w-[800px] bg-purple-900 shadow-2xl rounded-2xl p-4 z-[1000]"
+                    className="absolute top-full left-0 mt-3 w-[800px] shadow-2xl rounded-2xl overflow-hidden z-[1000]"
+                    style={{
+                      background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary}AA 100%)`,
+                      backdropFilter: 'blur(12px)'
+                    }}
                   >
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-6 p-4">
                       {exploreData.map((section, index) => (
                         <div 
                           key={index} 
@@ -161,8 +192,11 @@ const Header = () => {
                           onMouseEnter={() => setActiveCategory(index)}
                           onMouseLeave={() => setActiveCategory(null)}
                         >
-                          <div className="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer">
-                            <span className="text-purple-300">{section.icon}</span>
+                          <div 
+                            className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors"
+                            style={{ color: COLORS.white }}
+                          >
+                            <span style={{ color: COLORS.highlight }}>{section.icon}</span>
                             <span className="font-semibold">{section.category}</span>
                           </div>
                           
@@ -170,21 +204,22 @@ const Header = () => {
                             <motion.div 
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              className="absolute left-full top-0 ml-2 w-[500px] bg-purple-800 rounded-r-2xl p-4 shadow-lg z-[1000]"
+                              className="absolute left-full top-0 ml-2 w-[500px] rounded-r-2xl p-4 shadow-lg z-[1000]"
+                              style={{ backgroundColor: `${COLORS.primary}E6` }}
                             >
                               {section.subSections.map((subSec, j) => (
                                 <div key={j} className="mb-4">
-                                  <h4 className="text-white font-medium mb-2">{subSec.title}</h4>
+                                  <h4 className="font-medium mb-2" style={{ color: COLORS.white }}>{subSec.title}</h4>
                                   <div className="space-y-2">
                                     {subSec.items.map((item, k) => (
                                       <div 
                                         key={k} 
-                                        className="group relative p-2 hover:bg-white/5 rounded-lg"
+                                        className="group relative p-2 rounded-lg hover:bg-white/10 transition-colors"
                                       >
                                         <a href="#" className="flex justify-between items-center">
-                                          <span>{item.name}</span>
+                                          <span style={{ color: COLORS.white }}>{item.name}</span>
                                           {item.subItems.length > 0 && (
-                                            <FiChevronDown className="text-sm" />
+                                            <FiChevronDown className="text-sm" style={{ color: COLORS.white }} />
                                           )}
                                         </a>
                                         
@@ -192,13 +227,15 @@ const Header = () => {
                                           <motion.div 
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
-                                            className="absolute left-full top-0 ml-2 w-[300px] bg-purple-700 rounded-lg p-3 shadow-lg z-[1000]"
+                                            className="absolute left-full top-0 ml-2 w-[300px] rounded-lg p-3 shadow-lg z-[1000]"
+                                            style={{ backgroundColor: `${COLORS.primary}CC` }}
                                           >
                                             {item.subItems.map((subItem, l) => (
                                               <a
                                                 key={l}
                                                 href="#"
-                                                className="block p-2 hover:bg-white/5 rounded-md"
+                                                className="block p-2 rounded-md hover:bg-white/5 transition-colors"
+                                                style={{ color: COLORS.white }}
                                               >
                                                 {subItem}
                                               </a>
@@ -221,18 +258,26 @@ const Header = () => {
             </div>
           </div>
 
-          {/* شريط البحث */}
           <div className="hidden md:flex items-center flex-1 mx-10 max-w-4xl">
-            <form className="relative w-full group">
+            <form className="relative w-full transform transition-all duration-200 focus-within:scale-[1.02]">
               <input
                 type="text"
                 placeholder="ابحث في آلاف الدورات..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/10 backdrop-blur-lg border-2 border-transparent rounded-2xl py-4 px-8 pr-14 text-white placeholder-gray-300 
-                  focus:border-purple-400 focus:ring-4 focus:ring-purple-400/30 transition-all"
+                className="w-full backdrop-blur-lg border-2 rounded-2xl py-4 px-8 pr-14 placeholder-gray-300 focus:ring-4 transition-all"
+                style={{
+                  backgroundColor: `${COLORS.white}15`,
+                  borderColor: `${COLORS.white}25`,
+                  color: COLORS.white,
+                  focusBorderColor: COLORS.highlight,
+                  focusRingColor: `${COLORS.highlight}30`
+                }}
               />
-              <button className="absolute right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white">
+              <button 
+                className="absolute right-6 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-white/10"
+                style={{ color: COLORS.white }}
+              >
                 <FiSearch size={22} />
               </button>
               
@@ -241,13 +286,14 @@ const Header = () => {
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
-                  variants={fadeIn}
-                  className="absolute top-full w-full mt-2 bg-purple-900 shadow-xl rounded-2xl p-4 z-[1000]"
+                  variants={scaleUp}
+                  className="absolute top-full w-full mt-2 shadow-xl rounded-2xl overflow-hidden z-[1000]"
+                  style={{ backgroundColor: COLORS.secondary }}
                 >
                   {searchResults.map((course) => (
                     <Link key={course.id} href={`/courses/${course.id}`}>
                       <motion.div
-                        className="p-3 hover:bg-white/5 rounded-lg cursor-pointer flex items-center gap-4"
+                        className="p-3 hover:bg-white/5 rounded-lg cursor-pointer flex items-center gap-4 transition-colors"
                         whileHover={{ x: 5 }}
                       >
                         {course.image && (
@@ -260,8 +306,8 @@ const Header = () => {
                           />
                         )}
                         <div>
-                          <p className="text-white font-medium">{course.name}</p>
-                          <p className="text-sm text-white/60">{course.instructor}</p>
+                          <p className="font-medium" style={{ color: COLORS.white }}>{course.name}</p>
+                          <p className="text-sm" style={{ color: COLORS.gray }}>{course.instructor}</p>
                         </div>
                       </motion.div>
                     </Link>
@@ -271,19 +317,23 @@ const Header = () => {
             </form>
           </div>
 
-          {/* الأيقونات الجانبية */}
           <div className="flex items-center gap-5 rtl:space-x-reverse">
-            {/* زر المستخدم المعدل */}
             <div className="relative">
               <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 rounded-xl relative overflow-hidden"
+                style={{ 
+                  backgroundColor: `${COLORS.white}15`,
+                  boxShadow: '0 2px 8px rgba(13, 16, 18, 0.1)'
+                }}
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
-                <FiUser size={26} />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#008DCB] to-[#F9D011] flex items-center justify-center">
+                  <span className="text-white font-medium">م</span>
+                </div>
               </motion.button>
-              
+
               <AnimatePresence>
                 {isProfileOpen && (
                   <motion.div 
@@ -292,7 +342,11 @@ const Header = () => {
                     exit="hidden"
                     variants={fadeIn}
                     ref={profileRef}
-                    className="absolute top-full right-0 mt-3 w-72 bg-purple-900 shadow-2xl rounded-2xl p-4 z-[1000]"
+                    className="absolute top-full right-0 mt-3 w-72 shadow-2xl rounded-2xl border z-[1000]"
+                    style={{
+                      backgroundColor: COLORS.secondary,
+                      borderColor: `${COLORS.primary}50`
+                    }}
                   >
                     <List />
                   </motion.div>
@@ -302,7 +356,8 @@ const Header = () => {
 
             <Link href="./FavoritesPage">
               <motion.button 
-                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white"
+                className="hidden md:block p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                style={{ color: COLORS.white }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -312,16 +367,32 @@ const Header = () => {
 
             <div className="relative">
               <motion.button 
-                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                className="hidden md:block p-2.5 rounded-xl relative group"
+                style={{ 
+                  backgroundColor: `${COLORS.white}15`,
+                  boxShadow: '0 2px 8px rgba(13, 16, 18, 0.1)'
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setCartOpen(!cartOpen)}
               >
-                <FiShoppingCart size={26} />
+                <FiShoppingCart 
+                  size={26} 
+                  className="text-white group-hover:text-[#F9D011] transition-colors" 
+                />
                 {cartItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-purple-400 text-xs rounded-full flex items-center justify-center">
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: COLORS.accent,
+                      color: COLORS.white,
+                      boxShadow: '0 2px 4px rgba(226, 16, 30, 0.3)'
+                    }}
+                  >
                     {cartItems.length}
-                  </span>
+                  </motion.span>
                 )}
               </motion.button>
 
@@ -330,17 +401,34 @@ const Header = () => {
                   <motion.div
                     variants={fadeIn}
                     ref={cartRef}
-                    className="absolute top-full right-0 mt-3 w-80 bg-purple-900 shadow-xl rounded-2xl p-4 z-[1000]"
+                    className="absolute top-full right-0 mt-3 w-80 shadow-xl rounded-2xl overflow-hidden z-[1000]"
+                    style={{
+                      background: `linear-gradient(145deg, ${COLORS.secondary} 0%, ${COLORS.primary}30 100%)`,
+                      border: `1px solid ${COLORS.primary}30`
+                    }}
                   >
-                    <h3 className="text-lg font-semibold text-white mb-4">سلة التسوق ({cartItems.length})</h3>
-                    <div className="space-y-4">
+                    <h3 className="text-lg font-semibold mb-4 p-4" style={{ color: COLORS.white }}>
+                      سلة التسوق ({cartItems.length})
+                    </h3>
+                    <div className="space-y-4 px-4 pb-4">
                       {cartItems.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg">
-                          <span className="text-white/80">{item.name}</span>
-                          <span className="text-purple-300">${item.price}</span>
+                        <div 
+                          key={item.id} 
+                          className="flex items-center justify-between p-3 rounded-lg"
+                          style={{ backgroundColor: `${COLORS.white}05` }}
+                        >
+                          <span style={{ color: COLORS.white }}>{item.name}</span>
+                          <span style={{ color: COLORS.highlight }}>${item.price}</span>
                         </div>
                       ))}
-                      <button className="w-full bg-purple-500 hover:bg-purple-400 text-white py-3 rounded-xl mt-4 transition-colors">
+                      <button 
+                        className="w-full py-3 rounded-xl mt-4 transition-colors font-medium"
+                        style={{ 
+                          backgroundColor: COLORS.highlight,
+                          color: COLORS.secondary,
+                          boxShadow: '0 4px 14px rgba(249, 208, 17, 0.3)'
+                        }}
+                      >
                         اتمام الشراء
                       </button>
                     </div>
@@ -351,7 +439,8 @@ const Header = () => {
 
             <Link href="/ChatAI">
               <motion.button 
-                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                className="hidden md:block p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                style={{ color: COLORS.white }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -361,13 +450,26 @@ const Header = () => {
 
             <div className="relative">
               <motion.button 
-                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                className="hidden md:block p-2.5 rounded-xl relative group"
+                style={{ 
+                  backgroundColor: `${COLORS.white}15`,
+                  boxShadow: '0 2px 8px rgba(13, 16, 18, 0.1)'
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
               >
-                <FiBell size={26} />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full ring-2 ring-purple-900"></span>
+                <FiBell 
+                  size={26} 
+                  className="text-white group-hover:text-[#F9D011] transition-colors" 
+                />
+                <span 
+                  className="absolute -top-1 -right-1 w-3 h-3 rounded-full ring-2"
+                  style={{ 
+                    backgroundColor: COLORS.accent,
+                    borderColor: COLORS.primary
+                  }}
+                ></span>
               </motion.button>
 
               <AnimatePresence>
@@ -375,14 +477,22 @@ const Header = () => {
                   <motion.div
                     variants={fadeIn}
                     ref={notificationsRef}
-                    className="absolute top-full right-0 mt-3 w-80 bg-purple-900 shadow-xl rounded-2xl p-4 z-[1000]"
+                    className="absolute top-full right-0 mt-3 w-80 shadow-xl rounded-2xl overflow-hidden z-[1000]"
+                    style={{
+                      background: `linear-gradient(145deg, ${COLORS.secondary} 0%, ${COLORS.primary}30 100%)`,
+                      border: `1px solid ${COLORS.primary}30`
+                    }}
                   >
-                    <h3 className="text-lg font-semibold text-white mb-4">الإشعارات</h3>
-                    <div className="space-y-4">
+                    <h3 className="text-lg font-semibold mb-4 p-4" style={{ color: COLORS.white }}>الإشعارات</h3>
+                    <div className="space-y-4 px-4 pb-4">
                       {notifications.map((notification) => (
-                        <div key={notification.id} className="p-3 hover:bg-white/5 rounded-lg">
-                          <p className="text-white/80">{notification.text}</p>
-                          <p className="text-xs text-white/50 mt-1">{notification.time}</p>
+                        <div 
+                          key={notification.id} 
+                          className="p-3 rounded-lg hover:bg-white/5 transition-colors"
+                          style={{ backgroundColor: `${COLORS.white}05` }}
+                        >
+                          <p style={{ color: COLORS.white }}>{notification.text}</p>
+                          <p className="text-xs mt-1" style={{ color: COLORS.gray }}>{notification.time}</p>
                         </div>
                       ))}
                     </div>
@@ -393,7 +503,8 @@ const Header = () => {
 
             <Link href="/AddCommints">
               <motion.button 
-                className="hidden md:block p-2.5 bg-white/5 rounded-xl hover:bg-white/10 text-white relative"
+                className="hidden md:block p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                style={{ color: COLORS.white }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -407,7 +518,12 @@ const Header = () => {
         </div>
       </div>
 
-      <nav className={`bg-purple-900/95 hidden md:block transition-all ${isScrolled ? 'py-3' : 'py-4'}`}>
+      <nav 
+        className={`hidden md:block transition-all ${
+          isScrolled ? 'py-3' : 'py-4'
+        } bg-gradient-to-b from-[${COLORS.secondary}EE] to-[${COLORS.secondary}]`}
+        style={{ boxShadow: '0 4px 20px rgba(13, 16, 18, 0.1)' }}
+      >
         <div className="max-w-8xl mx-auto px-6">
           <div className="flex justify-center gap-10 rtl:space-x-reverse">
             {categories.map((category, index) => (
@@ -419,11 +535,17 @@ const Header = () => {
               >
                 <motion.a 
                   href="#"
-                  className="flex items-center gap-2 px-5 py-2.5 text-purple-100 hover:text-white rounded-xl"
-                  whileHover={{ scale: 1.02 }}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                  style={{ color: COLORS.primary }}
+                  whileHover={{ scale: 1.05 }}
                 >
-                  <span className="text-xl">{category.icon}</span>
-                  <span>{category.title}</span>
+                  <span 
+                    className="text-xl transition-colors"
+                    style={{ color: COLORS.primary }}
+                  >
+                    {category.icon}
+                  </span>
+                  <span className="font-medium tracking-wide">{category.title}</span>
                 </motion.a>
 
                 <AnimatePresence>
@@ -433,17 +555,24 @@ const Header = () => {
                       animate="visible"
                       exit="hidden"
                       variants={fadeIn}
-                      className="absolute top-full left-1/2 -translate-x-1/2 bg-purple-800 shadow-2xl rounded-2xl p-5 min-w-[400px] z-[1000]"
+                      className="absolute top-full left-1/2 -translate-x-1/2 shadow-2xl rounded-2xl overflow-hidden z-[1000]"
+                      style={{
+                        background: `linear-gradient(145deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                        border: `1px solid ${COLORS.primary}30`
+                      }}
                     >
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4 p-5 min-w-[400px]">
                         {category.sub.map((item, i) => (
                           <a
                             key={i}
                             href="#"
-                            className="px-5 py-3 hover:bg-white/5 rounded-lg flex items-center gap-3"
+                            className="px-5 py-3 rounded-lg flex items-center gap-3 hover:bg-white/10 transition-colors"
                           >
-                            <span className="w-2 h-2 bg-purple-300 rounded-full"></span>
-                            {item}
+                            <span 
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: COLORS.highlight }}
+                            ></span>
+                            <span style={{ color: COLORS.white }}>{item}</span>
                           </a>
                         ))}
                       </div>
@@ -463,7 +592,8 @@ const Header = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-50 backdrop-blur-lg"
+              style={{ backgroundColor: `${COLORS.secondary}CC` }}
               onClick={() => setIsSidebarOpen(false)}
             />
             
@@ -472,32 +602,53 @@ const Header = () => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-y-0 right-0 z-50 w-96 bg-purple-900 shadow-2xl"
+              className="fixed inset-y-0 right-0 z-50 w-96 shadow-2xl"
+              style={{
+                background: `linear-gradient(145deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.2)'
+              }}
             >
-              <div className="p-6 flex justify-between items-center border-b border-purple-800">
-                <h2 className="text-2xl font-bold text-white">القائمة</h2>
+              <div className="p-6 flex justify-between items-center border-b"
+                style={{ borderColor: `${COLORS.white}20` }}
+              >
+                <h2 className="text-2xl font-bold" style={{ color: COLORS.white }}>القائمة</h2>
                 <motion.button 
-                  className="p-2 text-white hover:bg-white/10 rounded-full"
+                  className="p-2 rounded-full hover:bg-white/10"
                   onClick={() => setIsSidebarOpen(false)}
                   whileHover={{ rotate: 90 }}
                 >
-                  <FiX size={28} />
+                  <FiX size={28} style={{ color: COLORS.white }} />
                 </motion.button>
               </div>
               
               <div className="p-6 space-y-6 overflow-y-auto h-[calc(100vh-80px)]">
-                <div className="flex items-center gap-4 pb-6 border-b border-white/10">
-                  <div className="w-16 h-16 rounded-full bg-purple-300 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-purple-900">م</span>
+                <div className="flex items-center gap-4 pb-6 border-b"
+                  style={{ borderColor: `${COLORS.white}10` }}
+                >
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-[#008DCB] to-[#F9D011]">
+                    <span className="text-2xl font-bold" style={{ color: COLORS.primary }}>م</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-white">مرحبا بك!</h3>
-                    <p className="text-white/60">سجل الدخول للوصول الكامل</p>
+                    <h3 className="text-xl font-semibold" style={{ color: COLORS.white }}>مرحبا بك!</h3>
+                    <p className="text-sm" style={{ color: COLORS.gray }}>سجل الدخول للوصول الكامل</p>
                     <div className="flex gap-3 mt-3">
-                      <button className="px-6 py-2 bg-purple-500 rounded-xl text-white hover:bg-purple-400">
+                      <button 
+                        className="px-6 py-2 rounded-xl transition-colors font-medium"
+                        style={{ 
+                          backgroundColor: COLORS.highlight,
+                          color: COLORS.secondary,
+                          boxShadow: '0 4px 14px rgba(249, 208, 17, 0.3)'
+                        }}
+                      >
                         تسجيل الدخول
                       </button>
-                      <button className="px-6 py-2 border border-white/20 rounded-xl text-white hover:bg-white/10">
+                      <button 
+                        className="px-6 py-2 border rounded-xl transition-colors hover:bg-white/10"
+                        style={{ 
+                          borderColor: `${COLORS.white}20`, 
+                          color: COLORS.white 
+                        }}
+                      >
                         إنشاء حساب
                       </button>
                     </div>
@@ -508,21 +659,29 @@ const Header = () => {
                   <input
                     type="text"
                     placeholder="البحث..."
-                    className="w-full bg-white/5 border-2 border-transparent rounded-xl py-3 px-6 text-white placeholder-gray-400 
-                      focus:border-purple-400 focus:ring-4 focus:ring-purple-400/30"
+                    className="w-full rounded-xl py-3 px-6 pr-12 bg-white/5 border-2 border-white/10 focus:border-[#F9D011] transition-colors"
+                    style={{ color: COLORS.white }}
                   />
-                  <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <FiSearch 
+                    className="absolute left-6 top-1/2 -translate-y-1/2"
+                    style={{ color: COLORS.gray }}
+                  />
                 </form>
                 
                 <div className="space-y-4">
                   {categories.map((category, index) => (
-                    <div key={index} className="border-b border-purple-800 last:border-0">
+                    <div 
+                      key={index} 
+                      className="border-b last:border-0"
+                      style={{ borderColor: `${COLORS.white}10` }}
+                    >
                       <button 
-                        className="w-full flex justify-between items-center p-4 text-white hover:bg-white/5 rounded-xl"
+                        className="w-full flex justify-between items-center p-4 rounded-xl hover:bg-white/10 transition-colors"
+                        style={{ color: COLORS.white }}
                         onClick={() => setActiveCategory(activeCategory === index ? null : index)}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-xl">{category.icon}</span>
+                          <span className="text-xl" style={{ color: COLORS.highlight }}>{category.icon}</span>
                           {category.title}
                         </div>
                         <FiChevronDown className={`transform transition-transform ${
@@ -542,7 +701,8 @@ const Header = () => {
                             <a 
                               key={i} 
                               href="#" 
-                              className="block p-4 text-purple-200 hover:text-white hover:bg-white/5 rounded-lg"
+                              className="block p-4 rounded-lg hover:bg-white/5 transition-colors"
+                              style={{ color: `${COLORS.white}CC` }}
                             >
                               {sub}
                             </a>
@@ -553,23 +713,24 @@ const Header = () => {
                   ))}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
-                  <button className="p-3 flex flex-col items-center gap-2 hover:bg-white/5 rounded-xl text-white/80 hover:text-white">
-                    <FiHeart size={24} />
-                    <span>المفضلة</span>
-                  </button>
-                  <button className="p-3 flex flex-col items-center gap-2 hover:bg-white/5 rounded-xl text-white/80 hover:text-white">
-                    <FiShoppingCart size={24} />
-                    <span>السلة</span>
-                  </button>
-                  <button className="p-3 flex flex-col items-center gap-2 hover:bg-white/5 rounded-xl text-white/80 hover:text-white">
-                    <FiBell size={24} />
-                    <span>الإشعارات</span>
-                  </button>
-                  <button className="p-3 flex flex-col items-center gap-2 hover:bg-white/5 rounded-xl text-white/80 hover:text-white">
-                    <FiUser size={24} />
-                    <span>الحساب</span>
-                  </button>
+                <div className="grid grid-cols-2 gap-4 pt-6 border-t"
+                  style={{ borderColor: `${COLORS.white}10` }}
+                >
+                  {[
+                    { icon: <FiHeart />, text: 'المفضلة' },
+                    { icon: <FiShoppingCart />, text: 'السلة' },
+                    { icon: <FiBell />, text: 'الإشعارات' },
+                    { icon: <FiUser />, text: 'الحساب' },
+                  ].map((item, i) => (
+                    <button 
+                      key={i}
+                      className="p-3 flex flex-col items-center gap-2 rounded-xl hover:bg-white/5 transition-colors"
+                      style={{ color: `${COLORS.white}CC` }}
+                    >
+                      {React.cloneElement(item.icon, { size: 24 })}
+                      <span>{item.text}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </motion.div>
