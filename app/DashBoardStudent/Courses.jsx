@@ -13,7 +13,16 @@ import {
 } from 'react-icons/fi';
 import coursesData from '../../data.json';
 
-
+// نظام الألوان المخصص
+const colors = {
+  primary: '#008DCB',
+  secondary: '#0D1012',
+  accent: '#F9D011',
+  danger: '#E2101E',
+  gray: '#999999',
+  lightGray: '#F5F5F5',
+  white: '#FFFFFF'
+};
 
 const CoursesPage = () => {
   const [favorites, setFavorites] = useState([]);
@@ -22,10 +31,19 @@ const CoursesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('popularity');
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('courseFavorites') || '[]');
     setFavorites(saved);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleFavorite = (courseId) => {
@@ -53,32 +71,40 @@ const CoursesPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-purple-50">
-      {/* شريط البحث */}
-      <div className="bg-white shadow-sm sticky top-0 z-50">
+    <div className="min-h-screen bg-gray-50">
+      {/* شريط البحث والفلاتر */}
+      <div className={`bg-white sticky top-0 z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            
+            {/* شريط البحث */}
             <div className="w-full md:w-1/3 relative">
               <input
                 type="text"
                 placeholder="ابحث عن دورة أو مدرب..."
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-700"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-[#008DCB] bg-white text-gray-700 placeholder-gray-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
+            {/* أزرار الفلاتر */}
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div className="relative">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 bg-purple-100 text-purple-700 px-6 py-3 rounded-lg hover:bg-purple-200 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl transition-colors"
+                  style={{
+                    backgroundColor: showFilters ? colors.primary : colors.lightGray,
+                    color: showFilters ? colors.white : colors.secondary
+                  }}
                 >
                   <FiFilter className="text-lg" />
                   التصفيات
                   {showFilters ? <FiChevronUp /> : <FiChevronDown />}
                 </button>
 
+                {/* قائمة الفلاتر */}
                 <AnimatePresence>
                   {showFilters && (
                     <motion.div
@@ -89,9 +115,10 @@ const CoursesPage = () => {
                     >
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">التصنيف</label>
+                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>التصنيف</label>
                           <select
-                            className="w-full px-3 py-2 border rounded-lg"
+                            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#008DCB]"
+                            style={{borderColor: colors.gray}}
                             value={selectedCategory || ''}
                             onChange={(e) => setSelectedCategory(e.target.value || null)}
                           >
@@ -105,9 +132,10 @@ const CoursesPage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">الترتيب حسب</label>
+                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>الترتيب حسب</label>
                           <select
-                            className="w-full px-3 py-2 border rounded-lg"
+                            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#008DCB]"
+                            style={{borderColor: colors.gray}}
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                           >
@@ -126,95 +154,80 @@ const CoursesPage = () => {
         </div>
       </div>
 
-      {/* المحتوى الرئيسي */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-8">
-        {/* الشريط الجانبي للتصنيفات */}
-        <motion.div 
-          className="hidden lg:block w-64 shrink-0"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="text-lg font-semibold mb-4 text-purple-900 flex items-center gap-2">
-              <FiBookOpen className="text-purple-600" />
-              التصنيفات
-            </h3>
-            <div className="space-y-2">
-              {coursesData.categories.map(category => (
-                <button
-                  key={category.categoryName}
-                  onClick={() => setSelectedCategory(
-                    selectedCategory === category.categoryName ? null : category.categoryName
-                  )}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                    selectedCategory === category.categoryName 
-                      ? 'bg-purple-50 text-purple-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="text-xl">{category.icon}</span>
-                  {category.categoryName}
-                  {selectedCategory === category.categoryName && (
-                    <span className="ml-auto w-2 h-2 bg-purple-600 rounded-full" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* بطاقات الدورات */}
-        <div className="flex-1">
-          <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <span className="text-gray-600">النتائج:</span>
-              <span className="font-medium text-purple-700">
-                {sortedCourses.length} دورة
-              </span>
-            </div>
-            
-            <div className="relative">
-              <select
-                className="bg-white pl-4 pr-8 py-2.5 rounded-lg border border-gray-200 appearance-none focus:ring-2 focus:ring-purple-500"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="popularity">الترتيب حسب: الشعبية</option>
-                <option value="price">الترتيب حسب: السعر</option>
-                <option value="rating">الترتيب حسب: التقييم</option>
-              </select>
-              <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedCourses.map(course => (
-              <CourseCard
-                key={course.id}
-                course={course}
-                isFavorite={favorites.includes(course.id)}
-                onToggleFavorite={toggleFavorite}
-                onViewDetails={() => setSelectedCourse(course)}
-              />
-            ))}
-          </div>
-
-          {sortedCourses.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              <div className="text-2xl mb-4">😞 لم نجد ما تبحث عنه</div>
-              <button
-                onClick={() => {
-                  setSelectedCategory(null);
-                  setSearchQuery('');
-                }}
-                className="text-purple-600 hover:text-purple-700"
-              >
-                إعادة تعيين الفلاتر
-              </button>
-            </div>
-          )}
+      {/* فئات الدورات بشكل أفقي */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex overflow-x-auto pb-4 scrollbar-hide">
+          {coursesData.categories.map(category => (
+            <button
+              key={category.categoryName}
+              onClick={() => setSelectedCategory(
+                selectedCategory === category.categoryName ? null : category.categoryName
+              )}
+              className={`flex-shrink-0 px-6 py-2 rounded-full mx-2 transition-colors ${
+                selectedCategory === category.categoryName 
+                  ? 'bg-[#008DCB] text-white'
+                  : 'bg-[#F5F5F5] text-[#0D1012] hover:bg-[#008DCB]/20'
+              }`}
+            >
+              {category.categoryName}
+            </button>
+          ))}
         </div>
+      </div>
+
+      {/* المحتوى الرئيسي */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <span className="text-gray-600">النتائج:</span>
+            <span className="font-medium" style={{color: colors.primary}}>
+              {sortedCourses.length} دورة
+            </span>
+          </div>
+          
+          <div className="relative">
+            <select
+              className="bg-white pl-4 pr-8 py-2.5 rounded-lg border-2 border-gray-200 appearance-none focus:outline-none focus:border-[#008DCB]"
+              style={{borderColor: colors.gray}}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="popularity">الترتيب حسب: الشعبية</option>
+              <option value="price">الترتيب حسب: السعر</option>
+              <option value="rating">الترتيب حسب: التقييم</option>
+            </select>
+            <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedCourses.map(course => (
+            <CourseCard
+              key={course.id}
+              course={course}
+              isFavorite={favorites.includes(course.id)}
+              onToggleFavorite={toggleFavorite}
+              onViewDetails={() => setSelectedCourse(course)}
+              colors={colors}
+            />
+          ))}
+        </div>
+
+        {sortedCourses.length === 0 && (
+          <div className="text-center py-12" style={{color: colors.gray}}>
+            <div className="text-2xl mb-4">😞 لم نجد ما تبحث عنه</div>
+            <button
+              onClick={() => {
+                setSelectedCategory(null);
+                setSearchQuery('');
+              }}
+              className="hover:underline"
+              style={{color: colors.primary}}
+            >
+              إعادة تعيين الفلاتر
+            </button>
+          </div>
+        )}
 
         {/* تفاصيل الدورة */}
         <AnimatePresence>
@@ -227,7 +240,8 @@ const CoursesPage = () => {
             >
               <button
                 onClick={() => setSelectedCourse(null)}
-                className="mb-6 text-gray-600 hover:text-purple-600"
+                className="mb-6 hover:text-[#008DCB] transition-colors"
+                style={{color: colors.secondary}}
               >
                 <FiArrowLeft className="text-2xl" />
               </button>
@@ -242,11 +256,13 @@ const CoursesPage = () => {
                   />
                 </div>
 
-                <h2 className="text-2xl font-bold">{selectedCourse.name}</h2>
+                <h2 className="text-2xl font-bold" style={{color: colors.secondary}}>
+                  {selectedCourse.name}
+                </h2>
 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
                       <Image
                         src={selectedCourse.instructorImage}
                         width={40}
@@ -254,46 +270,66 @@ const CoursesPage = () => {
                         alt={selectedCourse.instructor}
                       />
                     </div>
-                    <span className="font-medium">{selectedCourse.instructor}</span>
+                    <span className="font-medium" style={{color: colors.secondary}}>
+                      {selectedCourse.instructor}
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-1 ml-auto">
-                    <FiStar className="text-yellow-400" />
+                  <div className="flex items-center gap-1 ml-auto" style={{color: colors.accent}}>
+                    <FiStar className="text-lg" />
                     <span>{selectedCourse.rating.toFixed(1)}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <DetailItem icon={<FiClock />} label="المدة" value={`${selectedCourse.duration} ساعة`} />
-                  <DetailItem icon={<FiPlay />} label="الدروس" value={selectedCourse.lessons} />
-                  <DetailItem icon={<FiUsers />} label="الطلاب" value={selectedCourse.studentsEnrolled} />
-                  <DetailItem icon={<FiTag />} label="المستوى" value={selectedCourse.level} />
+                  <DetailItem 
+                    icon={<FiClock style={{color: colors.primary}} />} 
+                    label="المدة" 
+                    value={`${selectedCourse.duration} ساعة`}
+                  />
+                  <DetailItem 
+                    icon={<FiPlay style={{color: colors.primary}} />} 
+                    label="الدروس" 
+                    value={selectedCourse.lessons}
+                  />
+                  <DetailItem 
+                    icon={<FiUsers style={{color: colors.primary}} />} 
+                    label="الطلاب" 
+                    value={selectedCourse.studentsEnrolled}
+                  />
+                  <DetailItem 
+                    icon={<FiTag style={{color: colors.primary}} />} 
+                    label="المستوى" 
+                    value={selectedCourse.level}
+                  />
                 </div>
 
                 <div className="prose max-w-none">
-                  <h3 className="text-xl font-bold mb-4">تفاصيل الدورة</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{color: colors.secondary}}>تفاصيل الدورة</h3>
                   <p className="text-gray-600">
-                    وصف تفصيلي للدورة التعليمية وأهدافها والمهارات التي سيتم تعلمها،
-                    مع ذكر المتطلبات السابقة وأي معلومات إضافية مهمة للطالب.
+                    {selectedCourse.description || 'وصف تفصيلي للدورة التعليمية وأهدافها والمهارات التي سيتم تعلمها، مع ذكر المتطلبات السابقة وأي معلومات إضافية مهمة للطالب.'}
                   </p>
                 </div>
 
-                <div className="sticky bottom-0 bg-white pt-6 border-t border-gray-100">
+                <div className="sticky bottom-0 bg-white pt-6 border-t" style={{borderColor: colors.lightGray}}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {selectedCourse.discount && (
-                        <span className="text-red-600 text-2xl font-bold">
+                        <span className="text-2xl font-bold" style={{color: colors.danger}}>
                           ${(selectedCourse.price * (1 - selectedCourse.discount / 100)).toFixed(2)}
                         </span>
                       )}
                       <span className={`text-2xl font-bold ${
-                        selectedCourse.discount ? 'text-gray-400 line-through' : 'text-purple-600'
+                        selectedCourse.discount ? 'text-gray-400 line-through' : 'text-[#008DCB]'
                       }`}>
                         ${selectedCourse.price.toFixed(2)}
                       </span>
                     </div>
-                    <button className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
-                      <FiShoppingCart className="inline-block mr-2" />
+                    <button 
+                      className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+                      style={{backgroundColor: colors.primary, color: colors.white}}
+                    >
+                      <FiShoppingCart />
                       اشترك الآن
                     </button>
                   </div>
@@ -304,25 +340,29 @@ const CoursesPage = () => {
         </AnimatePresence>
       </main>
 
-      <button
+      {/* زر العودة للأعلى */}
+      <motion.button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
+        className="fixed bottom-8 right-8 p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+        style={{backgroundColor: colors.primary, color: colors.white}}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
       >
         <FiChevronUp className="text-2xl" />
-      </button>
+      </motion.button>
     </div>
   );
 };
 
-const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails }) => {
+const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, colors }) => {
   const [showQuickView, setShowQuickView] = useState(false);
 
   return (
     <motion.div 
-      className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col"
+      className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+      whileHover={{ y: -5 }}
       onHoverStart={() => setShowQuickView(true)}
       onHoverEnd={() => setShowQuickView(false)}
-      whileHover={{ y: -5 }}
     >
       <AnimatePresence>
         {showQuickView && (
@@ -335,7 +375,8 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails }) => 
             <div className="text-center text-white p-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="bg-white text-purple-600 px-6 py-2 rounded-lg mb-4"
+                className="bg-white px-6 py-2 rounded-lg mb-4"
+                style={{color: colors.primary}}
                 onClick={onViewDetails}
               >
                 <FiInfo className="inline-block mr-2" />
@@ -356,6 +397,17 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails }) => 
         )}
       </AnimatePresence>
 
+      {/* شريط الخصم */}
+      {course.discount && (
+        <div 
+          className="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-bold"
+          style={{backgroundColor: colors.danger, color: colors.white}}
+        >
+          {course.discount}% خصم
+        </div>
+      )}
+
+      {/* صورة الدورة */}
       <div className="relative h-48 overflow-hidden rounded-t-2xl">
         <Image
           src={course.image}
@@ -363,59 +415,87 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails }) => 
           fill
           className="object-cover"
         />
-        
-        <div className="absolute top-3 left-3 flex gap-2">
-          {course.discount && (
-            <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm">
-              {course.discount}% خصم
-            </span>
-          )}
-        </div>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(course.id);
-          }}
-          className="absolute top-3 right-3 p-2 bg-white/90 rounded-full shadow-md"
-        >
-          <FiHeart className={`w-5 h-5 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-500'}`} />
-        </button>
       </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-bold text-lg mb-2">{course.name}</h3>
-        
+      {/* محتوى البطاقة */}
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="text-lg font-bold" style={{color: colors.secondary}}>
+            {course.name}
+          </h3>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(course.id);
+            }}
+            className="p-1 hover:scale-110 transition-transform"
+          >
+            <FiHeart className={`w-6 h-6 ${
+              isFavorite 
+                ? `text-[${colors.danger}] fill-[${colors.danger}]` 
+                : `text-[${colors.gray}]`
+            }`}/>
+          </button>
+        </div>
+
+        {/* معلومات المدرب */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-6 h-6 rounded-full overflow-hidden">
+          <div className="w-8 h-8 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
             <Image
               src={course.instructorImage}
-              width={24}
-              height={24}
+              width={32}
+              height={32}
               alt={course.instructor}
+              className="object-cover"
             />
           </div>
-          <span className="text-sm text-gray-600">{course.instructor}</span>
+          <span className="text-sm" style={{color: colors.gray}}>
+            {course.instructor}
+          </span>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Pill label={course.level} color="purple" />
-          <Pill label={`${course.lessons} دروس`} />
+        {/* التقييم والمعلومات */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1" style={{color: colors.accent}}>
+            <FiStar className="text-lg" />
+            <span className="font-medium">{course.rating.toFixed(1)}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-sm" style={{color: colors.gray}}>
+              <FiUsers />
+              <span>{course.studentsEnrolled}</span>
+            </div>
+            <div className="flex items-center gap-1 text-sm" style={{color: colors.gray}}>
+              <FiClock />
+              <span>{course.duration} س</span>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-auto flex items-center justify-between">
-          <div>
+        {/* السعر والشراء */}
+        <div className="flex items-center justify-between border-t pt-4">
+          <div className="flex items-center gap-2">
             {course.discount ? (
               <>
-                <span className="text-red-600 font-bold">${(course.price * (1 - course.discount / 100)).toFixed(2)}</span>
-                <span className="line-through text-gray-400 ml-2">${course.price.toFixed(2)}</span>
+                <span className="text-xl font-bold" style={{color: colors.primary}}>
+                  ${(course.price * (1 - course.discount / 100)).toFixed(2)}
+                </span>
+                <span className="line-through text-sm" style={{color: colors.gray}}>
+                  ${course.price.toFixed(2)}
+                </span>
               </>
             ) : (
-              <span className="text-purple-600 font-bold">${course.price.toFixed(2)}</span>
+              <span className="text-xl font-bold" style={{color: colors.primary}}>
+                ${course.price.toFixed(2)}
+              </span>
             )}
           </div>
-          <button className="bg-purple-100 text-purple-600 px-4 py-2 rounded-lg">
+          <button 
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+            style={{backgroundColor: colors.primary, color: colors.white}}
+          >
             <FiShoppingCart />
+            <span>اشتري الآن</span>
           </button>
         </div>
       </div>
@@ -423,25 +503,10 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails }) => 
   );
 };
 
-const Pill = ({ label, color = 'gray' }) => {
-  const colors = {
-    purple: 'bg-purple-100 text-purple-700',
-    gray: 'bg-gray-100 text-gray-700',
-    red: 'bg-red-100 text-red-700',
-    green: 'bg-green-100 text-green-700',
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm ${colors[color]}`}>
-      {label}
-    </span>
-  );
-};
-
 const DetailItem = ({ icon, label, value }) => (
   <div className="bg-gray-50 p-4 rounded-lg">
-    <div className="text-purple-600 mb-2">{icon}</div>
-    <div className="font-medium">{label}</div>
+    <div className="text-[#008DCB] mb-2">{icon}</div>
+    <div className="font-medium text-[#0D1012]">{label}</div>
     <div className="text-gray-600">{value}</div>
   </div>
 );

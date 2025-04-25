@@ -1,11 +1,11 @@
-import Courses from "@/app/Courses/page";
+import LoginPage from "@/app/LoginPage/page";
 
 export default function Home() {
   return (
     
          
         <div>
-         <Courses/>
+         <LoginPage/>
         </div>
   );
 }

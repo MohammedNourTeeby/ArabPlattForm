@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './Header'
 import WelcomMassage from './WelcomMassage'
 import Courses from './Courses'
+import Footer from '@/components/Footer';
 
 function page() {
   return (
@@ -9,7 +10,8 @@ function page() {
       <Header/>
       <WelcomMassage/>
       <Courses/>
-    
+      <Footer />
+
     </div>
   )
 }

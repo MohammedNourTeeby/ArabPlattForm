@@ -1,4 +1,4 @@
-import CertificateViewer from '@/app/DashBoaredAdmin/components/Certificates/CertificateViewer';
+import CertificateViewer from '@/app/DashBoardAdmin/components/Certificates/CertificateViewer';
 
 export default function CertificatePage({ params }) {
   return (
