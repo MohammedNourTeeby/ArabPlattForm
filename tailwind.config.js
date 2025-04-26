@@ -20,6 +20,11 @@ module.exports = {
         "din-next": ["DIN Next Arabic", "sans-serif"],
       },
       colors: {
+        blue: "#008DCB",
+        black: "#0D1012",
+        gray: "#999999",
+        red: "#E2101E",
+        yellow: "#F9D011",
         ring: "var(--ring)", // تأكد من وجود هذا التعريف
 
         border: "var(--border)",

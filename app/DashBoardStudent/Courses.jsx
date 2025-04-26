@@ -9,11 +9,10 @@ import {
   FiPercent, FiHeart, FiChevronUp, 
   FiChevronDown, FiPlay, FiVideo,
   FiBookOpen, FiDollarSign, FiTag,
-  FiArrowLeft, FiInfo
+  FiArrowLeft, FiInfo, FiChevronLeft, FiChevronRight
 } from 'react-icons/fi';
 import coursesData from '../../data.json';
 
-// نظام الألوان المخصص
 const colors = {
   primary: '#008DCB',
   secondary: '#0D1012',
@@ -76,8 +75,6 @@ const CoursesPage = () => {
       <div className={`bg-white sticky top-0 z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            
-            {/* شريط البحث */}
             <div className="w-full md:w-1/3 relative">
               <input
                 type="text"
@@ -87,8 +84,6 @@ const CoursesPage = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-
-            {/* أزرار الفلاتر */}
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div className="relative">
                 <button
@@ -103,8 +98,6 @@ const CoursesPage = () => {
                   التصفيات
                   {showFilters ? <FiChevronUp /> : <FiChevronDown />}
                 </button>
-
-                {/* قائمة الفلاتر */}
                 <AnimatePresence>
                   {showFilters && (
                     <motion.div
@@ -130,7 +123,6 @@ const CoursesPage = () => {
                             ))}
                           </select>
                         </div>
-
                         <div>
                           <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>الترتيب حسب</label>
                           <select
@@ -154,24 +146,35 @@ const CoursesPage = () => {
         </div>
       </div>
 
-      {/* فئات الدورات بشكل أفقي */}
+      {/* فئات الدورات مع أزرار التنقل */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex overflow-x-auto pb-4 scrollbar-hide">
-          {coursesData.categories.map(category => (
-            <button
-              key={category.categoryName}
-              onClick={() => setSelectedCategory(
-                selectedCategory === category.categoryName ? null : category.categoryName
-              )}
-              className={`flex-shrink-0 px-6 py-2 rounded-full mx-2 transition-colors ${
-                selectedCategory === category.categoryName 
-                  ? 'bg-[#008DCB] text-white'
-                  : 'bg-[#F5F5F5] text-[#0D1012] hover:bg-[#008DCB]/20'
-              }`}
-            >
-              {category.categoryName}
+        <div className="flex items-center justify-between">
+          <div className="flex overflow-x-auto pb-4 scrollbar-hide w-full">
+            {coursesData.categories.map(category => (
+              <button
+                key={category.categoryName}
+                onClick={() => setSelectedCategory(
+                  selectedCategory === category.categoryName ? null : category.categoryName
+                )}
+                className={`flex-shrink-0 px-6 py-3 rounded-full mx-2 transition-colors ${
+                  selectedCategory === category.categoryName 
+                    ? 'bg-[#008DCB] text-white'
+                    : 'bg-[#F5F5F5] text-[#0D1012] hover:bg-[#008DCB]/20'
+                }`}
+              >
+                <span className="block text-sm font-medium">{category.categoryName}</span>
+                <span className="text-xs text-gray-500">({category.studentsCount}+ students)</span>
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-4 ml-4">
+            <button className="bg-transparent hover:bg-gray-200 rounded-full p-2">
+              <FiChevronLeft className="text-2xl" />
             </button>
-          ))}
+            <button className="bg-transparent hover:bg-gray-200 rounded-full p-2">
+              <FiChevronRight className="text-2xl" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -184,7 +187,6 @@ const CoursesPage = () => {
               {sortedCourses.length} دورة
             </span>
           </div>
-          
           <div className="relative">
             <select
               className="bg-white pl-4 pr-8 py-2.5 rounded-lg border-2 border-gray-200 appearance-none focus:outline-none focus:border-[#008DCB]"
@@ -199,8 +201,7 @@ const CoursesPage = () => {
             <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sortedCourses.map(course => (
             <CourseCard
               key={course.id}
@@ -212,7 +213,6 @@ const CoursesPage = () => {
             />
           ))}
         </div>
-
         {sortedCourses.length === 0 && (
           <div className="text-center py-12" style={{color: colors.gray}}>
             <div className="text-2xl mb-4">😞 لم نجد ما تبحث عنه</div>
@@ -228,8 +228,6 @@ const CoursesPage = () => {
             </button>
           </div>
         )}
-
-        {/* تفاصيل الدورة */}
         <AnimatePresence>
           {selectedCourse && (
             <motion.div
@@ -245,7 +243,6 @@ const CoursesPage = () => {
               >
                 <FiArrowLeft className="text-2xl" />
               </button>
-
               <div className="space-y-6">
                 <div className="relative h-64 rounded-xl overflow-hidden">
                   <Image
@@ -255,11 +252,9 @@ const CoursesPage = () => {
                     className="object-cover"
                   />
                 </div>
-
                 <h2 className="text-2xl font-bold" style={{color: colors.secondary}}>
                   {selectedCourse.name}
                 </h2>
-
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
@@ -274,13 +269,11 @@ const CoursesPage = () => {
                       {selectedCourse.instructor}
                     </span>
                   </div>
-
                   <div className="flex items-center gap-1 ml-auto" style={{color: colors.accent}}>
                     <FiStar className="text-lg" />
                     <span>{selectedCourse.rating.toFixed(1)}</span>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <DetailItem 
                     icon={<FiClock style={{color: colors.primary}} />} 
@@ -303,14 +296,12 @@ const CoursesPage = () => {
                     value={selectedCourse.level}
                   />
                 </div>
-
                 <div className="prose max-w-none">
                   <h3 className="text-xl font-bold mb-4" style={{color: colors.secondary}}>تفاصيل الدورة</h3>
                   <p className="text-gray-600">
                     {selectedCourse.description || 'وصف تفصيلي للدورة التعليمية وأهدافها والمهارات التي سيتم تعلمها، مع ذكر المتطلبات السابقة وأي معلومات إضافية مهمة للطالب.'}
                   </p>
                 </div>
-
                 <div className="sticky bottom-0 bg-white pt-6 border-t" style={{borderColor: colors.lightGray}}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -356,10 +347,10 @@ const CoursesPage = () => {
 
 const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, colors }) => {
   const [showQuickView, setShowQuickView] = useState(false);
-
+  
   return (
     <motion.div 
-      className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+      className="relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow"
       whileHover={{ y: -5 }}
       onHoverStart={() => setShowQuickView(true)}
       onHoverEnd={() => setShowQuickView(false)}
@@ -370,7 +361,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/50 rounded-2xl z-10 flex items-center justify-center"
+            className="absolute inset-0 bg-black/50 rounded-lg z-10 flex items-center justify-center"
           >
             <div className="text-center text-white p-4">
               <motion.button
@@ -396,8 +387,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* شريط الخصم */}
+      
       {course.discount && (
         <div 
           className="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-bold"
@@ -406,18 +396,27 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
           {course.discount}% خصم
         </div>
       )}
-
-      {/* صورة الدورة */}
-      <div className="relative h-48 overflow-hidden rounded-t-2xl">
+      
+      <div className="relative h-48 overflow-hidden rounded-t-lg">
         <Image
           src={course.image}
           alt={course.name}
           fill
           className="object-cover"
         />
+        <div className="absolute inset-0 flex items-center justify-end p-4">
+          <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
+            <Image
+              src={course.instructorImage}
+              width={64}
+              height={64}
+              alt={course.instructor}
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
-
-      {/* محتوى البطاقة */}
+      
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-bold" style={{color: colors.secondary}}>
@@ -437,8 +436,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             }`}/>
           </button>
         </div>
-
-        {/* معلومات المدرب */}
+        
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
             <Image
@@ -453,8 +451,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             {course.instructor}
           </span>
         </div>
-
-        {/* التقييم والمعلومات */}
+        
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1" style={{color: colors.accent}}>
             <FiStar className="text-lg" />
@@ -471,8 +468,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             </div>
           </div>
         </div>
-
-        {/* السعر والشراء */}
+        
         <div className="flex items-center justify-between border-t pt-4">
           <div className="flex items-center gap-2">
             {course.discount ? (
