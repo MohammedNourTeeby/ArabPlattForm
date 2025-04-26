@@ -12,7 +12,7 @@ import {
   FiChevronRight
 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
-import ProgressBar from '@ramonak/react-progress-bar';
+import { CircularProgressbar } from 'react-circular-progressbar';
 
 // نظام الألوان المحدد
 const colors = {
@@ -46,7 +46,7 @@ const LearningGoals = () => {
               <span className="text-sm" style={{ color: colors.gray }}>التقدم الشهري</span>
               <span className="font-semibold" style={{ color: colors.blue }}>75%</span>
             </div>
-            <ProgressBar 
+            <CircularProgressbar  
               completed={75}
               height="12px"
               bgColor={colors.blue}
