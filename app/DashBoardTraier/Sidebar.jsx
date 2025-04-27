@@ -1,169 +1,177 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
-  FiVideo,
-  FiMessageSquare,
-  FiTool,
-  FiLayers,
-  FiArchive,
+  FiBookOpen,
+  FiMessageCircle,
+  FiSettings,
+  FiUsers,
+  FiFolder,
+  FiBarChart2,
+  FiGift,
   FiChevronRight,
-  FiMapPin,
+  FiGrid,
 } from "react-icons/fi";
 
-export default function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(false);
+const COLORS = {
+  blue: '#008DCB',
+  white: '#FFFFFF'
+};
+
+export default function FixedSidebar() {
+  const [isHovered, setIsHovered] = useState(false);
   const [activeItem, setActiveItem] = useState(0);
 
   const menuItems = [
-    { name: "الدورات", icon: <FiVideo size={24} />, link: "/DashBoardTraier/Courses" },
-    { name: "تواصل", icon: <FiMessageSquare size={24} />, link: "./Massage" },
-    { name: "أداة", icon: <FiTool size={24} />, link: "/tool" },
-    { name: "أدوات", icon: <FiLayers size={24} />, link: "/tools" },
-    { name: "موارد علمية", icon: <FiArchive size={24} />, link: "./Materials" },
-    { name: " المجموعات التعليمية", icon: <FiArchive size={24} />, link: "/DashBoardTraier/components/groups" },
-    { 
-      name: "إدارة المراكز التدريبية", 
-      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
-      link: "/DashBoardTraier/centers" // مسار مطلق
-    }, 
-    
-    { 
-      name: "  إدارة التقييم الذاتي ", 
-      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
-      link: "/DashBoardTraier/components/Self-Assessment" // مسار مطلق
-    }, { 
-      name: "  كوبونات دعوة للدورات   ", 
-      icon: <FiMapPin size={24} />, // أيقونة أكثر ملاءمة
-      link: "/DashBoardTraier/components/copon" // مسار مطلق
-    }, 
-  
-  
-  
+    {
+      name: "الدورات التدريبية",
+      icon: <FiBookOpen size={22} />,
+      link: "/DashBoardTraier/Courses"
+    },
+    {
+      name: "المراسلات",
+      icon: <FiMessageCircle size={22} />,
+      link: "./Massage"
+    },
+    {
+      name: "الإعدادات",
+      icon: <FiSettings size={22} />,
+      link: "/tool"
+    },
+    {
+      name: "المجموعات",
+      icon: <FiUsers size={22} />,
+      link: "/DashBoardTraier/components/groups"
+    },
+    {
+      name: "الموارد العلمية",
+      icon: <FiFolder size={22} />,
+      link: "./Materials"
+    },
+    {
+      name: "المراكز التدريبية",
+      icon: <FiGrid size={22} />,
+      link: "/DashBoardTraier/centers"
+    },
+    {
+      name: "التقييم الذاتي",
+      icon: <FiBarChart2 size={22} />,
+      link: "/DashBoardTraier/components/Self-Assessment"
+    },
+    {
+      name: "كوبونات الدعوة",
+      icon: <FiGift size={22} />,
+      link: "/DashBoardTraier/components/copon"
+    },
   ];
 
   const sidebarVariants = {
-    collapsed: { width: 64 },
-    expanded: { width: 240 },
-  };
-
-  const itemVariants = {
-    collapsed: { opacity: 0, x: -20 },
-    expanded: { opacity: 1, x: 0 },
+    collapsed: { width: 80 },
+    expanded: { width: 280 }
   };
 
   return (
     <motion.div
       initial="collapsed"
-      animate={isExpanded ? "expanded" : "collapsed"}
+      animate={isHovered ? "expanded" : "collapsed"}
       variants={sidebarVariants}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-      className={`
-        h-screen flex flex-col
-        bg-gradient-to-b from-purple-900/95 to-gray-900/95
-        backdrop-blur-lg
-        shadow-2xl
-        border-r border-purple-700/30
-        rounded-r-3xl
-        overflow-hidden
-      `}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        backgroundColor: COLORS.blue,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        height: '100vh',
+        zIndex: 1000
+      }}
+      className="shadow-xl border-r border-blue-800"
     >
-      {/* الشعار */}
-      <motion.div 
-        className="flex items-center p-4 border-b border-purple-700/30"
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="bg-purple-700 w-9 h-9 flex items-center justify-center rounded-xl shadow-lg">
-          <span className="font-bold text-white">AR</span>
-        </div>
+      {/* الشعار المعدل */}
+      <div className="p-4 border-b border-blue-800 h-20 flex items-center justify-center">
         <AnimatePresence>
-          {isExpanded && (
-            <motion.span
-              initial="collapsed"
-              animate="expanded"
-              exit="collapsed"
-              variants={{
-                collapsed: { opacity: 0, x: -10 },
-                expanded: { opacity: 1, x: 0 },
-              }}
-              className="text-xl font-bold ml-3 text-white/90"
+          {isHovered ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-               الإعتــمـاد العــربــي
+              <Image
+                src="/الاعتماد العربي.png"
+                alt="شعار الاعتماد العربي"
+                width={160}
+                height={40}
+                className="filter brightness-0 invert"
+              />
+            </motion.div>
+          ) : (
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-2xl font-bold text-white"
+            >
+              اع
             </motion.span>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* عناصر القائمة */}
-      <nav className="flex-1 flex flex-col p-2 mt-2">
+      <nav className="flex-1 p-3 space-y-2 mt-4 overflow-y-auto h-[calc(100vh-160px)]">
         {menuItems.map((item, index) => (
           <motion.a
             key={index}
             href={item.link}
-            onMouseDown={() => setActiveItem(index)}
-            className={`
-              relative flex items-center gap-3 p-3 mb-1
-              rounded-xl
-              transition-all duration-200
-              ${activeItem === index 
-                ? "bg-purple-700/50 text-white shadow-inner" 
-                : "hover:bg-purple-800/30"}
-            `}
-            whileHover={{ x: 5 }}
+            className="relative flex items-center p-3 rounded-lg group"
+            style={{
+              backgroundColor: activeItem === index ? '#0077B5' : 'transparent',
+            }}
+            onClick={() => setActiveItem(index)}
           >
-            <span className="text-purple-300">{item.icon}</span>
-            
+            <span className="shrink-0 text-white">
+              {item.icon}
+            </span>
+
             <AnimatePresence>
-              {isExpanded && (
+              {isHovered && (
                 <motion.span
-                  initial="collapsed"
-                  animate="expanded"
-                  exit="collapsed"
-                  variants={itemVariants}
-                  className="text-base font-medium flex-1"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="pr-3 text-sm font-bold flex-1 text-white"
                 >
                   {item.name}
                 </motion.span>
               )}
             </AnimatePresence>
 
-            {!isExpanded && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute left-full top-1/2 -translate-y-1/2 ml-3 
-                  bg-gray-800 text-white text-sm py-1.5 px-3 rounded-lg 
-                  shadow-lg pointer-events-none whitespace-nowrap
-                  border border-purple-700/30"
-              >
-                {item.name}
-                <FiChevronRight className="absolute right-full top-1/2 -translate-y-1/2 
-                  text-gray-800 -mr-1.5" />
-              </motion.span>
-            )}
-
             {activeItem === index && (
               <motion.div 
-                className="absolute -left-1 w-1 h-6 bg-purple-400 rounded-full"
+                className="absolute -right-2 w-1 h-6 rounded-full bg-white"
                 layoutId="activeIndicator"
               />
+            )}
+
+            {!isHovered && (
+              <motion.div
+                className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-3 py-2 rounded-md shadow-lg"
+                style={{ 
+                  backgroundColor: COLORS.blue,
+                  border: '1px solid #0077B5'
+                }}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
+                <span className="text-xs font-bold text-white">{item.name}</span>
+                <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-blue-800"/>
+              </motion.div>
             )}
           </motion.a>
         ))}
       </nav>
 
-      {/* حقوق النشر */}
-      <motion.div 
-        className="p-4 text-xs text-gray-300/80 border-t border-purple-700/30"
-        variants={{
-          collapsed: { opacity: 0 },
-          expanded: { opacity: 1 }
-        }}
-      >
-        {isExpanded ? "© 2025 Udemy. All rights reserved" : "© 2025"}
-      </motion.div>
+      
     </motion.div>
   );
 }

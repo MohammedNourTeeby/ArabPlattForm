@@ -4,139 +4,262 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FiUser, FiBell, FiSettings, FiMessageSquare, FiCreditCard, FiClock, FiDollarSign, FiGlobe, FiEdit, FiHelpCircle, FiLogOut, FiBriefcase } from 'react-icons/fi';
 
+// نظام الألوان الجديد
+const colors = {
+  blue: '#008DCB',
+  black: '#0D1012',
+  gray: '#999999',
+  red: '#E2101E',
+  white: '#FFFFFF',
+  yellow: '#F9D011'
+};
+
 const List = () => {
+  // تحسين تأثيرات الحركة
   const menuVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
+    hidden: { opacity: 0, y: 20, scale: 0.98 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: { 
+        type: 'spring', 
+        stiffness: 260, 
+        damping: 20,
+        staggerChildren: 0.1
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0 }
   };
 
   return (
-    <div className="w-72 bg-gradient-to-b from-purple-50 to-white shadow-xl rounded-2xl p-6 border border-purple-100 overflow-y-auto max-h-[750px] backdrop-blur-sm">
-      {/* قسم معلومات المستخدم */}
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={menuVariants}
-        className="pb-6 border-b border-purple-200 mb-6"
+    <motion.div 
+      className="w-72 shadow-xl rounded-xl overflow-hidden"
+      style={{
+        backgroundColor: colors.white,
+        border: `1px solid ${colors.gray}30`,
+        boxShadow: `0 12px 32px ${colors.black}10`
+      }}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={menuVariants}
+    >
+      {/* رأس الملف الشخصي مع تدرج لوني */}
+      <div 
+        className="p-6 border-b"
+        style={{ borderColor: colors.gray + '30' }}
       >
-        <h3 className="font-bold text-purple-900 text-right text-lg mb-1">محمد نور طبيب</h3>
-        <p className="text-purple-600 text-sm text-right">mohammednourteby@g...</p>
-      </motion.div>
+        <motion.div variants={itemVariants}>
+          <h3 
+            className="font-bold text-right text-lg mb-1"
+            style={{ color: colors.black }}
+          >
+            محمد نور طبيب
+          </h3>
+          <p 
+            className="text-sm text-right"
+            style={{ color: colors.gray }}
+          >
+            mohammednourteby@g...
+          </p>
+        </motion.div>
+      </div>
 
-      {/* القائمة الرئيسية */}
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={menuVariants}
-        className="space-y-4 text-right"
-      >
-        {/* القسم التعليمي */}
-        <Link href="./DashBoardStudent" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>طالب</span>
-          <FiUser className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+      {/* محتوى القائمة مع تحسينات التنسيق */}
+      <div className="p-4 space-y-2 text-right">
+        {[
+          { icon: <FiUser />, text: 'طالب', href: './DashBoardStudent' },
+          { icon: <FiBell />, text: 'الإشعارات', href: './Navigation' },
+          { icon: <FiSettings />, text: 'إعدادات الحساب', href: './AccountSettings' },
+        ].map((item, idx) => (
+          <motion.div key={idx} variants={itemVariants}>
+            <Link 
+              href={item.href}
+              className="flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10 transition-all group"
+              style={{ 
+                color: colors.black,
+                hover: { backgroundColor: colors.blue + '10' }
+              }}
+            >
+              <span>{item.text}</span>
+              {React.cloneElement(item.icon, {
+                className: 'transition-transform',
+                style: { color: colors.blue }
+              })}
+            </Link>
+          </motion.div>
+        ))}
 
-        <Link href="./Navigation" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>الإشعارات</span>
-          <FiBell className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        <div 
+          className="my-4"
+          style={{ borderTop: `1px solid ${colors.gray}20` }}
+        />
 
-        <Link href="./AccountSettings" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>إعدادات الحساب</span>
-          <FiSettings className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        {/* قسم الرسائل مع إشعار */}
+        <motion.div variants={itemVariants}>
+          <Link 
+            href="./Massage"
+            className="flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10 group relative"
+            style={{ 
+              color: colors.black,
+              hover: { backgroundColor: colors.blue + '10' }
+            }}
+          >
+            <span>رسائل</span>
+            <div className="relative">
+              {React.cloneElement(<FiMessageSquare />, {
+                className: 'transition-transform',
+                style: { color: colors.blue }
+              })}
+              <span 
+                className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-pulse"
+                style={{ backgroundColor: colors.red }}
+              />
+            </div>
+          </Link>
+        </motion.div>
 
-        {/* فاصل */}
-        <div className="border-t border-purple-100 my-5"></div>
+        <div 
+          className="my-4"
+          style={{ borderTop: `1px solid ${colors.gray}20` }}
+        />
 
-        {/* الرسائل */}
-        <Link href="./Massage" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>رسائل</span>
-          <FiMessageSquare className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        {/* قسم الدفع والاشتراكات */}
+        {[
+          { icon: <FiCreditCard />, text: 'طرق الدفع', href: './Payment' },
+          { icon: <FiClock />, text: 'الاشتراكات', href: '#' },
+          { icon: <FiDollarSign />, text: 'رصيد', href: '#' },
+          { icon: <FiCreditCard />, text: 'سجل الشراء', href: '#' },
+        ].map((item, idx) => (
+          <motion.div key={idx} variants={itemVariants}>
+            <Link 
+              href={item.href}
+              className="flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10 group"
+              style={{ 
+                color: colors.black,
+                hover: { backgroundColor: colors.blue + '10' }
+              }}
+            >
+              <span>{item.text}</span>
+              {React.cloneElement(item.icon, {
+                className: 'transition-transform',
+                style: { color: colors.blue }
+              })}
+            </Link>
+          </motion.div>
+        ))}
 
-        {/* فاصل */}
-        <div className="border-t border-purple-100 my-5"></div>
+        <div 
+          className="my-4"
+          style={{ borderTop: `1px solid ${colors.gray}20` }}
+        />
 
-        {/* إعدادات الدفع */}
-        <Link href="./Payment" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>طرق الدفع</span>
-          <FiCreditCard className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
-
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>الاشتراكات</span>
-          <FiClock className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
-
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>رصيد </span>
-          <FiDollarSign className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
-
-        <Link href="#" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>سجل الشراء</span>
-          <FiCreditCard className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
-
-        {/* فاصل */}
-        <div className="border-t border-purple-100 my-5"></div>
-
-        {/* اللغة */}
-        <div className="flex justify-between items-center text-purple-800 p-3 bg-purple-50 rounded-xl">
+        {/* قسم اللغة */}
+        <motion.div 
+          className="flex justify-between items-center p-3 rounded-lg"
+          style={{ backgroundColor: colors.blue + '08' }}
+          variants={itemVariants}
+        >
           <div className="flex items-center gap-2">
-            <FiGlobe className="text-purple-600" />
-            <span>اللغة</span>
+            {React.cloneElement(<FiGlobe />, {
+              style: { color: colors.blue }
+            })}
+            <span style={{ color: colors.black }}>اللغة</span>
           </div>
-          <span className="text-purple-500">الإنجليزية</span>
-        </div>
+          <span style={{ color: colors.blue }}>الإنجليزية</span>
+        </motion.div>
 
-        {/* الملف الشخصي */}
-        <Link href="./ProfileSettings " className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>الملف الشخصي العام</span>
-          <FiUser className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        {/* قسم الملف الشخصي */}
+        {[
+          { icon: <FiUser />, text: 'الملف الشخصي العام', href: './ProfileSettings' },
+          { icon: <FiEdit />, text: 'تعديل الملف الشخصي', href: './ProfileSettings' },
+        ].map((item, idx) => (
+          <motion.div key={idx} variants={itemVariants}>
+            <Link 
+              href={item.href}
+              className="flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10 group"
+              style={{ 
+                color: colors.black,
+                hover: { backgroundColor: colors.blue + '10' }
+              }}
+            >
+              <span>{item.text}</span>
+              {React.cloneElement(item.icon, {
+                className: 'transition-transform',
+                style: { color: colors.blue }
+              })}
+            </Link>
+          </motion.div>
+        ))}
 
-        <Link href="./ProfileSettings" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>تعديل الملف الشخصي</span>
-          <FiEdit className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        <div 
+          className="my-4"
+          style={{ borderTop: `1px solid ${colors.gray}20` }}
+        />
 
-        {/* فاصل */}
-        <div className="border-t border-purple-100 my-5"></div>
-
-        {/* المساعدة وتسجيل الخروج */}
-        <Link href="./Help" className="flex items-center justify-end gap-3 text-purple-800 hover:bg-purple-50 p-3 rounded-xl transition-all group">
-          <span>المساعدة والدعم</span>
-          <FiHelpCircle className="text-purple-600 group-hover:scale-110 transition-transform" />
-        </Link>
+        {/* قسم المساعدة والخروج */}
+        <motion.div variants={itemVariants}>
+          <Link 
+            href="./Help"
+            className="flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10 group"
+            style={{ 
+              color: colors.black,
+              hover: { backgroundColor: colors.blue + '10' }
+            }}
+          >
+            <span>المساعدة والدعم</span>
+            {React.cloneElement(<FiHelpCircle />, {
+              className: 'transition-transform',
+              style: { color: colors.blue }
+            })}
+          </Link>
+        </motion.div>
 
         <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-full flex items-center justify-end gap-3 text-red-600 hover:bg-red-50 p-3 rounded-xl transition-all"
+          className="w-full flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10"
+          style={{ 
+            color: colors.red,
+            hover: { backgroundColor: colors.red + '10' }
+          }}
+          variants={itemVariants}
         >
           <span>تسجيل الخروج</span>
-          <FiLogOut className="text-red-500" />
+          {React.cloneElement(<FiLogOut />, {
+            style: { color: colors.red }
+          })}
         </motion.button>
 
-        {/* قسم بوديمي للأعمال */}
+        {/* قسم الأعمال المميز */}
         <motion.div 
-          whileHover={{ scale: 1.02 }}
-          className="mt-6 p-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white"
+          className="mt-4 p-4 rounded-xl"
+          style={{ 
+            background: `linear-gradient(135deg, ${colors.blue}, ${colors.yellow})`,
+            boxShadow: `0 4px 16px ${colors.blue}20`
+          }}
+          variants={itemVariants}
         >
-          <div className="flex items-center gap-3">
-            <FiBriefcase className="text-2xl" />
+          <div className="flex items-center gap-3 text-white">
+            {React.cloneElement(<FiBriefcase />, {
+              className: 'text-xl'
+            })}
             <div>
-              <h4 className="font-bold text-lg">              الإعتــمـاد العــربــي
-              للأعمال</h4>
+              <h4 className="font-bold text-lg">الاعتماد العربي للأعمال</h4>
               <p className="text-sm opacity-90 mt-1">جلب التعلم إلى شركتك</p>
             </div>
           </div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

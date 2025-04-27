@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import Sidebar from "./Sidebar";
+import ProfessionalSidebar from "./Sidebar";
 import HomePage from "./HomePage";
 import Footer from "@/components/Footer";
 
@@ -9,7 +9,7 @@ function page() {
     <div>
     <div className="flex">
       {" "}
-      <Sidebar />{" "}
+      <ProfessionalSidebar />{" "}
       <div className="flex-1">
         {" "}
         <Header />
