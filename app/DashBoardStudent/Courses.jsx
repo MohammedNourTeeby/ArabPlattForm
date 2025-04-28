@@ -12,6 +12,7 @@ import {
   FiArrowLeft, FiInfo, FiChevronLeft, FiChevronRight
 } from 'react-icons/fi';
 import coursesData from '../../data.json';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const colors = {
   primary: '#008DCB',
@@ -24,6 +25,7 @@ const colors = {
 };
 
 const CoursesPage = () => {
+  const { t, language } = useLanguage();
   const [favorites, setFavorites] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -31,6 +33,8 @@ const CoursesPage = () => {
   const [sortBy, setSortBy] = useState('popularity');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('courseFavorites') || '[]');
@@ -44,6 +48,15 @@ const CoursesPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleCourseHover = (course, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setPreviewPosition({
+      x: language === 'ar' ? rect.right + 20 : rect.left - 320,
+      y: rect.top
+    });
+    setHoveredCourse(course);
+  };
 
   const toggleFavorite = (courseId) => {
     setFavorites(prev => {
@@ -70,15 +83,18 @@ const CoursesPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div 
+      className="min-h-screen bg-gray-50"
+      style={{ direction: language === 'ar' ? 'rtl' : 'ltr' }}
+    >
       {/* شريط البحث والفلاتر */}
       <div className={`bg-white sticky top-0 z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-6xl mx-auto px-4 py-2">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="w-full md:w-1/3 relative">
               <input
                 type="text"
-                placeholder="ابحث عن دورة أو مدرب..."
+                placeholder={t?.courses?.searchPlaceholder}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-[#008DCB] bg-white text-gray-700 placeholder-gray-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -95,7 +111,7 @@ const CoursesPage = () => {
                   }}
                 >
                   <FiFilter className="text-lg" />
-                  التصفيات
+                  {t?.courses?.filters}
                   {showFilters ? <FiChevronUp /> : <FiChevronDown />}
                 </button>
                 <AnimatePresence>
@@ -108,14 +124,16 @@ const CoursesPage = () => {
                     >
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>التصنيف</label>
+                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>
+                            {t?.courses?.categoryLabel}
+                          </label>
                           <select
                             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#008DCB]"
                             style={{borderColor: colors.gray}}
                             value={selectedCategory || ''}
                             onChange={(e) => setSelectedCategory(e.target.value || null)}
                           >
-                            <option value="">الكل</option>
+                            <option value="">{t?.courses?.allCategories}</option>
                             {coursesData.categories.map(category => (
                               <option key={category.categoryName} value={category.categoryName}>
                                 {category.categoryName}
@@ -124,16 +142,18 @@ const CoursesPage = () => {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>الترتيب حسب</label>
+                          <label className="block text-sm font-medium mb-2" style={{color: colors.secondary}}>
+                            {t?.courses?.sortBy}
+                          </label>
                           <select
                             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#008DCB]"
                             style={{borderColor: colors.gray}}
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                           >
-                            <option value="popularity">الشعبية</option>
-                            <option value="price">السعر</option>
-                            <option value="rating">التقييم</option>
+                            <option value="popularity">{t?.courses?.sortOptions?.popularity}</option>
+                            <option value="price">{t?.courses?.sortOptions?.price}</option>
+                            <option value="rating">{t?.courses?.sortOptions?.rating}</option>
                           </select>
                         </div>
                       </div>
@@ -147,7 +167,7 @@ const CoursesPage = () => {
       </div>
 
       {/* فئات الدورات مع أزرار التنقل */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-6xl mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex overflow-x-auto pb-4 scrollbar-hide w-full">
             {coursesData.categories.map(category => (
@@ -163,28 +183,28 @@ const CoursesPage = () => {
                 }`}
               >
                 <span className="block text-sm font-medium">{category.categoryName}</span>
-                <span className="text-xs text-gray-500">({category.studentsCount}+ students)</span>
+                <span className="text-xs text-gray-500">{category.studentsCount}+ {t?.courses?.students}</span>
               </button>
             ))}
           </div>
           <div className="flex items-center gap-4 ml-4">
             <button className="bg-transparent hover:bg-gray-200 rounded-full p-2">
-              <FiChevronLeft className="text-2xl" />
+              {language === 'ar' ? <FiChevronRight className="text-2xl" /> : <FiChevronLeft className="text-2xl" />}
             </button>
             <button className="bg-transparent hover:bg-gray-200 rounded-full p-2">
-              <FiChevronRight className="text-2xl" />
+              {language === 'ar' ? <FiChevronLeft className="text-2xl" /> : <FiChevronRight className="text-2xl" />}
             </button>
           </div>
         </div>
       </div>
 
       {/* المحتوى الرئيسي */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
+      <main className="max-w-6xl mx-auto px-4 py-4">
+        <div className="flex flex-wrap gap-2 items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <span className="text-gray-600">النتائج:</span>
+            <span className="text-gray-600">{t?.courses?.results}:</span>
             <span className="font-medium" style={{color: colors.primary}}>
-              {sortedCourses.length} دورة
+              {sortedCourses.length} {t?.courses?.courses}
             </span>
           </div>
           <div className="relative">
@@ -194,14 +214,14 @@ const CoursesPage = () => {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
-              <option value="popularity">الترتيب حسب: الشعبية</option>
-              <option value="price">الترتيب حسب: السعر</option>
-              <option value="rating">الترتيب حسب: التقييم</option>
+              <option value="popularity">{t?.courses?.sortOptions?.popularity}</option>
+              <option value="price">{t?.courses?.sortOptions?.price}</option>
+              <option value="rating">{t?.courses?.sortOptions?.rating}</option>
             </select>
             <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {sortedCourses.map(course => (
             <CourseCard
               key={course.id}
@@ -209,13 +229,96 @@ const CoursesPage = () => {
               isFavorite={favorites.includes(course.id)}
               onToggleFavorite={toggleFavorite}
               onViewDetails={() => setSelectedCourse(course)}
+              onHover={(e) => handleCourseHover(course, e)}
+              onHoverEnd={() => setHoveredCourse(null)}
               colors={colors}
+              t={t}
+              language={language}
             />
           ))}
         </div>
+
+        {/* Preview Card on Hover */}
+        <AnimatePresence>
+          {hoveredCourse && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="fixed z-50 bg-white shadow-2xl rounded-xl p-4 w-80"
+              style={{
+                left: `${previewPosition.x}px`,
+                top: `${previewPosition.y}px`,
+              }}
+            >
+              <h3 className="text-lg font-bold mb-2" style={{color: colors.secondary}}>
+                {hoveredCourse.name}
+              </h3>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-full overflow-hidden border-2" style={{borderColor: colors.primary}}>
+                  <Image
+                    src={hoveredCourse.instructorImage}
+                    width={32}
+                    height={32}
+                    alt={hoveredCourse.instructor}
+                    className="object-cover"
+                  />
+                </div>
+                <span className="text-sm" style={{color: colors.gray}}>
+                  {hoveredCourse.instructor}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <DetailItem 
+                  icon={<FiClock style={{color: colors.primary}} />}
+                  label={t?.courses?.duration}
+                  value={`${hoveredCourse.duration} ${t?.courses?.hours}`}
+                />
+                <DetailItem 
+                  icon={<FiPlay style={{color: colors.primary}} />}
+                  label={t?.courses?.lessons}
+                  value={hoveredCourse.lessons}
+                />
+                <DetailItem 
+                  icon={<FiUsers style={{color: colors.primary}} />}
+                  label={t?.courses?.students}
+                  value={hoveredCourse.studentsEnrolled}
+                />
+                <DetailItem 
+                  icon={<FiTag style={{color: colors.primary}} />}
+                  label={t?.courses?.level}
+                  value={hoveredCourse.level}
+                />
+              </div>
+              <p className="text-sm text-gray-600 line-clamp-3 mb-4">
+                {hoveredCourse.description}
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {hoveredCourse.discount && (
+                    <span className="text-base font-bold" style={{color: colors.danger}}>
+                      ${(hoveredCourse.price * (1 - hoveredCourse.discount / 100)).toFixed(2)}
+                    </span>
+                  )}
+                  <span className={`text-base ${hoveredCourse.discount ? 'text-gray-400 line-through' : 'text-[#008DCB]'}`}>
+                    ${hoveredCourse.price.toFixed(2)}
+                  </span>
+                </div>
+                <button 
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
+                  style={{backgroundColor: colors.primary, color: colors.white}}
+                >
+                  <FiShoppingCart />
+                  <span>{t?.courses?.buyNow}</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {sortedCourses.length === 0 && (
           <div className="text-center py-12" style={{color: colors.gray}}>
-            <div className="text-2xl mb-4">😞 لم نجد ما تبحث عنه</div>
+            <div className="text-2xl mb-4">😞 {t?.courses?.noResults}</div>
             <button
               onClick={() => {
                 setSelectedCategory(null);
@@ -224,7 +327,7 @@ const CoursesPage = () => {
               className="hover:underline"
               style={{color: colors.primary}}
             >
-              إعادة تعيين الفلاتر
+              {t?.courses?.resetFilters}
             </button>
           </div>
         )}
@@ -277,29 +380,31 @@ const CoursesPage = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <DetailItem 
                     icon={<FiClock style={{color: colors.primary}} />} 
-                    label="المدة" 
-                    value={`${selectedCourse.duration} ساعة`}
+                    label={t?.courses?.duration}
+                    value={`${selectedCourse.duration} ${t?.courses?.hours}`}
                   />
                   <DetailItem 
                     icon={<FiPlay style={{color: colors.primary}} />} 
-                    label="الدروس" 
+                    label={t?.courses?.lessons}
                     value={selectedCourse.lessons}
                   />
                   <DetailItem 
                     icon={<FiUsers style={{color: colors.primary}} />} 
-                    label="الطلاب" 
+                    label={t?.courses?.students}
                     value={selectedCourse.studentsEnrolled}
                   />
                   <DetailItem 
                     icon={<FiTag style={{color: colors.primary}} />} 
-                    label="المستوى" 
+                    label={t?.courses?.level}
                     value={selectedCourse.level}
                   />
                 </div>
                 <div className="prose max-w-none">
-                  <h3 className="text-xl font-bold mb-4" style={{color: colors.secondary}}>تفاصيل الدورة</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{color: colors.secondary}}>
+                    {t?.courses?.courseDetails}
+                  </h3>
                   <p className="text-gray-600">
-                    {selectedCourse.description || 'وصف تفصيلي للدورة التعليمية وأهدافها والمهارات التي سيتم تعلمها، مع ذكر المتطلبات السابقة وأي معلومات إضافية مهمة للطالب.'}
+                    {selectedCourse.description || t?.courses?.defaultDescription}
                   </p>
                 </div>
                 <div className="sticky bottom-0 bg-white pt-6 border-t" style={{borderColor: colors.lightGray}}>
@@ -321,7 +426,7 @@ const CoursesPage = () => {
                       style={{backgroundColor: colors.primary, color: colors.white}}
                     >
                       <FiShoppingCart />
-                      اشترك الآن
+                      {t?.courses?.subscribeNow}
                     </button>
                   </div>
                 </div>
@@ -331,7 +436,6 @@ const CoursesPage = () => {
         </AnimatePresence>
       </main>
 
-      {/* زر العودة للأعلى */}
       <motion.button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         className="fixed bottom-8 right-8 p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
@@ -345,55 +449,20 @@ const CoursesPage = () => {
   );
 };
 
-const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, colors }) => {
-  const [showQuickView, setShowQuickView] = useState(false);
-  
+const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, onHover, onHoverEnd, colors, t, language }) => {
   return (
     <motion.div 
       className="relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow"
       whileHover={{ y: -5 }}
-      onHoverStart={() => setShowQuickView(true)}
-      onHoverEnd={() => setShowQuickView(false)}
+      onMouseEnter={onHover}
+      onMouseLeave={onHoverEnd}
     >
-      <AnimatePresence>
-        {showQuickView && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/50 rounded-lg z-10 flex items-center justify-center"
-          >
-            <div className="text-center text-white p-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                className="bg-white px-6 py-2 rounded-lg mb-4"
-                style={{color: colors.primary}}
-                onClick={onViewDetails}
-              >
-                <FiInfo className="inline-block mr-2" />
-                عرض التفاصيل
-              </motion.button>
-              <div className="space-y-2 text-sm">
-                <p className="flex items-center justify-center gap-2">
-                  <FiClock className="text-lg" />
-                  المدة: {course.duration} ساعات
-                </p>
-                <p className="flex items-center justify-center gap-2">
-                  <FiPlay className="text-lg" />
-                  {course.lessons} درس
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
       {course.discount && (
         <div 
           className="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-bold"
           style={{backgroundColor: colors.danger, color: colors.white}}
         >
-          {course.discount}% خصم
+          {course.discount}% {t?.courses?.discount}
         </div>
       )}
       
@@ -428,13 +497,15 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
               onToggleFavorite(course.id);
             }}
             className="p-1 hover:scale-110 transition-transform"
-          >
-            <FiHeart className={`w-6 h-6 ${
-              isFavorite 
-                ? `text-[${colors.danger}] fill-[${colors.danger}]` 
-                : `text-[${colors.gray}]`
-            }`}/>
-          </button>
+            >
+              <FiHeart 
+                className="w-6 h-6"
+                style={{ 
+                  color: isFavorite ? colors.danger : colors.gray,
+                  fill: isFavorite ? colors.danger : 'none'
+                }}
+              />
+            </button>
         </div>
         
         <div className="flex items-center gap-2 mb-4">
@@ -464,7 +535,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             </div>
             <div className="flex items-center gap-1 text-sm" style={{color: colors.gray}}>
               <FiClock />
-              <span>{course.duration} س</span>
+              <span>{course.duration} {t?.courses?.hoursShort}</span>
             </div>
           </div>
         </div>
@@ -491,7 +562,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
             style={{backgroundColor: colors.primary, color: colors.white}}
           >
             <FiShoppingCart />
-            <span>اشتري الآن</span>
+            <span>{t?.courses?.buyNow}</span>
           </button>
         </div>
       </div>
@@ -500,10 +571,10 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite, onViewDetails, color
 };
 
 const DetailItem = ({ icon, label, value }) => (
-  <div className="bg-gray-50 p-4 rounded-lg">
-    <div className="text-[#008DCB] mb-2">{icon}</div>
-    <div className="font-medium text-[#0D1012]">{label}</div>
-    <div className="text-gray-600">{value}</div>
+  <div className="bg-gray-50 p-3 rounded-lg">
+    <div className="text-[#008DCB] mb-1">{icon}</div>
+    <div className="font-medium text-sm text-[#0D1012]">{label}</div>
+    <div className="text-gray-600 text-sm">{value}</div>
   </div>
 );
 

@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'منصة الإعتماد العرب
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html  className={cairo.variable}>
+    <html lang="ar" dir="rtl" className={cairo.variable}>
       <body className="flex flex-col min-h-screen bg-gray-50">
         {/* 1. مزوّد React Query */}
         

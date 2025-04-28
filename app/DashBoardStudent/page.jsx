@@ -12,8 +12,12 @@ function page() {
   return (
     <div>
       <Header/>
-      <WelcomMassage/>
-      <Courses/>
+<div className="pt-20">      <WelcomMassage/>
+</div>
+<div className="px-0">
+<Courses/>
+</div>
+
       <LearningGoals/>
       <PricingPlans/>
       <TestimonialsAndReport/>

@@ -7,7 +7,6 @@ import coursesData from '../../data.json';
 const page = () => {
   const [favorites, setFavorites] = useState([]);
 
-  // Load favorites from localStorage on component mount
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem('courseFavorites')) || [];
     setFavorites(savedFavorites);
@@ -167,15 +166,15 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
         </div>
       </div>
 
-      {/* Hover Overlay */}
+      {/* Enhanced Hover Overlay */}
       <AnimatePresence>
         {isHovered && (
           <motion.div 
-            className="absolute inset-0 bg-white rounded-2xl shadow-2xl p-6 overflow-y-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2 }}
+            className="absolute inset-0 z-20 bg-white rounded-2xl shadow-2xl p-6 overflow-y-auto"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <div className="flex justify-between items-start mb-4">
               <h4 className="font-bold text-xl text-gray-900">تفاصيل الدورة</h4>
@@ -246,7 +245,7 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
   );
 };
 
-// Helper Components (remain the same as before)
+// Helper Components
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
