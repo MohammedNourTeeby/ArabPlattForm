@@ -14,4 +14,9 @@ export const platforms = [
     name: "Instagram",
     icon: "📷",
   },
+  {
+    id: 4,
+    name: "LinkedIn",
+    icon: "💼",
+  },
 ];

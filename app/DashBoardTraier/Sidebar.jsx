@@ -10,8 +10,9 @@ import {
   FiFolder,
   FiBarChart2,
   FiGift,
-  FiChevronRight,
-  FiGrid,
+  FiBell,  FiShare2,        // لوسائل التواصل
+  FiDollarSign,    // للمالية
+  FiAward,         // للشهادا 
 } from "react-icons/fi";
 
 const COLORS = {
@@ -61,28 +62,28 @@ export default function FixedSidebar() {
       link: "/DashBoardTraier/components/copon"
     },
     {
-      name: " Ads",
-      icon: <FiGift size={22} />,
+      name: "Ads",
+      icon: <FiBell size={22} />,
       link: "./ads"
     },
     {
       name: "Social Media",
-      icon: <FiGift size={22} />,
+      icon: <FiShare2 size={22} />,
       link: "./Social"
     },
     {
       name: "المالية",
-      icon: <FiGift size={22} />,
+      icon: <FiDollarSign size={22} />,
       link: "/DashBoardTraier/components/Finance"
     },
     {
       name: "الشهادات",
-      icon: <FiGift size={22} />,
+      icon: <FiAward size={22} />,
       link: "/DashBoardTraier/components/Certificate"
     },
     {
       name: "فريق تسويقي",
-      icon: <FiGift size={22} />,
+      icon: <FiUsers size={22} />,
       link: "/DashBoardTraier/components/Marketer"
     },
   ];

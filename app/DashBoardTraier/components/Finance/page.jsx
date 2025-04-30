@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -17,6 +17,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Chip,
+  LinearProgress,
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -25,22 +27,44 @@ import {
   AttachMoney, 
   InsertChart, 
   AccountBalanceWallet, 
-  Download 
+  Download,
+  Paid,
+  AccountBalance,
+  CurrencyExchange
 } from '@mui/icons-material';
-import { PieChart, Pie, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { 
+  PieChart, 
+  Pie, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell 
+} from 'recharts';
 import * as XLSX from 'xlsx';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSnackbar } from 'notistack';
 
-// الألوان المحددة
+// نظام الألوان مع النسب المحددة
 const themeColors = {
-  blue: '#008DCB',
-  black: '#0D1012',
-  gray: '#999999',
-  red: '#E2101E',
-  white: '#FFFFFF',
-  yellow: '#F9D011'
+  blue: '#008DCB',    // 10%
+  black: '#0D1012',   // 5%
+  gray: '#999999',    // 20%
+  red: '#E2101E',     // 7%
+  white: '#FFFFFF',   // 50%
+  yellow: '#F9D011'   // 8%
 };
 
-// بيانات وهمية
+// أنيميشنات مخصصة
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  hover: { scale: 1.02 }
+};
+
 const dummyData = {
   totalEarnings: 24500,
   monthlyEarnings: 8500,
@@ -65,10 +89,34 @@ const dummyData = {
 };
 
 const FinanceDashboard = () => {
-  const [withdrawAmount, setWithdrawAmount] = useState('');
-  const [selectedMethod, setSelectedMethod] = useState('');
+  const [state, setState] = useState({
+    withdrawAmount: '',
+    selectedMethod: '',
+    filterStatus: 'all',
+    searchQuery: '',
+    isLoading: false
+  });
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const filteredTransactions = dummyData.transactions.filter(t => {
+    const matchesStatus = state.filterStatus === 'all' || t.status === state.filterStatus;
+    const matchesSearch = t.course.toLowerCase().includes(state.searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+  const handleWithdraw = async () => {
+    setState(prev => ({ ...prev, isLoading: true }));
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      enqueueSnackbar('تمت عملية السحب بنجاح', { variant: 'success' });
+      setState(prev => ({ ...prev, withdrawAmount: '', isLoading: false }));
+    } catch (error) {
+      enqueueSnackbar('فشل في عملية السحب', { variant: 'error' });
+      setState(prev => ({ ...prev, isLoading: false }));
+    }
+  };
 
   const handleExportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(dummyData.transactions);
@@ -81,127 +129,309 @@ const FinanceDashboard = () => {
     <Box sx={{ 
       p: isMobile ? 2 : 4,
       backgroundColor: themeColors.white,
-      minHeight: '100vh'
+      minHeight: '100vh',
+      transition: 'all 0.3s ease'
     }}>
       {/* العنوان الرئيسي */}
-      <Box sx={{ 
-        mb: 4,
-        borderBottom: `2px solid ${themeColors.gray}`,
-        pb: 2
-      }}>
-        <Typography variant="h4" sx={{ 
-          color: themeColors.black,
-          fontWeight: 'bold',
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Box sx={{ 
+          mb: 4,
+          borderBottom: `2px solid ${themeColors.gray}`,
+          pb: 2,
           display: 'flex',
-          alignItems: 'center',
-          gap: 1
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
-          <AccountBalanceWallet sx={{ color: themeColors.blue }} />
-          لوحة التحكم المالية
-        </Typography>
-      </Box>
+          <Typography variant="h4" sx={{
+            color: themeColors.black,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2
+          }}>
+            <AccountBalanceWallet sx={{ 
+              fontSize: 40,
+              color: themeColors.blue,
+              borderRadius: '50%',
+              p: 1,
+              backgroundColor: `${themeColors.blue}10`
+            }} />
+            لوحة التحكم المالية
+          </Typography>
+          
+          <Chip
+            label="الحالة المالية: نشطة"
+            sx={{ 
+              borderColor: themeColors.blue,
+              color: themeColors.blue,
+              fontWeight: 600,
+              backgroundColor: `${themeColors.blue}10`
+            }}
+            variant="outlined"
+          />
+        </Box>
+      </motion.div>
 
       {/* بطاقات الإحصائيات */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {[
-          { title: 'إجمالي الأرباح', value: `$${dummyData.totalEarnings}`, icon: <AttachMoney />, color: themeColors.blue },
-          { title: 'أرباح هذا الشهر', value: `$${dummyData.monthlyEarnings}`, icon: <InsertChart />, color: themeColors.yellow },
-          { title: 'السحوبات', value: `$${dummyData.withdrawals}`, icon: <ArrowDownward />, color: themeColors.red },
-          { title: 'الرصيد المعلق', value: `$${dummyData.pendingBalance}`, icon: <AccountBalanceWallet />, color: themeColors.gray },
+          { 
+            title: 'إجمالي الأرباح', 
+            value: `$${dummyData.totalEarnings}`, 
+            icon: <Paid sx={{ fontSize: 32 }}/>, 
+            progress: 75,
+            color: themeColors.blue 
+          },
+          { 
+            title: 'أرباح هذا الشهر', 
+            value: `$${dummyData.monthlyEarnings}`, 
+            icon: <InsertChart sx={{ fontSize: 32 }}/>, 
+            progress: 45,
+            color: themeColors.yellow 
+          },
+          { 
+            title: 'السحوبات', 
+            value: `$${dummyData.withdrawals}`, 
+            icon: <ArrowDownward sx={{ fontSize: 32 }}/>, 
+            progress: 60,
+            color: themeColors.red 
+          },
+          { 
+            title: 'الرصيد المعلق', 
+            value: `$${dummyData.pendingBalance}`, 
+            icon: <AccountBalanceWallet sx={{ fontSize: 32 }}/>, 
+            progress: 30,
+            color: themeColors.gray 
+          },
         ].map((card, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <Paper sx={{
-              p: 2,
-              borderRadius: 2,
-              backgroundColor: card.color,
-              color: themeColors.white,
-              transition: 'transform 0.3s',
-              '&:hover': { transform: 'translateY(-5px)' }
-            }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="h6">{card.title}</Typography>
-                {React.cloneElement(card.icon, { sx: { fontSize: 32 } })}
-              </Box>
-              <Typography variant="h4" sx={{ mt: 1, fontWeight: 'bold' }}>
-                {card.value}
-              </Typography>
-            </Paper>
+            <motion.div
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: index * 0.1 }}
+              whileHover="hover"
+            >
+              <Paper sx={{
+                p: 3,
+                borderRadius: 4,
+                backgroundColor: themeColors.white,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.05)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <Box sx={{ 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 4,
+                  backgroundColor: `${card.color}10`
+                }}>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={card.progress} 
+                    sx={{ 
+                      height: 4,
+                      backgroundColor: 'transparent',
+                      '.MuiLinearProgress-bar': {
+                        backgroundColor: card.color
+                      }
+                    }}
+                  />
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h6" sx={{ 
+                      color: themeColors.black,
+                      mb: 1,
+                      fontWeight: 600
+                    }}>
+                      {card.title}
+                    </Typography>
+                    <Typography variant="h4" sx={{ 
+                      fontWeight: 700,
+                      color: card.color
+                    }}>
+                      {card.value}
+                    </Typography>
+                  </Box>
+                  <Box sx={{
+                    backgroundColor: `${card.color}10`,
+                    borderRadius: '50%',
+                    p: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {React.cloneElement(card.icon, { sx: { color: card.color } })}
+                  </Box>
+                </Box>
+              </Paper>
+            </motion.div>
           </Grid>
         ))}
       </Grid>
 
       {/* المخططات */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: themeColors.black }}>
-              تطور الأرباح
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={dummyData.earningsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Area 
-                  type="monotone" 
-                  dataKey="earnings" 
-                  stroke={themeColors.blue} 
-                  fill={themeColors.blue}
-                  fillOpacity={0.2}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </Paper>
+        <Grid item xs={12} md={8}>
+          <motion.div whileHover={{ scale: 1.01 }}>
+            <Paper sx={{ 
+              p: 3, 
+              borderRadius: 4,
+              backgroundColor: themeColors.white,
+              boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
+            }}>
+              <Typography variant="h6" sx={{ 
+                mb: 3,
+                color: themeColors.black,
+                fontWeight: 600
+              }}>
+                تحليل الأرباح الشهري
+              </Typography>
+              <ResponsiveContainer width="100%" height={400}>
+                <AreaChart data={dummyData.earningsData}>
+                  <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColors.blue} stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor={themeColors.blue} stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis 
+                    dataKey="month" 
+                    tick={{ fill: themeColors.black }}
+                    axisLine={{ stroke: themeColors.gray }}
+                  />
+                  <YAxis 
+                    tick={{ fill: themeColors.black }}
+                    axisLine={{ stroke: themeColors.gray }}
+                  />
+                  <Tooltip 
+                    contentStyle={{
+                      borderRadius: 8,
+                      borderColor: themeColors.blue,
+                      boxShadow: theme.shadows[3]
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="earnings" 
+                    stroke={themeColors.blue}
+                    strokeWidth={2}
+                    fill="url(#gradient)"
+                    activeDot={{ r: 6, fill: themeColors.blue }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </Paper>
+          </motion.div>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: themeColors.black }}>
-              مصادر الإيرادات
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={dummyData.revenueSources}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill={themeColors.blue}
-                  dataKey="value"
-                  label
-                />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </Paper>
+        <Grid item xs={12} md={4}>
+          <motion.div whileHover={{ scale: 1.01 }}>
+            <Paper sx={{ 
+              p: 3, 
+              borderRadius: 4,
+              backgroundColor: themeColors.white,
+              boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
+            }}>
+              <Typography variant="h6" sx={{ 
+                mb: 3,
+                color: themeColors.black,
+                fontWeight: 600
+              }}>
+                مصادر الإيرادات
+              </Typography>
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart>
+                  <Pie
+                    data={dummyData.revenueSources}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                    label
+                  >
+                    {dummyData.revenueSources.map((entry, index) => (
+                      <Cell 
+                        key={index} 
+                        fill={[
+                          themeColors.blue,
+                          themeColors.yellow,
+                          themeColors.gray
+                        ][index % 3]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{
+                      borderRadius: 8,
+                      borderColor: themeColors.blue,
+                      boxShadow: theme.shadows[3]
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </Paper>
+          </motion.div>
         </Grid>
       </Grid>
 
-      {/* سحب الأرباح */}
+      {/* نموذج السحب */}
       <Paper sx={{ 
         p: 3, 
         mb: 4, 
-        borderRadius: 2,
+        borderRadius: 4,
         backgroundColor: themeColors.white,
-        boxShadow: 3
+        boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
       }}>
-        <Typography variant="h6" sx={{ mb: 2, color: themeColors.black }}>
-          سحب الأرباح
+        <Typography variant="h6" sx={{ 
+          mb: 3,
+          color: themeColors.black,
+          fontWeight: 600
+        }}>
+          طلب سحب الأرباح
         </Typography>
         
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={4}>
             <FormControl fullWidth>
-              <InputLabel>طريقة السحب</InputLabel>
+              <InputLabel sx={{ color: themeColors.gray }}>طريقة السحب</InputLabel>
               <Select
-                value={selectedMethod}
-                onChange={(e) => setSelectedMethod(e.target.value)}
-                sx={{ borderRadius: 2 }}
+                value={state.selectedMethod}
+                onChange={(e) => setState(prev => ({ ...prev, selectedMethod: e.target.value }))}
+                sx={{
+                  borderRadius: 3,
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: themeColors.gray
+                  }
+                }}
               >
-                <MenuItem value="paypal">PayPal</MenuItem>
-                <MenuItem value="bank">حساب بنكي</MenuItem>
-                <MenuItem value="crypto">محفظة رقمية</MenuItem>
+                <MenuItem value="paypal">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <img src="/paypal-logo.png" alt="PayPal" style={{ height: 20 }} />
+                    PayPal
+                  </Box>
+                </MenuItem>
+                <MenuItem value="bank">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <AccountBalance sx={{ color: themeColors.blue }} />
+                    حساب بنكي
+                  </Box>
+                </MenuItem>
+                <MenuItem value="crypto">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CurrencyExchange sx={{ color: themeColors.blue }} />
+                    محفظة رقمية
+                  </Box>
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -211,9 +441,16 @@ const FinanceDashboard = () => {
               fullWidth
               label="المبلغ المطلوب"
               type="number"
-              value={withdrawAmount}
-              onChange={(e) => setWithdrawAmount(e.target.value)}
-              sx={{ borderRadius: 2 }}
+              value={state.withdrawAmount}
+              onChange={(e) => setState(prev => ({ ...prev, withdrawAmount: e.target.value }))}
+              sx={{ 
+                borderRadius: 3,
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: themeColors.gray
+                  }
+                }
+              }}
             />
           </Grid>
           
@@ -221,64 +458,152 @@ const FinanceDashboard = () => {
             <Button
               fullWidth
               variant="contained"
+              onClick={handleWithdraw}
+              disabled={state.isLoading}
               sx={{
                 height: '56px',
+                borderRadius: 3,
                 backgroundColor: themeColors.blue,
-                '&:hover': { backgroundColor: '#006699' }
+                '&:hover': { backgroundColor: '#006699' },
+                '&:disabled': { backgroundColor: themeColors.gray }
               }}
             >
-              تأكيد السحب
+              {state.isLoading ? 'جاري المعالجة...' : 'تأكيد السحب'}
             </Button>
           </Grid>
         </Grid>
       </Paper>
 
       {/* جدول العمليات */}
-      <Paper sx={{ p: 3, borderRadius: 2 }}>
+      <Paper sx={{ 
+        p: 3, 
+        borderRadius: 4,
+        backgroundColor: themeColors.white,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
+      }}>
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          mb: 2
+          mb: 3,
+          flexWrap: 'wrap',
+          gap: 2
         }}>
-          <Typography variant="h6" sx={{ color: themeColors.black }}>
+          <Typography variant="h6" sx={{ 
+            color: themeColors.black,
+            fontWeight: 600
+          }}>
             السجلات المالية
           </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<Download />}
-            onClick={handleExportExcel}
-            sx={{
-              borderColor: themeColors.blue,
-              color: themeColors.blue,
-              '&:hover': { backgroundColor: '#008DCB22' }
-            }}
-          >
-            تصدير كإكسل
-          </Button>
+          
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="بحث..."
+              value={state.searchQuery}
+              onChange={(e) => setState(prev => ({ ...prev, searchQuery: e.target.value }))}
+              sx={{
+                minWidth: 200,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                  '& fieldset': {
+                    borderColor: themeColors.gray
+                  }
+                }
+              }}
+            />
+            <Select
+              value={state.filterStatus}
+              onChange={(e) => setState(prev => ({ ...prev, filterStatus: e.target.value }))}
+              sx={{
+                borderRadius: 3,
+                minWidth: 120,
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: themeColors.gray
+                }
+              }}
+            >
+              <MenuItem value="all">جميع الحالات</MenuItem>
+              <MenuItem value="Completed">مكتملة</MenuItem>
+              <MenuItem value="Pending">معلقة</MenuItem>
+            </Select>
+            <Button
+              variant="outlined"
+              startIcon={<Download />}
+              onClick={handleExportExcel}
+              sx={{
+                borderRadius: 3,
+                borderColor: themeColors.blue,
+                color: themeColors.blue,
+                '&:hover': { 
+                  backgroundColor: `${themeColors.blue}10`,
+                  borderColor: themeColors.blue
+                }
+              }}
+            >
+              تصدير Excel
+            </Button>
+          </Box>
         </Box>
 
         <TableContainer>
           <Table>
-            <TableHead sx={{ backgroundColor: themeColors.gray + '22' }}>
-              <TableRow>
+            <TableHead>
+              <TableRow sx={{ 
+                backgroundColor: `${themeColors.blue}05`,
+                '& th': {
+                  fontWeight: 600,
+                  color: themeColors.black,
+                  borderBottom: `2px solid ${themeColors.gray}`
+                }
+              }}>
                 <TableCell>التاريخ</TableCell>
                 <TableCell>الدورة</TableCell>
-                <TableCell>المبلغ</TableCell>
-                <TableCell>الحالة</TableCell>
+                <TableCell align="right">المبلغ</TableCell>
+                <TableCell align="center">الحالة</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {dummyData.transactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+              {filteredTransactions.map((transaction) => (
+                <TableRow 
+                  key={transaction.id}
+                  hover
+                  sx={{ 
+                    '&:last-child td': { borderBottom: 0 },
+                    '&:hover': { backgroundColor: `${themeColors.blue}03` }
+                  }}
+                >
                   <TableCell>{transaction.date}</TableCell>
                   <TableCell>{transaction.course}</TableCell>
-                  <TableCell>${transaction.amount}</TableCell>
-                  <TableCell sx={{ 
-                    color: transaction.status === 'Completed' ? themeColors.blue : themeColors.red,
-                    fontWeight: 'bold'
-                  }}>
-                    {transaction.status}
+                  <TableCell align="right">
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1,
+                      justifyContent: 'flex-end'
+                    }}>
+                      <AttachMoney sx={{ 
+                        color: themeColors.blue,
+                        fontSize: 18 
+                      }}/>
+                      {transaction.amount}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={transaction.status}
+                      sx={{
+                        backgroundColor: transaction.status === 'Completed' 
+                          ? `${themeColors.blue}10` 
+                          : `${themeColors.red}10`,
+                        color: transaction.status === 'Completed' 
+                          ? themeColors.blue 
+                          : themeColors.red,
+                        fontWeight: 600,
+                        borderRadius: 2
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
