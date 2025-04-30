@@ -49,11 +49,7 @@ export default function FixedSidebar() {
       icon: <FiFolder size={22} />,
       link: "./Materials"
     },
-    {
-      name: "المراكز التدريبية",
-      icon: <FiGrid size={22} />,
-      link: "/DashBoardTraier/centers"
-    },
+    
     {
       name: "التقييم الذاتي",
       icon: <FiBarChart2 size={22} />,
@@ -63,6 +59,31 @@ export default function FixedSidebar() {
       name: "كوبونات الدعوة",
       icon: <FiGift size={22} />,
       link: "/DashBoardTraier/components/copon"
+    },
+    {
+      name: " Ads",
+      icon: <FiGift size={22} />,
+      link: "./ads"
+    },
+    {
+      name: "Social Media",
+      icon: <FiGift size={22} />,
+      link: "./Social"
+    },
+    {
+      name: "المالية",
+      icon: <FiGift size={22} />,
+      link: "/DashBoardTraier/components/Finance"
+    },
+    {
+      name: "الشهادات",
+      icon: <FiGift size={22} />,
+      link: "/DashBoardTraier/components/Certificate"
+    },
+    {
+      name: "فريق تسويقي",
+      icon: <FiGift size={22} />,
+      link: "/DashBoardTraier/components/Marketer"
     },
   ];
 

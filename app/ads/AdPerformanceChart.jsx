@@ -1,10 +1,16 @@
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, Filler } from 'chart.js';
-ChartJS.register(Filler);
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js';
+
+// تسجيل المكونات المطلوبة يدويًا
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler);
 
 const AdPerformanceChart = ({ data }) => {
+  // تحويل التواريخ إلى نصوص باللغة العربية
+  const chartLabels = data.map(d => new Date(d.date).toLocaleDateString('ar-SA'));
+
+  // بيانات الرسم البياني
   const chartData = {
-    labels: data.map(d => new Date(d.date).toLocaleDateString('ar-SA')),
+    labels: chartLabels,
     datasets: [
       {
         label: 'الزيارات',
@@ -25,19 +31,20 @@ const AdPerformanceChart = ({ data }) => {
     ]
   };
 
+  // خيارات الرسم البياني
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: 'top',
-        rtl: true
+        rtl: true // دعم الوضع من اليمين إلى اليسار
       }
     },
     scales: {
       x: {
         ticks: {
           font: {
-            family: 'Noto Sans Arabic'
+            family: 'Noto Sans Arabic' // خط عربي للمحور الأفقي
           }
         }
       },
@@ -54,4 +61,5 @@ const AdPerformanceChart = ({ data }) => {
     </div>
   );
 };
+
 export default AdPerformanceChart;
