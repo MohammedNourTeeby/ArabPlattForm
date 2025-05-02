@@ -19,19 +19,15 @@ import supportData from '../../data/supportTickets.json';
 import SupportTickets from './SupportTickets';
 import FinancialReports from './FinancialReports';
 import InviteLinkGenerator from './InviteLinkGenerator';
-import TeamManagementPanel from './components/managmentTeam/TeamManagementPanel';
 import CourseManagementy from './components/CourseManagementy';
 import ReviewStats from './components/ReviewStats';
 import AdminAdsPage from '../ads/page';
-import OffersPage from './components/Offers/page';
-import CouponDashboard from './components/coupons/page';
-import RefundsPage from './components/Refunds/page';
+
 import RefundDashboard from './components/promotion/page';
-import PayoutsPage from './components/Payouts/page';
 import PrivacyPage from './components/legal/page';
 import CertificatesPage from './components/Certificates/page';
 import AcademicDashboard from './components/Academic/page';
-import FinancialDashboard from './components/financial/page';
+import FinancialDashboard from '../DashBoardFinicial/components/financial/page';
 import NotificationsDashboard from './components/SMS/page';
 import EmailTemplatesPage from './Email/page';
 import AnalyticsDashboard from './components/CRM/page';
@@ -127,7 +123,6 @@ const AdminDashboard = () => {
           setActiveSection={setActiveSection}
           sections={{
             dashboard: 'لوحة التحكم',
-  users: 'إدارة المستخدمين',
   content: 'المحتوى والدورات',
   support: 'الدعم والتذاكر',
   finance: 'العمليات المالية',
@@ -192,16 +187,7 @@ const AdminDashboard = () => {
             </>
           )}
 
-          {/* Users Section */}
-          {activeSection === 'users' && (
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <UsersTable
-                users={users}
-                onSubmit={handleUserSubmit}
-                onDelete={(userId) => setUsers(users.filter(u => u.id !== userId))}
-              />
-            </div>
-          )}
+          
 
           {/* Content Section */}
           {activeSection === 'content' && (
@@ -253,15 +239,10 @@ const AdminDashboard = () => {
             </div>
           )}
                 {activeSection === 'addstudent' && <InviteLinkGenerator />}
-                {activeSection === 'addgroup' && <TeamManagementPanel />}
                 {activeSection === 'tracker' && <CourseManagementy  />}
                 {activeSection === 'tracker' && <ReviewStats  />}
-                {activeSection === 'payouts' && <PayoutsPage   />}
                 {activeSection === 'ads' && <AdminAdsPage   />}
-                {activeSection === 'offers' && <OffersPage   />}
-                {activeSection === 'copon' && <CouponDashboard   />}
-                {activeSection === 'refunds' && <RefundsPage   />}
-                {activeSection === 'promotion' && <RefundDashboard   />}
+                               {activeSection === 'promotion' && <RefundDashboard   />}
                 {activeSection === 'legal' && <PrivacyPage   />}
                 {activeSection === 'certif' && <CertificatesPage   />}
                 {activeSection === 'certif' && <AcademicDashboard   />}

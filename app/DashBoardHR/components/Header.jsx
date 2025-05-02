@@ -5,10 +5,9 @@ import {
   BellIcon,
   UserCircleIcon,
   ChevronDownIcon,
-  ChartPieIcon,
-  DocumentChartBarIcon,
-  BanknotesIcon,
-  ArrowTrendingUpIcon
+  UsersIcon,
+  BriefcaseIcon,
+  CalendarIcon
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
@@ -21,83 +20,88 @@ const COLORS = {
   accent: '#F9D011'      // أصفر 8%
 };
 
-const BoardHeader = () => {
+const HRHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isReportsOpen, setIsReportsOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   
-  // مؤشرات الأداء
-  const performanceMetrics = [
-    { id: 1, title: 'معدل النمو', value: '18%', change: +2.4 },
-    { id: 2, title: 'الأرباح', value: '2.1M ر.س', change: -0.8 },
-    { id: 3, title: 'الاستثمارات', value: '4.3M ر.س', change: +5.1 }
+  const quickAccess = [
+    { id: 1, title: 'قائمة الموظفين', icon: UsersIcon, count: 45 },
+    { id: 2, title: 'الوظائف الشاغرة', icon: BriefcaseIcon, count: 6 },
+    { id: 3, title: 'طلبات الإجازة', icon: CalendarIcon, count: 12 }
   ];
 
-  // الإشعارات
   const notifications = [
-    { id: 1, text: 'اجتماع مجلس الإدارة الطارئ', urgent: true },
-    { id: 2, text: 'اعتماد الميزانية السنوية', urgent: false },
-    { id: 3, text: 'مراجعة سياسة الاستثمار', urgent: true }
+    { id: 1, text: 'طلب إجازة جديد من محمد علي', urgent: true },
+    { id: 2, text: '3 طلبات توظيف جديدة', urgent: false },
+    { id: 3, text: 'تذكير: اجتماع تقييم الأداء غدًا', urgent: true }
   ];
 
   return (
     <motion.header 
-      className="fixed w-full z-50 shadow-2xl"
+      className="fixed w-full z-50 shadow-lg"
       style={{ backgroundColor: COLORS.background }}
       initial={{ y: -20 }}
       animate={{ y: 0 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="flex justify-between items-center px-8 py-4">
-        {/* الجانب الأيسر مع المؤشرات */}
+        {/* الشعار والوصول السريع */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
-            <img 
-              src="/board-logo.png" 
-              alt="Board Logo" 
-              className="h-12 w-12"
+            <BriefcaseIcon 
+              className="h-8 w-8" 
+              style={{ color: COLORS.primary }}
             />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              مجلس الإدارة التنفيذي
+            <h1 
+              className="text-xl font-bold"
+              style={{ color: COLORS.secondary }}
+            >
+              إدارة الموارد البشرية
             </h1>
           </div>
           
-          {/* مؤشرات الأداء */}
-          <div className="hidden xl:flex items-center gap-6">
-            {performanceMetrics.map((metric) => (
+          <div className="hidden lg:flex items-center gap-6">
+            {quickAccess.map((item) => (
               <motion.div
-                key={metric.id}
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer"
-                whileHover={{ scale: 1.02 }}
+                key={item.id}
+                className="flex items-center gap-2 cursor-pointer group"
+                whileHover={{ scale: 1.05 }}
               >
-                <div className="p-2 rounded-full" style={{ 
-                  backgroundColor: metric.change > 0 ? `${COLORS.primary}20` : `${COLORS.danger}20`,
-                  color: metric.change > 0 ? COLORS.primary : COLORS.danger
-                }}>
-                  <ArrowTrendingUpIcon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm" style={{ color: COLORS.neutral }}>{metric.title}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold" style={{ color: COLORS.secondary }}>{metric.value}</p>
-                    <span className={`text-sm ${metric.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                      ({metric.change > 0 ? '+' : ''}{metric.change}%)
-                    </span>
-                  </div>
-                </div>
+                <item.icon 
+                  className="h-5 w-5" 
+                  style={{ color: COLORS.neutral }}
+                />
+                <span 
+                  className="text-sm"
+                  style={{ color: COLORS.secondary }}
+                >
+                  {item.title}
+                </span>
+                <span 
+                  className="text-xs px-2 py-1 rounded-full"
+                  style={{ 
+                    backgroundColor: item.count > 10 ? COLORS.danger + '20' : COLORS.primary + '20',
+                    color: item.count > 10 ? COLORS.danger : COLORS.primary
+                  }}
+                >
+                  {item.count}
+                </span>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* الجانب الأيمن مع أدوات التحكم */}
+        {/* الإشعارات وملف المستخدم */}
         <div className="flex items-center gap-6">
-          {/* الإشعارات */}
+          {/* زر الإشعارات */}
           <div className="relative">
             <motion.button
-              className="relative p-2 rounded-full"
+              className="relative p-2 rounded-full hover:bg-gray-100"
               whileTap={{ scale: 0.95 }}
+              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
             >
               <BellIcon 
-                className="h-7 w-7" 
+                className="h-6 w-6" 
                 style={{ color: COLORS.secondary }}
               />
               <span 
@@ -107,17 +111,17 @@ const BoardHeader = () => {
             </motion.button>
 
             <AnimatePresence>
-              {isReportsOpen && (
+              {isNotificationOpen && (
                 <motion.div
-                  className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl"
+                  className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl"
                   style={{ border: `1px solid ${COLORS.neutral}30` }}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
                   <div className="p-4 border-b" style={{ borderColor: COLORS.neutral + '30' }}>
-                    <h3 className="font-bold" style={{ color: COLORS.secondary }}>
-                      الإشعارات المهمة
+                    <h3 className="font-medium" style={{ color: COLORS.secondary }}>
+                      الإشعارات ({notifications.filter(n => n.urgent).length})
                     </h3>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
@@ -125,18 +129,18 @@ const BoardHeader = () => {
                       <motion.div
                         key={notification.id}
                         className="flex items-start gap-3 p-4 hover:bg-gray-50"
-                        style={{ borderBottom: `1px solid ${COLORS.neutral}10` }}
+                        style={{ borderBottom: `1px solid ${COLORS.neutral}20` }}
                         whileHover={{ x: 5 }}
                       >
                         {notification.urgent && (
                           <span 
                             className="w-2 h-2 mt-2 rounded-full"
-                            style={{ backgroundColor: COLORS.accent }}
+                            style={{ backgroundColor: COLORS.danger }}
                           />
                         )}
                         <p 
-                          className={`text-sm ${notification.urgent ? 'font-bold' : ''}`}
-                          style={{ color: COLORS.secondary }}
+                          className={`text-sm ${notification.urgent ? 'font-medium' : ''}`}
+                          style={{ color: notification.urgent ? COLORS.secondary : COLORS.neutral }}
                         >
                           {notification.text}
                         </p>
@@ -148,7 +152,7 @@ const BoardHeader = () => {
             </AnimatePresence>
           </div>
 
-          {/* ملف العضو */}
+          {/* ملف المستخدم */}
           <div className="relative">
             <motion.div
               className="flex items-center gap-3 cursor-pointer"
@@ -156,53 +160,48 @@ const BoardHeader = () => {
               whileHover={{ scale: 1.02 }}
             >
               <div className="relative">
-                <img 
-                  src="/board-member.png" 
-                  alt="Member" 
-                  className="h-12 w-12 rounded-full border-2"
-                  style={{ borderColor: COLORS.primary }}
+                <UserCircleIcon 
+                  className="h-10 w-10" 
+                  style={{ color: COLORS.primary }}
                 />
                 <div 
-                  className="absolute bottom-0 right-0 w-2 h-2 rounded-full border-2 border-white"
+                  className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white"
                   style={{ backgroundColor: COLORS.accent }}
                 />
               </div>
               <div className="text-right">
                 <p 
-                  className="font-bold"
+                  className="font-medium"
                   style={{ color: COLORS.secondary }}
                 >
-                  د. عبدالله السديري
+                  علي عبدالرحمن
                 </p>
                 <p 
                   className="text-sm"
                   style={{ color: COLORS.neutral }}
                 >
-                  رئيس مجلس الإدارة
+                  مدير الموارد البشرية
                 </p>
               </div>
               <ChevronDownIcon 
-                className={`h-6 w-6 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}
-                style={{ color: COLORS.secondary }}
+                className={`h-5 w-5 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}
+                style={{ color: COLORS.neutral }}
               />
             </motion.div>
 
             <AnimatePresence>
               {isMenuOpen && (
                 <motion.div
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl"
-                  style={{ 
-                    border: `1px solid ${COLORS.neutral}30`,
-                    backgroundColor: COLORS.background
-                  }}
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl"
+                  style={{ border: `1px solid ${COLORS.neutral}30` }}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
                   {[
-                    { name: 'الملف التنفيذي', icon: UserCircleIcon },
-                    { name: 'التقارير الاستراتيجية', icon: DocumentChartBarIcon },
-                    { name: 'تسجيل الخروج', icon: ChevronDownIcon }
+                    { name: 'الملف الشخصي', icon: UserCircleIcon },
+                    { name: 'الإعدادات', icon: UsersIcon },
+                    { name: 'تسجيل الخروج', icon: CalendarIcon }
                   ].map((item, index) => (
                     <motion.div
                       key={item.name}
@@ -215,7 +214,7 @@ const BoardHeader = () => {
                         style={{ color: COLORS.primary }}
                       />
                       <span 
-                        className="text-sm font-medium"
+                        className="text-sm"
                         style={{ color: COLORS.secondary }}
                       >
                         {item.name}
@@ -242,4 +241,4 @@ const BoardHeader = () => {
   );
 };
 
-export default BoardHeader;
+export default HRHeader;

@@ -9,6 +9,11 @@ import FinancialManager from './components/FinancialManager';
 import TasksManager from './components/TasksManager';
 import InternalCommunication from './components/InternalCommunication';
 import VoipDashboard from './components/voip/page';
+import FinancialDashboard from './components/financial/page';
+import PayoutsPage from './components/Payouts/page';
+import RefundDashboard from './components/Refunds/page';
+import CouponDashboard from './components/coupons/page';
+import OffersPage from './components/Offers/page';
 
 const page = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -155,6 +160,13 @@ const page = () => {
                     {activeSection === 'voip' && <VoipDashboard />}
                     </div>
                     )}
+                                    {activeSection === 'payouts' && <PayoutsPage   />}
+                                    {activeSection === 'myfinance' && <FinancialDashboard   />}
+                                    {activeSection === 'refunds' && <RefundDashboard   />}
+                                    {activeSection === 'copon' && <CouponDashboard   />}
+                                    {activeSection === 'offers' && <OffersPage   />}
+
+                    
         </main>
       </div>
     </div>

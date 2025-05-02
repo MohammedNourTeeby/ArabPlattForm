@@ -1,7 +1,6 @@
-// src/components/Financial/ExportControls.jsx
 "use client"
 import { useState } from 'react';
-import {Button} from '@/components/ui/button';
+import { Button } from '@/components/ui/Buttonn';
 import { exportToCSV, exportToPDF, exportToExcel } from '@/utils/exporters';
 import { FiFileText, FiFile, FiDownload } from 'react-icons/fi';
 import PropTypes from 'prop-types';
@@ -42,34 +41,33 @@ const ExportControls = ({ transactions }) => {
   return (
     <div className="export-controls space-y-4">
       <div className="flex flex-wrap gap-3">
-      <Button
-  variant="outline"
-  onClick={() => handleExport('csv')}
-  disabled={!transactions?.length || isExporting}
-  // استبدال loading بـ data-loading كخاصية بيانات
-  data-loading={isExporting === 'csv'}
->
-  {isExporting === 'csv' ? 'جاري التصدير...' : 'تصدير CSV'}
-</Button>
+        <Button
+          variant="outline"
+          onClick={() => handleExport('csv')}
+          disabled={!transactions?.length || isExporting}
+          data-loading={isExporting === 'csv'}
+        >
+          {isExporting === 'csv' ? 'جاري التصدير...' : 'تصدير CSV'}
+        </Button>
 
         <Button
           variant="outline"
           onClick={() => handleExport('pdf')}
           disabled={!transactions?.length || isExporting}
-          loading={isExporting === 'pdf'}
+          loading={isExporting === 'pdf' ? "true" : undefined}
           icon={<FiFile />}
         >
-          تصدير PDF
+          {isExporting === 'pdf' ? 'جاري التصدير...' : 'تصدير PDF'}
         </Button>
 
         <Button
           variant="outline"
           onClick={() => handleExport('excel')}
           disabled={!transactions?.length || isExporting}
-          loading={isExporting === 'excel'}
+          loading={isExporting === 'excel' ? "true" : undefined}
           icon={<FiDownload />}
         >
-          تصدير Excel
+          {isExporting === 'excel' ? 'جاري التصدير...' : 'تصدير Excel'}
         </Button>
       </div>
 

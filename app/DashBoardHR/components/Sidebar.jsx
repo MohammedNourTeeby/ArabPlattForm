@@ -3,6 +3,7 @@ import React from 'react';
 
 const sectionLabels = {
   dashboard: 'إحصاءات مختصرة',
+  Employee: 'ادارة مستخدمي المنصة ',
   tasks : ' المهام الموكلة',
   course: 'إدارة الدورات ',
   suppurt: 'الرسائل و الدعم ',

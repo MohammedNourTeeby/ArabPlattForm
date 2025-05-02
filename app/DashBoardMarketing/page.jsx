@@ -8,9 +8,11 @@ import SalesReports from './components/SalesReports';
 import LeadsManager from './components/LeadsManager';
 import AffiliateDashboard from './components/Affiliate/AffiliateDashboard';
 import AutomationDashboard from './components/AutomationBuilder/page';
-import AutumationyyyDashboard from './components/automation/page';
+import AutomationSystem from './components/automation/page';
 import DashboardPage from './components/MultiChannelCenter/page';
 import SocialDashboard from './components/SocialMidia/page';
+import StudentMarketingDashboard from './components/Emails/page';
+import AdsManagerDashboard from './components/Ads Manager/page';
 
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -31,7 +33,7 @@ function Page() {
             conniction: 'إدارة التواصل مع العملاء  ',
             maitychannel: ' ادارة التواصل الموحد  ',
 
-          
+      
         }}
       />
       <main className="flex-1 mr-64 p-8"> {/* تصحيح الهوامش */}
@@ -40,16 +42,18 @@ function Page() {
       {activeSection === 'campaigns' && <CampaignList />}
       {activeSection === 'reports' && <SalesReports />}
       {activeSection === 'leads' && <LeadsManager />}
-      {activeSection === 'affiliate' && <AffiliateDashboard   />}
+      {activeSection === 'Affiliate' && <AffiliateDashboard   />}
  {/* content Section */}
-                    {activeSection === 'automation' && (
+                    {activeSection === 'Automation' && (
                       <div className="bg-white p-6 rounded-lg shadow-sm">
-                    {activeSection === 'automation' && <AutomationDashboard />}
+                    {activeSection === 'Automation' && <AutomationSystem />}
                     </div>
                     )}
       {activeSection === 'conniction' && <AutumationyyyDashboard   />}
       {activeSection === 'maitychannel' && <DashboardPage   />}
       {activeSection === 'social' && < SocialDashboard/>}
+      {activeSection === 'ُEmails' && < StudentMarketingDashboard/>}
+      {activeSection === 'Ads' && < AdsManagerDashboard/>}
 
         </div>
       </main>

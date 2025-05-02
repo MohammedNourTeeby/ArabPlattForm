@@ -8,31 +8,18 @@ const categories = [
   {
     title: 'إدارة المستخدمين',
     items: [
-      { key: 'users', label: 'إدارة المستخدمين' },
       { key: 'addstudent', label: 'إضافة متدرب جديد' },
-      { key: 'addgroup', label: 'إضافة فريق إداري' },
       { key: 'tracker', label: 'تفاعل المستخدمين' }
     ]
   },
-  {
-    title: 'العمليات المالية',
-    items: [
-      { key: 'finance', label: 'العمليات المالية' },
-      { key: 'payouts', label: 'تسوية العمولات الآلية' },
-      { key: 'refunds', label: 'إدارة الرسوم المالية' },
-      { key: 'copon', label: 'إدارة الخصومات' },
-      { key: 'offers', label: 'إدارة العروض' }
-    ]
-  },
+  
   {
     title: 'المحتوى والتسويق',
     items: [
       { key: 'content', label: 'المحتوى والدورات' },
       { key: 'certif', label: 'إدارة الشهادات' },
       { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
-      { key: 'ads', label: 'إدارة الاعلانات' },
       { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
-      { key: 'social', label: ' التواصل الاجتماعي   ' },
       { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
     ]
   },

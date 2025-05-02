@@ -8,21 +8,35 @@ const categories = [
     ]
   },
   {
+    title: 'التسويق بالإيميل ',
+    items: [
+      { key: 'ُEmails', label: ' التسويق بالإيميل ' }
+    ]
+  },
+  {
+    title: 'إدارة الاعلانات ',
+    items: [
+      { key: 'Ads', label: ' Ads Manager' }
+    ]
+  },
+  {
+    title: 'Automation Manager',
+    items: [
+      { key: 'Automation', label: ' Automation Manager' }
+    ]
+  },
+  {
     title: 'إدارة التسويق',
     items: [
       { key: 'campaigns', label: 'الحملات التسويقية' },
-      { key: 'automation', label: 'إدارة حملات التسويق' },
-      { key: 'affiliate', label: 'التسويق بالعمولة' },
-      { key: 'social', label: 'التسويق المؤتمت' },
-
+     
     ]
   },
   {
     title: 'إدارة العملاء',
     items: [
       { key: 'leads', label: 'إدارة العملاء' },
-      { key: 'conniction', label: 'إدارة التواصل مع العملاء' },
-      { key: 'maitychannel', label: 'ادارة التواصل الموحد' }
+      { key: 'Affiliate', label: ' التسويق بالعمولة' },
     ]
   },
   {

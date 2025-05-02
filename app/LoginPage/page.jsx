@@ -27,9 +27,9 @@ const roles = [
   { value: 'Student', label: 'طالب', icon: '🎓' },
   { value: 'Traier', label: 'مدرب', icon: '👨🏫' },
   { value: 'Admin', label: 'الإدارة', icon: '👔' },
-  { value: 'Employee', label: 'الموظف', icon: '💼' },
-  { value: 'Wakil', label: 'الوكيل', icon: '🤝' },
-  { value: 'Assist', label: 'المساعد', icon: '👥' },
+  { value: 'Finicial', label: 'الماليّة', icon: '💼' },
+  { value: 'Marketing', label: 'التسويق', icon: '🤝' },
+  { value: 'HR', label: ' الموارد البشرية', icon: '👥' },
 ];
 
 export default function LoginPage() {
