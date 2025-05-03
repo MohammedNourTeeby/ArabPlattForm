@@ -14,13 +14,11 @@ const categories = [
   },
   
   {
-    title: 'المحتوى والتسويق',
+    title: 'المحتوى ',
     items: [
       { key: 'content', label: 'المحتوى والدورات' },
       { key: 'certif', label: 'إدارة الشهادات' },
-      { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
-      { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
-      { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
+     
     ]
   },
   {
@@ -34,6 +32,20 @@ const categories = [
     
     ]
   },
+  {
+      title: 'الدعم الفني',
+      items: [
+        { key: 'finance', label: 'الدعم الفني' },
+        { key: 'support', label: 'المهام التشغيلية' }
+      ]
+    },
+    {
+        title: 'الاتصالات',
+        items: [
+          { key: 'user', label: 'نظام التواصل الداخلي' },
+          { key: 'voip', label :'إدارة المكالمات VOIP' }
+        ]
+      },
    {
       title: 'التقارير',
       items: [

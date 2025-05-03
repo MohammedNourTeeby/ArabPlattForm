@@ -23,7 +23,6 @@ import CourseManagementy from './components/CourseManagementy';
 import ReviewStats from './components/ReviewStats';
 import AdminAdsPage from '../ads/page';
 
-import RefundDashboard from './components/promotion/page';
 import PrivacyPage from './components/legal/page';
 import CertificatesPage from './components/Certificates/page';
 import AcademicDashboard from './components/Academic/page';
@@ -35,9 +34,11 @@ import LicenseDashboard from './components/Saas/page';
 import SosialDashboard from '../../app/Social/page';
 import CommunityCoursePage from './components/communitycourse/page';
 import ReportsDashboard from './components/Reports/page';
-import BrandingPage from './components/WhiteLabel/page';
-import DomainPageBuilder from './components/domin/page';
 
+import TicketsManager from './components/Support/TicketsManager';
+import TasksManager from './components/Support/TasksManager';
+import InternalCommunication from './components/voip/InternalCommunication';
+import VoipDashboard from './components/voip/page';
 
 const AdminDashboard = () => {
   // State management
@@ -242,7 +243,6 @@ const AdminDashboard = () => {
                 {activeSection === 'tracker' && <CourseManagementy  />}
                 {activeSection === 'tracker' && <ReviewStats  />}
                 {activeSection === 'ads' && <AdminAdsPage   />}
-                               {activeSection === 'promotion' && <RefundDashboard   />}
                 {activeSection === 'legal' && <PrivacyPage   />}
                 {activeSection === 'certif' && <CertificatesPage   />}
                 {activeSection === 'certif' && <AcademicDashboard   />}
@@ -252,9 +252,25 @@ const AdminDashboard = () => {
                 {activeSection === 'saas' && <LicenseDashboard   />}
                 {activeSection === 'social' && <SosialDashboard   />}
                 {activeSection === 'report' && <ReportsDashboard />}
-                {activeSection === 'WhiteLabel' && <BrandingPage />}
-                {activeSection === 'domin' && <DomainPageBuilder />}
-
+{activeSection === 'support' && (
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                    {activeSection === 'support' && <TasksManager />}
+                    </div>
+                    )}
+                    {activeSection === 'finance' && (
+                                          <div className="bg-white p-6 rounded-lg shadow-sm">
+                                        {activeSection === 'finance' && <TicketsManager />}
+                                        </div>
+                                        )}
+                                        {activeSection === 'user' && (
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                    {activeSection === 'user' && <InternalCommunication />}
+                    </div>
+                    )}{activeSection === 'voip' && (
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                    {activeSection === 'voip' && <VoipDashboard />}
+                    </div>
+                    )}
         </main>
       </div>
     </div>

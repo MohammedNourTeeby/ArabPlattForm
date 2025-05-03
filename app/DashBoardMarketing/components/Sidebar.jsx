@@ -29,7 +29,9 @@ const categories = [
     title: 'إدارة التسويق',
     items: [
       { key: 'campaigns', label: 'الحملات التسويقية' },
-     
+      { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
+      { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
+      { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
     ]
   },
   {

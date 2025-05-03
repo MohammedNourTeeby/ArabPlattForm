@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Sidebar from './components/Sidebar';
 import SummaryCard from './components/SummaryCard';
-import TicketsManager from './components/TicketsManager';
 import FinancialManager from './components/FinancialManager';
-import TasksManager from './components/TasksManager';
-import InternalCommunication from './components/InternalCommunication';
-import VoipDashboard from './components/voip/page';
+
 import FinancialDashboard from './components/financial/page';
 import PayoutsPage from './components/Payouts/page';
 import RefundDashboard from './components/Refunds/page';
@@ -133,11 +130,7 @@ const page = () => {
             </div>
           )}
            {/* Finance Section */}
-                    {activeSection === 'finance' && (
-                      <div className="bg-white p-6 rounded-lg shadow-sm">
-                    {activeSection === 'finance' && <TicketsManager />}
-                    </div>
-                    )}
+                    
                     {/* content Section */}
                     {activeSection === 'content' && (
                       <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -145,21 +138,9 @@ const page = () => {
                     </div>
                     )}
                     {/* support Section */}
-                    {activeSection === 'support' && (
-                      <div className="bg-white p-6 rounded-lg shadow-sm">
-                    {activeSection === 'support' && <TasksManager />}
-                    </div>
-                    )}
+                    
                     {/* user Section */}
-                    {activeSection === 'user' && (
-                      <div className="bg-white p-6 rounded-lg shadow-sm">
-                    {activeSection === 'user' && <InternalCommunication />}
-                    </div>
-                    )}{activeSection === 'voip' && (
-                      <div className="bg-white p-6 rounded-lg shadow-sm">
-                    {activeSection === 'voip' && <VoipDashboard />}
-                    </div>
-                    )}
+                    
                                     {activeSection === 'payouts' && <PayoutsPage   />}
                                     {activeSection === 'myfinance' && <FinancialDashboard   />}
                                     {activeSection === 'refunds' && <RefundDashboard   />}

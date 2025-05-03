@@ -1,5 +1,5 @@
 // app/affiliate/page.jsx
-import AffiliateDashboard from '@/app/DashBoardWakil/components/Affiliate/AffiliateDashboard';
+import AffiliateDashboard from '@/app/DashBoardMarketing/components/Affiliate/AffiliateDashboard';
 
 export default function AffiliatePage() {
   return (

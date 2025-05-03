@@ -17,26 +17,14 @@ const categories = [
       { key: 'offers', label: 'إدارة العروض' }
     ]
   },
-  {
-    title: 'الدعم الفني',
-    items: [
-      { key: 'finance', label: 'الدعم الفني' },
-      { key: 'support', label: 'المهام التشغيلية' }
-    ]
-  },
+  
   {
     title: 'العمليات',
     items: [
       { key: 'content', label: 'العمليات المالية' }
     ]
   },
-  {
-    title: 'الاتصالات',
-    items: [
-      { key: 'user', label: 'نظام التواصل الداخلي' },
-      { key: 'voip', label :'إدارة المكالمات VOIP' }
-    ]
-  },
+  
  
 ];
 
