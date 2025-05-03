@@ -16,6 +16,7 @@ import AdsManagerDashboard from './components/Ads Manager/page';
 import RefundDashboard from './components/promotion/page';
 import BrandingPage from './components/WhiteLabel/page';
 import DomainPageBuilder from './components/domin/page';
+import SosialDashboard from '@/app/Social/page';
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
@@ -54,11 +55,12 @@ function Page() {
       {activeSection === 'conniction' && <AutumationyyyDashboard   />}
       {activeSection === 'maitychannel' && <DashboardPage   />}
       {activeSection === 'social' && < SocialDashboard/>}
-      {activeSection === 'ُEmails' && < StudentMarketingDashboard/>}
+      {activeSection === 'Emails' && < StudentMarketingDashboard/>}
       {activeSection === 'Ads' && < AdsManagerDashboard/>}
                                {activeSection === 'promotion' && <RefundDashboard   />}
                 {activeSection === 'WhiteLabel' && <BrandingPage />}
                 {activeSection === 'domin' && <DomainPageBuilder />}
+                {activeSection === 'Social' && <SosialDashboard />}
 
         </div>
       </main>

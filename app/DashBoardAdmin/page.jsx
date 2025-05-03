@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic'; // <-- أضف هذا السطر
 
-import Header from './Header';
 import Sidebar from './Sidbar';
 import UsersTable from './UsersTable';
 import SummaryCard from './SummaryCard';
@@ -116,7 +115,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       <div className="flex pt-16">
         <Sidebar

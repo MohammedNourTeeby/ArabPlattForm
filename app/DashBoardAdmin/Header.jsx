@@ -41,12 +41,12 @@ const BoardHeader = () => {
 
   return (
     <motion.header 
-      className="fixed w-full z-50 shadow-2xl"
+      className="fixed w-full z-50 shadow-xl"
       style={{ backgroundColor: COLORS.background }}
       initial={{ y: -20 }}
       animate={{ y: 0 }}
     >
-      <div className="flex justify-between items-center px-8 py-4">
+      <div className="flex justify-between items-center px-8 py-1">
         {/* الجانب الأيسر مع المؤشرات */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">

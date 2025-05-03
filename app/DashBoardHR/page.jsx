@@ -19,14 +19,8 @@ function Page() {
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         sections={{
-          dashboard: 'إحصاءات مختصرة ',
-          tasks : ' المهام الموكلة',
-          course: 'إدارة الدورات ',
-          suppurt: 'الرسائل و الدعم ',
-          student: ' متابعة الطلاب  ',
-          settings: '  إعدادات الحساب  ',
-
-
+      
+          
         }}
       />
       <main className="flex-1 mr-64 p-8"> {/* تصحيح الهوامش */}
@@ -34,7 +28,7 @@ function Page() {
       {activeSection === 'dashboard' && <AssistantDashboard />}
       {activeSection === 'tasks' && <TaskList />}
       {activeSection === 'course' && <CourseManagement />}
-      {activeSection === 'suppurt' && <SupportInbox />}
+      {activeSection === 'support' && <SupportInbox />}
       {activeSection === 'student' && <StudentTracking />}
       {activeSection === 'settings' && <ProfileSettings />}
       {activeSection === 'Employee' && <TeamManagementPanel />}

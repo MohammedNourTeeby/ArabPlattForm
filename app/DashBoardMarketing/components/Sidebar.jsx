@@ -1,118 +1,202 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHome,
+  faEnvelope,
+  faBullhorn,
+  faRobot,
+  faChartLine,
+  faUsers,
+  faHandshake,
+  faFileInvoiceDollar,
+  faFileAlt,
+  faChevronDown,
+  faCircle
+} from '@fortawesome/free-solid-svg-icons';
+
+// تعريف الثيم بالألوان المحددة
+const theme = {
+  blue: '#008DCB',
+  black: '#0D1012',
+  gray: '#999999',
+  red: '#E2101E',
+  white: '#FFFFFF',
+  yellow: '#F9D011'
+};
+
+const alpha = (color, opacity) => `${color}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
 
 const categories = [
   {
     title: 'الرئيسية',
+    icon: faHome,
     items: [
-      { key: 'dashboard', label: 'إحصاءات سريعة' }
+      { key: 'dashboard', label: 'إحصاءات سريعة', icon: faHome }
     ]
   },
   {
-    title: 'التسويق بالإيميل ',
+    title: 'التسويق بالإيميل',
+    icon: faEnvelope,
     items: [
-      { key: 'ُEmails', label: ' التسويق بالإيميل ' }
+      { key: 'Emails', label: 'التسويق بالإيميل', icon: faEnvelope }
     ]
   },
   {
-    title: 'إدارة الاعلانات ',
+    title: 'Social Media',
+    icon: faEnvelope,
     items: [
-      { key: 'Ads', label: ' Ads Manager' }
+      { key: 'Social', label: 'Social Media Planner ', icon: faEnvelope }
+    ]
+  },
+  {
+    title: 'إدارة الاعلانات',
+    icon: faBullhorn,
+    items: [
+      { key: 'Ads', label: 'Ads Manager', icon: faBullhorn }
     ]
   },
   {
     title: 'Automation Manager',
+    icon: faRobot,
     items: [
-      { key: 'Automation', label: ' Automation Manager' }
+      { key: 'Automation', label: 'Automation Manager', icon: faRobot }
     ]
   },
   {
     title: 'إدارة التسويق',
+    icon: faChartLine,
     items: [
-      { key: 'campaigns', label: 'الحملات التسويقية' },
-      { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى' },
-      { key: 'WhiteLabel', label: ' الهوية البصرية  ' },
-      { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية ' },
+      { key: 'campaigns', label: 'الحملات التسويقية', icon: faChartLine },
+      { key: 'promotion', label: 'ظهور المدرب في الصفحة الأولى', icon: faUsers },
+      { key: 'WhiteLabel', label: 'الهوية البصرية', icon: faHandshake },
+      { key: 'domin', label: 'إدارة الدومين و الصفحات التسويقية', icon: faFileInvoiceDollar },
     ]
   },
   {
     title: 'إدارة العملاء',
+    icon: faUsers,
     items: [
-      { key: 'leads', label: 'إدارة العملاء' },
-      { key: 'Affiliate', label: ' التسويق بالعمولة' },
+      { key: 'leads', label: 'إدارة العملاء', icon: faUsers },
+      { key: 'Affiliate', label: 'التسويق بالعمولة', icon: faHandshake },
     ]
   },
   {
     title: 'التقارير',
+    icon: faFileInvoiceDollar,
     items: [
-      { key: 'reports', label: 'التقارير المالية' },
-
+      { key: 'reports', label: 'التقارير المالية', icon: faFileInvoiceDollar }
     ]
   }
 ];
 
 const Sidebar = ({ activeSection, setActiveSection }) => {
-  const [expanded, setExpanded] = useState([]);
-  const primaryColor = '#2563EB';
-  
+  const [expandedCategories, setExpandedCategories] = useState(['الرئيسية']);
+
   return (
-    <aside className="w-72 bg-white fixed right-0 top-30 h-screen shadow-xl rounded-l-3xl"
-      style={{ 
-        background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)'
-      }}
+    <aside 
+      className="w-72 fixed right-0 top-20 h-screen flex flex-col bg-white border-l"
+      style={{ borderColor: alpha(theme.gray, 0.1) }}
     >
-      <div className="p-6 border-b border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800">لوحة التحكم</h2>
+      {/* شعار المنصة */}
+      <div className="px-6 py-4 border-b flex items-center justify-center bg-white">
+        <img 
+          src="/الاعتماد العربي.png" 
+          alt="Logo"
+          className="h-14 object-contain"
+        />
       </div>
-      
-      <nav className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-50">
-        <ul className="p-4 space-y-4">
-          {categories.map(category => (
-            <li key={category.title} className="group">
-              {/* Header */}
-              <button 
-                onClick={() => setExpanded(prev => 
+
+      {/* محتوى القائمة */}
+      <nav className="flex-1 overflow-y-auto">
+        <ul className="space-y-3 p-4">
+          {categories.map((category) => (
+            <li key={category.title}>
+              <button
+                onClick={() => setExpandedCategories(prev => 
                   prev.includes(category.title) 
                     ? prev.filter(t => t !== category.title) 
                     : [...prev, category.title]
                 )}
                 className={`
-                  w-full flex justify-between items-center px-4 py-3 
+                  w-full flex justify-between items-center px-4 py-3
                   rounded-lg transition-all duration-300
-                  ${expanded.includes(category.title) 
-                    ? 'text-blue-600 bg-blue-100' 
-                    : 'text-gray-600 hover:bg-gray-50'
+                  ${expandedCategories.includes(category.title) 
+                    ? 'bg-blue-50' 
+                    : 'bg-white hover:bg-gray-50'
                   }
                 `}
+                style={{
+                  border: `1px solid ${alpha(theme.gray, 0.1)}`
+                }}
               >
-                <span className="font-semibold text-sm lg:text-base">{category.title}</span>
-                <svg
-                  className={`w-5 h-5 transition-transform duration-300 
-                    ${expanded.includes(category.title) ? 'rotate-180' : ''}`}
-                  viewBox="0 0 20 20" fill="currentColor"
-                >
-                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
-                </svg>
+                <div className="flex items-center gap-3">
+                  <FontAwesomeIcon 
+                    icon={category.icon}
+                    className="w-5 h-5"
+                    style={{
+                      color: expandedCategories.includes(category.title) 
+                        ? theme.blue 
+                        : theme.gray
+                    }}
+                  />
+                  <span className="font-semibold text-sm">
+                    {category.title}
+                  </span>
+                </div>
+                
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className={`w-4 h-4 transition-transform duration-300 
+                    ${expandedCategories.includes(category.title) ? 'rotate-180' : ''}`}
+                  style={{
+                    color: expandedCategories.includes(category.title) ? theme.blue : theme.gray
+                  }}
+                />
               </button>
 
-              {/* Submenu */}
-              <ul className={`mt-2 space-y-2 overflow-hidden transition-all duration-500
-                ${expanded.includes(category.title) ? 'max-h-60' : 'max-h-0'}
-              `}>
-                {category.items.map(item => (
+              <ul 
+                className={`ml-8 space-y-2 overflow-hidden transition-all
+                  ${expandedCategories.includes(category.title) 
+                    ? 'max-h-96 opacity-100 mt-2' 
+                    : 'max-h-0 opacity-0'
+                  }`}
+              >
+                {category.items.map((item) => (
                   <li key={item.key}>
                     <button
                       onClick={() => setActiveSection(item.key)}
                       className={`
-                        w-full text-right px-6 py-3 rounded-lg transition-all duration-200
+                        w-full text-right px-4 py-2.5 rounded-lg 
+                        transition-all duration-300 flex items-center gap-3
                         ${activeSection === item.key 
-                          ? `bg-${primaryColor} text-white shadow-md` 
-                          : 'text-gray-600 hover:bg-gray-50'
+                          ? 'bg-blue-100' 
+                          : 'bg-white hover:bg-gray-50'
                         }
                       `}
+                      style={{
+                        border: `1px solid ${alpha(theme.gray, 0.1)}`
+                      }}
                     >
-                      <span className="block truncate text-sm lg:text-base">
+                      <FontAwesomeIcon 
+                        icon={item.icon}
+                        className="w-4 h-4"
+                        style={{
+                          color: activeSection === item.key 
+                            ? theme.blue 
+                            : theme.gray
+                        }}
+                      />
+                      <span className="flex-1 text-sm font-medium">
                         {item.label}
                       </span>
+                      
+                      {activeSection === item.key && (
+                        <FontAwesomeIcon 
+                          icon={faCircle}
+                          className="w-2 h-2 animate-pulse"
+                          style={{ color: theme.blue }}
+                        />
+                      )}
                     </button>
                   </li>
                 ))}
@@ -121,6 +205,27 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
           ))}
         </ul>
       </nav>
+
+      {/* قسم الإشعارات */}
+      <div className="mx-4 mb-4 p-4 rounded-lg bg-yellow-50 border border-yellow-100">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
+            <FontAwesomeIcon 
+              icon={faFileAlt} 
+              className="w-4 h-4"
+              style={{ color: theme.yellow }}
+            />
+          </div>
+          <div>
+            <p className="text-xs font-semibold" style={{ color: theme.black }}>
+              3 تحديثات جديدة
+            </p>
+            <p className="text-xs" style={{ color: theme.gray }}>
+              آخر تحديث: ٢٤ ساعة
+            </p>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 };

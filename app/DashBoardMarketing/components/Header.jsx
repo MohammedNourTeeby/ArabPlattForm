@@ -44,7 +44,7 @@ const MarketingDashboardHeader = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex justify-between items-center px-8 py-4">
+      <div className="flex justify-between items-center px-8 py-2">
         {/* الجانب الأيسر مع المؤشرات */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">

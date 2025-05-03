@@ -27,7 +27,8 @@ import {
   FunnelIcon,
   GlobeAltIcon,
   ArrowPathIcon,
-  CalendarIcon
+  CalendarIcon,
+  ArrowUpTrayIcon
 } from '@heroicons/react/24/outline';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -95,10 +96,43 @@ const DEMO_ACCOUNT = {
 };
 
 const SOCIAL_PLATFORMS = [
-  { value: 'facebook', label: 'فيسبوك', icon: '/icons/facebook.svg' },
-  { value: 'instagram', label: 'إنستجرام', icon: '/icons/instagram.svg' },
-  { value: 'twitter', label: 'تويتر', icon: '/icons/twitter.svg' },
-  { value: 'linkedin', label: 'لينكدإن', icon: '/icons/linkedin.svg' }
+  { value: 'facebook', label: 'فيسبوك', icon: 'https://static.vecteezy.com/system/resources/previews/018/930/476/non_2x/facebook-logo-facebook-icon-transparent-free-png.png' },
+  { value: 'instagram', label: 'إنستجرام', icon: 'https://png.pngtree.com/png-clipart/20230401/original/pngtree-three-dimensional-instagram-icon-png-image_9015419.png' },
+  { value: 'twitter', label: 'تويتر', icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYHDhjypgRklncOY5oZJLLQ3TysrcwWN4gfg&s' },
+  { value: 'linkedin', label: 'لينكدإن', icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlh2DiY-UY_24sTF_1-yecTQI275oFKmBKxg&s' }
+];
+
+const SHARING_PLATFORMS = [
+  { 
+    value: 'meta-ads', 
+    label: 'إدارة إعلانات ميتا', 
+    icon: 'https://static.vecteezy.com/system/resources/previews/046/861/643/non_2x/meta-icon-transparent-background-free-png.png',
+    url: (campaign) => `https://www.facebook.com/adsmanager/create/campaign?name=${encodeURIComponent(campaign.name)}`
+  },
+  {
+    value: 'facebook',
+    label: 'فيسبوك',
+    icon: 'https://static.vecteezy.com/system/resources/previews/018/930/476/non_2x/facebook-logo-facebook-icon-transparent-free-png.png',
+    url: (campaign) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`
+  },
+  {
+    value: 'whatsapp',
+    label: 'واتساب',
+    icon: 'https://www.iconpacks.net/icons/2/free-whatsapp-logo-icon-4456-thumb.png',
+    url: (campaign) => `https://api.whatsapp.com/send?text=${encodeURIComponent(`حملة إعلانية: ${campaign.name}\n${window.location.href}`)}`
+  },
+  {
+    value: 'instagram',
+    label: 'إنستجرام',
+    icon: 'https://png.pngtree.com/png-clipart/20230401/original/pngtree-three-dimensional-instagram-icon-png-image_9015419.png',
+    url: (campaign) => `https://www.instagram.com/create/story?content=${encodeURIComponent(campaign.content)}`
+  },
+  {
+    value: 'twitter',
+    label: 'تويتر',
+    icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYHDhjypgRklncOY5oZJLLQ3TysrcwWN4gfg&s',
+    url: (campaign) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(`حملة إعلانية: ${campaign.name}\n${window.location.href}`)}`
+  },
 ];
 
 const AdvancedAdsManager = () => {
@@ -160,56 +194,102 @@ const AdvancedAdsManager = () => {
     toast.success('تم إنشاء الحملة بنجاح!');
   };
 
-  const CampaignCard = ({ campaign }) => (
-    <motion.div 
-      className="p-6 rounded-2xl bg-surface shadow-surfaces hover:shadow-lg transition-all"
-      whileHover={{ y: -5 }}
-    >
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-lg font-semibold text-text-primary">{campaign.name}</h3>
-          <div className="flex items-center gap-2 mt-2">
-            <span className={`px-2 py-1 rounded-full text-sm 
-              ${campaign.status === 'active' ? 'bg-success-light text-success-main' : 'bg-error-light text-error-main'}`}>
-              {campaign.status === 'active' ? 'نشطة' : 'متوقفة'}
-            </span>
-            <span className="text-sm text-text-secondary">
-              {campaign.budget} {DEMO_ACCOUNT.currency}
-            </span>
+  const CampaignCard = ({ campaign }) => {
+    const [showSharingOptions, setShowSharingOptions] = useState(false);
+
+    const handleShare = (platform) => {
+      const shareUrl = platform.url(campaign);
+      window.open(shareUrl, '_blank');
+      setShowSharingOptions(false);
+    };
+
+    return (
+      <motion.div 
+        className="p-6 rounded-2xl bg-surface shadow-surfaces hover:shadow-lg transition-all relative"
+        whileHover={{ y: -5 }}
+      >
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-text-primary">{campaign.name}</h3>
+            <div className="flex items-center gap-2 mt-2">
+              <span className={`px-2 py-1 rounded-full text-sm 
+                ${campaign.status === 'active' ? 'bg-success-light text-success-main' : 'bg-error-light text-error-main'}`}>
+                {campaign.status === 'active' ? 'نشطة' : 'متوقفة'}
+              </span>
+              <span className="text-sm text-text-secondary">
+                {campaign.budget} {DEMO_ACCOUNT.currency}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <button
+                onClick={() => setShowSharingOptions(!showSharingOptions)}
+                className="p-2 hover:bg-background rounded-lg"
+              >
+                <ArrowUpTrayIcon className="h-5 w-5 text-text-secondary" />
+              </button>
+              
+              <AnimatePresence>
+                {showSharingOptions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-lg shadow-lg z-20"
+                  >
+                    {SHARING_PLATFORMS.map((platform) => (
+                      <button
+                        key={platform.value}
+                        onClick={() => handleShare(platform)}
+                        className="flex items-center gap-3 w-full px-4 py-3 hover:bg-background text-text-primary text-sm text-right"
+                      >
+                        <img 
+                          src={platform.icon} 
+                          alt={platform.label} 
+                          className="h-5 w-5 object-contain"
+                        />
+                        <span className="flex-1">{platform.label}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <button 
+              onClick={() => setSelectedCampaign(campaign)}
+              className="p-2 hover:bg-background rounded-lg"
+            >
+              <Cog6ToothIcon className="h-5 w-5 text-text-secondary" />
+            </button>
           </div>
         </div>
-        <button 
-          onClick={() => setSelectedCampaign(campaign)}
-          className="p-2 hover:bg-background rounded-lg"
-        >
-          <Cog6ToothIcon className="h-5 w-5 text-text-secondary" />
-        </button>
-      </div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <ArrowTrendingUpIcon className="h-4 w-4 text-success-main" />
-            <span className="text-sm text-text-primary">{campaign.stats.clicks.toLocaleString()} نقرات</span>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <ArrowTrendingUpIcon className="h-4 w-4 text-success-main" />
+              <span className="text-sm text-text-primary">{campaign.stats.clicks.toLocaleString()} نقرات</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GlobeAltIcon className="h-4 w-4 text-primary-main" />
+              <span className="text-sm text-text-primary">{campaign.stats.impressions.toLocaleString()} ظهور</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <GlobeAltIcon className="h-4 w-4 text-primary-main" />
-            <span className="text-sm text-text-primary">{campaign.stats.impressions.toLocaleString()} ظهور</span>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <CreditCardIcon className="h-4 w-4 text-warning-main" />
-            <span className="text-sm text-text-primary">{campaign.stats.spend?.toLocaleString()} إنفاق</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ChartPieIcon className="h-4 w-4 text-secondary-main" />
-            <span className="text-sm text-text-primary">{campaign.stats.ctr}% CTR</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <CreditCardIcon className="h-4 w-4 text-warning-main" />
+              <span className="text-sm text-text-primary">{campaign.stats.spend?.toLocaleString()} إنفاق</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ChartPieIcon className="h-4 w-4 text-secondary-main" />
+              <span className="text-sm text-text-primary">{campaign.stats.ctr}% CTR</span>
+            </div>
           </div>
         </div>
-      </div>
-    </motion.div>
-  );
+      </motion.div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
