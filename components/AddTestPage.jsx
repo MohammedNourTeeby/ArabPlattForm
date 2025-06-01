@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkAuth } from '@/store/slices/authSlice';
 
-const AddTest = () => {
+const AddTestPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const courseId = searchParams.get('courseId');

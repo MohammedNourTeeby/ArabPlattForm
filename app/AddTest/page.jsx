@@ -1,11 +1,11 @@
 'use client';
 import { Suspense } from 'react';
-import AddTest from '@/components/AddTest';
+import AddTestPage from '@/components/AddTestPage';
 
 export default function AddTest() {
   return (
     <Suspense fallback="جارٍ التحميل...">
-      <AddTest />
+      <AddTestPage />
     </Suspense>
   );
 }
