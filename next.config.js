@@ -1,8 +1,4 @@
-//next.config.js.
-/* eslint-disable @typescript-eslint/no-require-imports */
-const withTM = require("next-transpile-modules")(["@ffmpeg/ffmpeg"]);
-
-module.exports = withTM({
+module.exports = {
   reactStrictMode: true,
   env: {
     FFMPEG_CORE_PATH: "/ffmpeg.js",
@@ -13,7 +9,7 @@ module.exports = withTM({
         protocol: "http",
         hostname: "localhost",
         port: "1337",
-        pathname: "/api/uploads/**", // المسار الذي تأتي منه الصور
+        pathname: "/api/uploads/**",
       },
       {
         protocol: "https",
@@ -29,30 +25,8 @@ module.exports = withTM({
       },
     ],
   },
-  experimental: {},
-  webpack: (config, { isServer }) => {
-    // إضافة تحميل ملفات CSS باستخدام require.resolve
-    config.module.rules.push({
-      test: /\.css$/i,
-      use: !isServer
-        ? [
-            require.resolve("style-loader"),
-            require.resolve("css-loader"),
-            require.resolve("postcss-loader"),
-          ]
-        : [
-            {
-              loader: require.resolve("css-loader"),
-              options: {
-                url: false,
-                importLoaders: 1,
-                modules: false,
-              },
-            },
-            require.resolve("postcss-loader"),
-          ],
-    });
-
+  // إزالة أي تكوينات غير ضرورية
+  webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
@@ -62,4 +36,4 @@ module.exports = withTM({
     };
     return config;
   },
-});
+};
