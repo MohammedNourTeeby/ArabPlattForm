@@ -36,9 +36,9 @@ export default function FixedSidebar() {
       link: "./Massage"
     },
     {
-      name: "الإعدادات",
+      name: "متابعة الدورات و اضافة اختبارات",
       icon: <FiSettings size={22} />,
-      link: "/tool"
+      link: "/AddTest"
     },
     {
       name: "المجموعات",

@@ -9,8 +9,21 @@ module.exports = withTM({
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+        pathname: "/api/uploads/**", // المسار الذي تأتي منه الصور
+      },
+      {
         protocol: "https",
-        hostname: "**",
+        hostname: "static.vecteezy.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+        port: "",
         pathname: "/**",
       },
     ],

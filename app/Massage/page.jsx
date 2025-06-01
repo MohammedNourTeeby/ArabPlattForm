@@ -100,14 +100,12 @@ export default function CourseChatSystem() {
   }, [newMessage, filePreview]);
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFilePreview({
-        name: file.name,
-        type: file.type.split('/')[0],
-        size: (file.size / 1024).toFixed(2) + 'KB'
-      });
-    }
+    const files = Array.from(e.target.files);
+    const newAttachments = files.map(file => ({
+      name: file.name,
+      file: file, // إرسال الملف مباشرة بدلًا من Base64
+    }));
+    setFormData(prev => ({ ...prev, attachments: [...prev.attachments, ...newAttachments] }));
   };
 
   return (

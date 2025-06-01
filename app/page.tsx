@@ -1,11 +1,10 @@
-import LoginPage from "@/app/LoginPage/page";
-
-export default function Home() {
+import DashBoardTraier from './DashBoardTraier/page'
+function page() {
   return (
-    
-         
-        <div>
-         <LoginPage/>
-        </div>
-  );
+    <div>
+      <DashBoardTraier/>
+    </div>
+  )
 }
+
+export default page

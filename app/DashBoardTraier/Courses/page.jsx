@@ -1,147 +1,167 @@
+// components/MyCourses.jsx
 "use client";
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import CourseEditor from './CourseEditor';
-import ContentSorter from './ContentSorter';
-import CourseCard from './CourseCard';
-import coursesData from '../../../data.json';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
 
-const Page = () => {
-  const [courses, setCourses] = useState(coursesData);
-  const [favorites, setFavorites] = useState([]);
-  const [editingCourse, setEditingCourse] = useState(null);
-  const [showEditor, setShowEditor] = useState(false);
+const MyCourses = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { user } = useSelector((state) => state.auth);
+const shimmer = (w, h) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="${w}" height="${h}" fill="#f3f4f6" />
+  <path d="M0 0h48v1H0z" fill="rgba(209,213,219,0.3)" transform="translate(0 0.5)" />
+</svg>`;
 
-  // تحميل المفضلة من localStorage
+const toBase64 = (str) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str);
   useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem('courseFavorites')) || [];
-    setFavorites(savedFavorites);
-  }, []);
-
-  // حفظ المفضلة في localStorage
-  const toggleFavorite = (courseId) => {
-    setFavorites(prev => {
-      const newFavorites = prev.includes(courseId)
-        ? prev.filter(id => id !== courseId)
-        : [...prev, courseId];
-      localStorage.setItem('courseFavorites', JSON.stringify(newFavorites));
-      return newFavorites;
-    });
-  };
-
-  // حفظ التغييرات على الدورة
-  const handleSaveCourse = (updatedCourse) => {
-    if (updatedCourse.id) {
-      setCourses(prev => ({
-        ...prev,
-        categories: prev.categories.map(cat => ({
-          ...cat,
-          courses: cat.courses.map(c => 
-            c.id === updatedCourse.id ? updatedCourse : c
-          )
-        }))
-      }));
-    } else {
-      const newCourse = { ...updatedCourse, id: crypto.randomUUID() };
-      setCourses(prev => ({
-        ...prev,
-        categories: prev.categories.map(cat => 
-          cat.categoryName === newCourse.category
-            ? { ...cat, courses: [...cat.courses, newCourse] }
-            : cat
-        )
-      }));
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+  `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/courses`,
+  {
+    params: {
+      'filters[users_permissions_user][id]': user?.id,
+      populate: {
+        coverImage: { // يجب أن يكون هيكل populate هكذا
+          fields: ['url'],
+          populate: ['formats'] // للحصول على الصور المصغرة
+        },
+        track: { fields: ['name'] },
+        users_permissions_user: { fields: ['username'] }
+      }
     }
-    setShowEditor(false);
-  };
+  }
+);
+        console.log('API Response:', response.data.data);
+        setCourses(response.data.data);
+      } catch (err) {
+        setError('فشل في تحميل الدورات');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // حذف الدورة
-  const handleDelete = (courseId) => {
-    setCourses(prev => ({
-      ...prev,
-      categories: prev.categories.map(cat => ({
-        ...cat,
-        courses: cat.courses.filter(c => c.id !== courseId)
-      }))
-    }));
-  };
+    if (user?.id) {
+      fetchCourses();
+    }
+  }, [user]);
 
-  // إعادة ترتيب المحتوى
-  const handleReorder = (categoryName, newCourses) => {
-    setCourses(prev => ({
-      ...prev,
-      categories: prev.categories.map(cat => 
-        cat.categoryName === categoryName
-          ? { ...cat, courses: newCourses }
-          : cat
-      )
-    }));
-  };
+  if (loading) return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="animate-pulse bg-white rounded-xl p-6">
+            <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+            <div className="h-10 bg-gray-200 rounded-lg mt-4"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (error) return <div className="text-red-500 text-center py-8">{error}</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8 flex justify-end">
-        <button
-          onClick={() => {
-            setEditingCourse(null);
-            setShowEditor(true);
-          }}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">دوراتي</h1>
+        <Link 
+          href="/AddCourse"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          + إنشاء دورة جديدة
-        </button>
+          إضافة دورة جديدة
+        </Link>
       </div>
 
-      {courses.categories.map((category, idx) => (
-        <motion.section 
-          key={category.categoryName}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: idx * 0.1 }}
-          className="mb-16"
-        >
-          <div className="mb-8 flex items-center gap-4 border-b-2 border-purple-100 pb-4">
-            <div className="p-3 bg-purple-100 rounded-lg text-purple-600">
-              {category.icon}
-            </div>
-            <h2 className="text-3xl font-bold text-gray-900">
-              {category.categoryName}
-            </h2>
-          </div>
-          
-          <ContentSorter
-            items={category.courses}
-            onReorder={(newCourses) => handleReorder(category.categoryName, newCourses)}
-          >
-            {(course) => (
-              <CourseCard 
-                key={course.id}
-                course={course}
-                isFavorite={favorites.includes(course.id)}
-                onToggleFavorite={toggleFavorite}
-                onEdit={() => {
-                  setEditingCourse(course);
-                  setShowEditor(true);
-                }}
-                onDelete={handleDelete}
-              />
-            )}
-          </ContentSorter>
-        </motion.section>
-      ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {courses.map((course) => {
+const coverImage = course.coverImage;
+          return (
+            <motion.div 
+              key={course.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+            >
+              <div className="relative h-48 w-full mb-4 rounded-lg overflow-hidden">
+  {coverImage ? (
+   <Image
+  src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${coverImage?.url}`}
+  alt={course.courseName}
+  width={400}
+  height={300}
+  className="object-cover w-full h-full"
+  placeholder="blur"
+  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(400, 300))}`}
+  unoptimized={process.env.NODE_ENV !== 'production'} // أضف هذا السطر للتطوير المحلي
+/>
+  ) : (
+    <div className="w-full h-full bg-gradient-to-r from-blue-50 to-purple-50 flex items-center justify-center text-gray-400">
+      <span className="text-sm">لا توجد صورة متاحة</span>
+    </div>
+  )}
+</div>
 
-      <AnimatePresence>
-        {showEditor && (
-          <CourseEditor
-            courseToEdit={editingCourse}
-            categories={courses.categories}
-            onSave={handleSaveCourse}
-            onClose={() => setShowEditor(false)}
-          />
-        )}
-      </AnimatePresence>
+              <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                {course.courseName}
+              </h2>
+
+              <div className="flex justify-between items-center mb-4">
+                <span className={`px-3 py-1 rounded-full ${
+                  course.isFree 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-blue-100 text-blue-800'
+                }`}>
+                  {course.isFree 
+                    ? 'مجاني' 
+                    : `$${course.price}`}
+                </span>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3">
+                <Link
+                  href={{
+                    pathname: '/AddTest',
+                    query: { 
+                      courseId: course.id,
+                      courseName: course.courseName 
+                    }
+                  }}
+                  className="w-full px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-center"
+                >
+                  إضافة اختبار
+                </Link>
+
+                <Link
+                  href={`/Courses/manage/${course.id}`}
+                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-center"
+                >
+                  إدارة الدورة
+                </Link>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {courses.length === 0 && (
+        <div className="text-center py-12 text-gray-500">
+          <p className="text-lg mb-4">لم تقم بإضافة أي دورات بعد</p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Page;
+export default MyCourses;

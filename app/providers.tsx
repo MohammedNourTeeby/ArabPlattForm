@@ -1,25 +1,34 @@
 // app/providers.tsx
-'use client';
-import { ReactNode } from 'react';
+"use client";
+import { ReactNode } from "react";
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
-import { MantineProvider } from '@mantine/core';
-import { MediaRecorderProvider } from '@/contexts/MediaRecorderContext';
-import { LicenseProvider } from './DashBoardAdmin/components/Saas/LicenseContext';
-import { ConfirmProvider } from './DashBoardAdmin/components/Saas/ConfirmContext';
-import { LanguageProvider } from '@/contexts/LanguageContext'
-
+import { MantineProvider } from "@mantine/core";
+import { MediaRecorderProvider } from "@/contexts/MediaRecorderContext";
+import { LicenseProvider } from "./DashBoardAdmin/components/Saas/LicenseContext";
+import { ConfirmProvider } from "./DashBoardAdmin/components/Saas/ConfirmContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-      <MantineProvider  >
-        
-        <MediaRecorderProvider><LicenseProvider><ConfirmProvider>
-        <LanguageProvider>
+       <Provider store={store}>
 
-          {children}
-          </LanguageProvider>
+    <MantineProvider>
+      <MediaRecorderProvider>
+        <LicenseProvider>
+          <ConfirmProvider>
+            <LanguageProvider>
 
-          </ConfirmProvider></LicenseProvider></MediaRecorderProvider>
-      </MantineProvider>
+              {children}
+
+
+              </LanguageProvider>
+          </ConfirmProvider>
+        </LicenseProvider>
+      </MediaRecorderProvider>
+    </MantineProvider>
+             </Provider>
+
   );
 }

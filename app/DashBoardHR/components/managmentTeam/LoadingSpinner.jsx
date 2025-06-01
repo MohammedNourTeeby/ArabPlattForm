@@ -1,6 +1,3 @@
-// LoadingSpinner.jsx
-'use client';
-
 export default function LoadingSpinner({
   className = '',
   primaryColor = '#008DCB',

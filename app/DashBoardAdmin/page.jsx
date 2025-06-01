@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic'; // <-- أضف هذا السطر
-
+import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './Sidbar';
 import UsersTable from './UsersTable';
 import SummaryCard from './SummaryCard';
@@ -12,7 +12,7 @@ import ActivityLog from './ActivityLog';
 import dashboardData from '../../data/dashboardData.json';
 import statsData from '../../data/statsData.json';
 import DashboardStats from './DashboardStats'; // تأكد من المسار الصحيح
-import CourseManagement from './CourseManagement';
+import CourseManagement from './components/CourseManagment/page';
 import coursesData from '../../data/coursesData.json';
 import supportData from '../../data/supportTickets.json';
 import SupportTickets from './SupportTickets';
@@ -114,6 +114,7 @@ const AdminDashboard = () => {
   }
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gray-50">
       
       <div className="flex pt-16">
@@ -192,11 +193,9 @@ const AdminDashboard = () => {
           {activeSection === 'content' && (
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <CourseManagement
-                courses={courses}
-                onSubmit={handleCourseSubmit}
-                onDelete={(courseId) => setCourses(courses.filter(c => c.id !== courseId))}
+               
               />
-             <CommunityCoursePage />
+        
             </div>
             
           ) }
@@ -272,6 +271,8 @@ const AdminDashboard = () => {
         </main>
       </div>
     </div>
+        </ProtectedRoute>
+
   );
 };
 

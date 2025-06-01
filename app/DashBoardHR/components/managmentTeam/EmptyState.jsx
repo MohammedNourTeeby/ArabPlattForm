@@ -1,4 +1,3 @@
-// EmptyState.jsx
 'use client';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 

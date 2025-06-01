@@ -8,7 +8,7 @@ import CourseManagement from './components/CourseManagement';
 import SupportInbox from './components/SupportInbox';
 import StudentTracking from './components/StudentTracking';
 import ProfileSettings from './components/ProfileSettings';
-import TeamManagementPanel from './components/managmentTeam/TeamManagementPanel';
+import UsersPage from './components/managmentTeam/page';
 
 function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -31,7 +31,7 @@ function Page() {
       {activeSection === 'support' && <SupportInbox />}
       {activeSection === 'student' && <StudentTracking />}
       {activeSection === 'settings' && <ProfileSettings />}
-      {activeSection === 'Employee' && <TeamManagementPanel />}
+      {activeSection === 'Employee' && <UsersPage />}
      
         </div>
       </main>

@@ -24,6 +24,7 @@ const WelcomeMessage = () => {
   const slides = [
     {
       image: "https://media.istockphoto.com/id/1446806057/es/foto/joven-estudiante-feliz-usando-computadora-port%C3%A1til-viendo-webinar-escribiendo-en-casa.jpg?s=612x612&w=0&k=20&c=eAEreJw-5Uerr2vDkFTQLgPGacbdZZDq7xpqrSTJ71A=",
+      alt : "Slide",
       title: t?.slides?.[0]?.title,
       description: t?.slides?.[0]?.description,
       cta: t?.slides?.[0]?.cta,
@@ -31,6 +32,8 @@ const WelcomeMessage = () => {
     },
     {
       image: "https://media.istockphoto.com/id/1490133656/es/foto/mujer-joven-usando-un-port%C3%A1til-mientras-trabaja-desde-casa.jpg?s=612x612&w=0&k=20&c=e9B2HwTUxZMLkNIQdE88e5eFOBBPZJK-zDDb53W9CxE=",
+            alt : "Slide",
+
       title: t?.slides?.[1]?.title,
       description: t?.slides?.[1]?.description,
       cta: t?.slides?.[1]?.cta,
@@ -104,7 +107,7 @@ const WelcomeMessage = () => {
           >
             <Image
               src="https://static.vecteezy.com/system/resources/thumbnails/017/202/446/small/animated-man-comes-up-with-idea-video.jpg"
-              alt={t?.altTexts?.user}
+  alt={t?.altTexts?.user || 'User Profile'} // ✅ Fallback added
               width={100}
               height={100}
               className="w-24 h-24 object-cover"
@@ -181,7 +184,7 @@ const WelcomeMessage = () => {
               <div className="relative w-full md:w-1/2 h-80 md:h-full">
                 <Image
                   src={slides[currentSlide].image}
-                  alt={slides[currentSlide].title}
+  alt={t?.altTexts?.user || 'User Profile'} // ✅ Fallback added
                   fill
                   className="object-cover object-center transform scale-105 hover:scale-100 transition-transform duration-500 ease-out"
                   sizes="(max-width: 768px) 100vw, 50vw"

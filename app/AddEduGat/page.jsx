@@ -1,135 +1,293 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
+import api from '@/services/api';
+import { useSelector } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiPlus, FiEdit3, FiTrash2, FiSave, FiInfo, FiX } from 'react-icons/fi';
 
 const AddEduGat = () => {
+  const { user } = useSelector((state) => state.auth);
   const [tracks, setTracks] = useState([]);
-  const [trackName, setTrackName] = useState('');
-  const [category, setCategory] = useState('');
-  const [coursesCount, setCoursesCount] = useState('');
-  const [description, setDescription] = useState('');
+  const [trackData, setTrackData] = useState({
+    name: '',
+    description: '',
+    numOfCourse: 0,
+  });
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  // إضافة أو تعديل مسار
-  const handleSubmit = (e) => {
+  // جلب مسارات المستخدم
+ const fetchUserTracks = async () => {
+    try {
+      setLoading(true);
+      const response = await api.getUserTracks(user?.id);
+      
+      // التحقق من بنية الاستجابة
+      const safeData = response?.data?.data || [];
+      
+      const formattedTracks = safeData.map(track => ({
+        id: track?.id?.toString() || Date.now().toString(),
+        name: track?.name || 'بدون اسم',
+        description: track?.description || 'لا يوجد وصف',
+        numOfCourse: track?.numOfCourse || 0,
+        createdAt: track?.createdAt 
+          ? new Date(track.createdAt).toLocaleDateString('ar-EG')
+          : 'تاريخ غير معروف'
+      }));
+      
+      setTracks(formattedTracks);
+    } catch (err) {
+      handleApiError(err, 'فشل في تحميل البيانات');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    if (user?.id) fetchUserTracks();
+  }, [user]);
+
+  // معالجة الإرسال
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!trackName || !category) return;
-
-    const newTrack = {
-      id: Date.now(),
-      trackName,
-      category,
-      coursesCount,
-      description,
-      createdAt: new Date().toLocaleDateString()
-    };
-
-    if (editId) {
-      setTracks(tracks.map(t => t.id === editId ? newTrack : t));
-      setEditId(null);
-    } else {
-      setTracks([...tracks, newTrack]);
+    if (!user?.id) {
+      setError('يجب تسجيل الدخول أولاً');
+      return;
     }
 
-    // تفريغ الحقول بعد الإرسال
-    setTrackName('');
-    setCategory('');
-    setCoursesCount('');
-    setDescription('');
+    if (!validateForm()) return;
+
+    try {
+      setLoading(true);
+      
+      const payload = {
+        data: {
+          ...trackData,
+          numOfCourse: Number(trackData.numOfCourse),
+          users_permissions_user: user.id
+        }
+      };
+
+      let response;
+      if (editId) {
+        response = await api.updateTrack(editId, payload);
+        setTracks(tracks.map(t => 
+          t.id === editId ? { 
+            ...response.data.data.attributes, 
+            id: editId,
+            createdAt: new Date().toLocaleDateString('ar-EG')
+          } : t
+        ));
+      } else {
+        response = await api.createTrack(payload);
+        setTracks([{ 
+          ...response.data.data.attributes, 
+          id: response.data.data.id,
+          createdAt: new Date().toLocaleDateString('ar-EG')
+        }, ...tracks]);
+      }
+
+      resetForm();
+      setSuccess(editId ? 'تم تحديث المسار بنجاح 🎉' : 'تم إضافة المسار بنجاح 🎉');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      handleApiError(err, 'حدث خطأ أثناء العملية');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // حذف مسار
-  const handleDelete = (id) => {
-    setTracks(tracks.filter(track => track.id !== id));
+  // التحقق من صحة البيانات
+  const validateForm = () => {
+    const errors = [];
+    if (!trackData.name?.trim()) errors.push('اسم المسار مطلوب');
+    if (isNaN(Number(trackData.numOfCourse))) errors.push('عدد الدورات يجب أن يكون رقمًا');
+
+    if (errors.length > 0) {
+      setError(errors.join(' - '));
+      return false;
+    }
+    return true;
   };
 
-  // تحرير مسار
+  // معالجة الأخطاء
+  const handleApiError = (error, defaultMessage) => {
+    const errorMessage = error.response?.data?.error?.message || 
+                        error.message || 
+                        defaultMessage;
+    
+    setError(errorMessage);
+    setTimeout(() => setError(''), 5000);
+  };
+
+  // تعبئة الحقول عند التعديل
   const handleEdit = (track) => {
-    setTrackName(track.trackName);
-    setCategory(track.category);
-    setCoursesCount(track.coursesCount);
-    setDescription(track.description);
+    if (!track) return; // التحقق من وجود track
+    
+    setTrackData({
+      name: track.name || '',
+      description: track.description || '',
+      numOfCourse: track.numOfCourse || 0
+    });
+    
     setEditId(track.id);
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth',
+      // إضافة تأخير بسيط لضمان التمرير بعد تحديث الحالة
+      block: 'start' 
+    });
+  };
+
+  // حذف المسار
+  const handleDelete = async (id) => {
+    if (!window.confirm('هل أنت متأكد من حذف هذا المسار؟')) return;
+    
+    try {
+      setLoading(true);
+      await api.deleteTrack(id);
+    
+    setSuccess('تم الحذف بنجاح');
+    setTimeout(() => setSuccess(''), 3000);
+          await fetchUserTracks();
+
+  } catch (err) {
+    console.error('تفاصيل خطأ الحذف:', {
+      status: err.response?.status,
+      data: err.response?.data
+    });
+    setError('فشل في الحذف - تحقق من الصلاحيات');
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // إعادة تعيين النموذج
+  const resetForm = () => {
+    setTrackData({
+      name: '',
+      description: '',
+      numOfCourse: 0
+    });
+    setEditId(null);
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen">
-      {/* نموذج الإضافة */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen"
+    >
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 right-6 p-4 bg-red-100 text-red-700 rounded-lg shadow-lg flex items-center gap-2"
+          >
+            <FiInfo />
+            <span>{error}</span>
+            <button onClick={() => setError('')}>
+              <FiX />
+            </button>
+          </motion.div>
+        )}
+
+        {success && (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 right-6 p-4 bg-green-100 text-green-700 rounded-lg shadow-lg flex items-center gap-2"
+          >
+            <FiInfo />
+            <span>{success}</span>
+            <button onClick={() => setSuccess('')}>
+              <FiX />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* نموذج الإدخال */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          {editId ? 'تعديل المسار التعليمي' : 'إضافة مسار تعليمي جديد'}
+          {editId ? 'تعديل المسار' : 'إضافة مسار جديد'}
         </h2>
-        
+
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">اسم المسار</label>
-            <input
-              type="text"
-              value={trackName}
-              onChange={(e) => setTrackName(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              اسم المسار *
+              <input
+                type="text"
+                value={trackData.name}
+                onChange={(e) => setTrackData({...trackData, name: e.target.value})}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="أدخل اسم المسار"
+                required
+              />
+            </label>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">الفئة</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-            >
-              <option value="">اختر الفئة</option>
-              <option value="تطوير الويب">تطوير الويب</option>
-              <option value="علوم البيانات">علوم البيانات</option>
-              <option value="التسويق الرقمي">التسويق الرقمي</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">عدد الدورات</label>
-            <input
-              type="number"
-              value={coursesCount}
-              onChange={(e) => setCoursesCount(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              min="1"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              عدد الدورات *
+              <input
+                type="number"
+                value={trackData.numOfCourse}
+                onChange={(e) => setTrackData({...trackData, numOfCourse: e.target.value})}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                min="0"
+                required
+              />
+            </label>
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              rows="3"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              الوصف
+              <textarea
+                value={trackData.description}
+                onChange={(e) => setTrackData({...trackData, description: e.target.value})}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                rows="4"
+                placeholder="أدخل وصفًا للمسار"
+              />
+            </label>
           </div>
 
           <div className="md:col-span-2 flex justify-end gap-4">
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              disabled={loading}
+              className={`px-6 py-2 text-white rounded-lg flex items-center gap-2 ${
+                loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
+              }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              {editId ? 'تحديث' : 'إضافة'}
+              {loading ? (
+                <span className="animate-pulse">جاري الحفظ...</span>
+              ) : (
+                <>
+                  {editId ? <FiSave /> : <FiPlus />}
+                  {editId ? 'حفظ التعديلات' : 'إضافة مسار'}
+                </>
+              )}
             </button>
 
             {editId && (
               <button
                 type="button"
-                onClick={() => {
-                  setEditId(null);
-                  setTrackName('');
-                  setCategory('');
-                  setCoursesCount('');
-                  setDescription('');
-                }}
-                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                onClick={resetForm}
+                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center gap-2"
               >
+                <FiX />
                 إلغاء التعديل
               </button>
             )}
@@ -137,57 +295,67 @@ const AddEduGat = () => {
         </form>
       </div>
 
-      {/* جدول المسارات */}
+      {/* قائمة المسارات */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">اسم المسار</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الفئة</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">عدد الدورات</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تاريخ الإضافة</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الإجراءات</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {tracks.map((track) => (
-              <tr key={track.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 text-sm text-gray-900">{track.trackName}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{track.category}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{track.coursesCount}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{track.createdAt}</td>
-                <td className="px-6 py-4 text-sm flex gap-3 justify-end">
-                  <button
-                    onClick={() => handleEdit(track)}
-                    className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">جاري تحميل البيانات...</div>
+        ) : (
+          <>
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {['اسم المسار', 'عدد الدورات', 'تاريخ الإضافة', 'الإجراءات'].map((header) => (
+                    <th
+                      key={header}
+                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              
+              <tbody className="bg-white divide-y divide-gray-200">
+                {tracks.map((track) => (
+                  <motion.tr
+                    key={track.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="hover:bg-gray-50"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
-                    تعديل
-                  </button>
-                  <button
-                    onClick={() => handleDelete(track.id)}
-                    className="text-red-600 hover:text-red-900 flex items-center gap-1"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    حذف
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    <td className="px-6 py-4 text-sm text-gray-900">{track.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{track.numOfCourse}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{track.createdAt}</td>
+                    <td className="px-6 py-4 text-sm flex gap-3 justify-end">
+                      <button
+                        onClick={() => handleEdit(track)}
+                        className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
+                      >
+                        <FiEdit3 />
+                        تعديل
+                      </button>
+                      <button
+                        onClick={() => handleDelete(track.id)}
+                        className="text-red-600 hover:text-red-900 flex items-center gap-1"
+                      >
+                        <FiTrash2 />
+                        حذف
+                      </button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
 
-        {tracks.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            لا توجد مسارات مضافة حالياً
-          </div>
+            {tracks.length === 0 && !loading && (
+              <div className="text-center py-8 text-gray-500">
+                لا توجد مسارات مضافة حالياً
+              </div>
+            )}
+          </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

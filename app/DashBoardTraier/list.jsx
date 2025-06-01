@@ -3,7 +3,8 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FiUser, FiBell, FiSettings, FiMessageSquare, FiCreditCard, FiClock, FiDollarSign, FiGlobe, FiEdit, FiHelpCircle, FiLogOut, FiBriefcase } from 'react-icons/fi';
-
+import { useDispatch } from 'react-redux';
+import { logout } from '@/store/slices/authSlice';
 // نظام الألوان الجديد
 const colors = {
   blue: '#008DCB',
@@ -15,6 +16,10 @@ const colors = {
 };
 
 const List = () => {
+    const dispatch = useDispatch();
+const handleLogout = () => {
+    dispatch(logout());
+  };
   // تحسين تأثيرات الحركة
   const menuVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.98 },
@@ -225,7 +230,7 @@ const List = () => {
           </Link>
         </motion.div>
 
-        <motion.button 
+        <motion.button onClick={handleLogout}
           className="w-full flex items-center justify-end gap-3 p-3 rounded-lg hover:bg-opacity-10"
           style={{ 
             color: colors.red,
