@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { postStrapiData } from "@/lib/strapi";
 
+// الدالة الأولى: لتعديل النسب (instructorShare, platformShare, ...)
 export async function PUT(request, { params }) {
   try {
     const { id } = params;
@@ -32,12 +33,13 @@ export async function PUT(request, { params }) {
     return NextResponse.json(updatedCourse);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to update course shares" + error },
+      { error: "Failed to update course shares: " + error.message },
       { status: 500 }
     );
   }
 }
 
+// الدالة الثانية: لإنشاء كورس جديد
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -45,13 +47,14 @@ export async function POST(request) {
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create course" + error },
+      { error: "Failed to create course: " + error.message },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(request, { params }) {
+// الدالة الثالثة: لتعديل الكورس (تم تغيير اسمها من PUT إلى PATCH)
+export async function PATCH(request, { params }) {
   try {
     const { id } = params;
     const body = await request.json();
@@ -59,12 +62,13 @@ export async function PUT(request, { params }) {
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to update course" + error },
+      { error: "Failed to update course: " + error.message },
       { status: 500 }
     );
   }
 }
 
+// الدالة الرابعة: لحذف الكورس
 export async function DELETE(request, { params }) {
   try {
     const { id } = params;
@@ -84,7 +88,7 @@ export async function DELETE(request, { params }) {
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete course" + error },
+      { error: "Failed to delete course: " + error.message },
       { status: 500 }
     );
   }

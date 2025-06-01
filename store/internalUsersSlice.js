@@ -200,6 +200,3 @@ const internalUsersSlice = createSlice({
 });
 
 export default internalUsersSlice.reducer;
-export {
-  updateInternalUser as updateInternalUser, // ✅ توحيد الاسم
-};
