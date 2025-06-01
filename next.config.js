@@ -1,3 +1,4 @@
+//next.config.js.
 /* eslint-disable @typescript-eslint/no-require-imports */
 const withTM = require("next-transpile-modules")(["@ffmpeg/ffmpeg"]);
 
