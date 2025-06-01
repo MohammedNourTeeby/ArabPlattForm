@@ -78,7 +78,7 @@ const [isUploading, setIsUploading] = useState(false);
     const fetchTracks = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:1337/api/tracks?populate=*"
+  `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tracks?populate=*`
         );
         setTracks(data.data); // Strapi v5 يعيد البيانات ضمن data.data
       } catch (error) {
@@ -144,7 +144,7 @@ const [isUploading, setIsUploading] = useState(false);
     
     try {
       const { data } = await axios.post(
-        "http://localhost:1337/api/upload",
+       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/upload`,
         formDataUpload,
         {
           headers: {
@@ -215,7 +215,7 @@ const [isUploading, setIsUploading] = useState(false);
     
     try {
       const { data } = await axios.post(
-        "http://localhost:1337/api/upload",
+        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/upload`,
         formDataUpload,
         {
           headers: {
@@ -272,7 +272,7 @@ const [isUploading, setIsUploading] = useState(false);
       caption: formData.newVideo.duration
     }));
     const { data } = await axios.post(
-      'http://localhost:1337/api/upload',
+       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/upload`,
       videoFormData,
       {
         headers: {
@@ -365,7 +365,7 @@ const handleAddVideo = async () => {
         }
       };
       
-      await axios.post('http://localhost:1337/api/courses', payload, {
+      await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/courses`, payload, {
         headers: {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json"

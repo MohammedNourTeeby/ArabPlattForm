@@ -1,7 +1,7 @@
 // api/axiosInstance.js
 import axios from "axios";
 
-const STRAPI_URL = "http://localhost:1337"; // تأكد من أن Strapi يعمل على هذا المنفذ
+const STRAPI_URL = `${process.env.NEXT_PUBLIC_STRAPI_URL}`;
 
 const apiClient = axios.create({
   baseURL: STRAPI_URL,
